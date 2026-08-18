@@ -89,8 +89,29 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
 @media(min-width:700px){main{padding:14px}.toolbar-label{font-size:.8rem}.chip{font-size:.78rem;padding:7px 12px}.answerpanel{width:330px}.toast{font-size:.78rem}}
 @media(max-width:430px){main{padding:6px;gap:5px}header{padding:0 4px}.eyebrow{font-size:.54rem}h1{font-size:1.22rem}.shell{padding:6px;border-radius:17px}.toolbar{gap:4px;padding-bottom:5px}.toolbar-label{width:100%;font-size:.64rem}.chip{font-size:.66rem;padding:5px 8px}.stage{border-radius:14px}.controlbar{bottom:7px;padding:5px 7px;gap:4px}.sidebtn{font-size:.64rem;padding:7px 8px}.playbtn{width:43px;height:43px;font-size:1.15rem}.formula-pill{left:7px;top:7px;font-size:.93rem;padding:5px 8px}.answerpanel{top:7px;right:7px;width:min(294px,82%);padding:8px}.pad{gap:4px}.key{min-height:29px;font-size:.69rem}.toast{bottom:62px;top:auto;left:7px;width:min(250px,66%);font-size:.68rem}.status{bottom:64px;right:8px}}
 </style>
+
+<style id="desktop-and-nav-patch">
+.resource-home{position:fixed;top:12px;right:14px;z-index:80;text-decoration:none;border:1px solid rgba(190,214,218,.9);background:rgba(250,253,253,.76);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#173044;border-radius:999px;padding:9px 13px;font:800 .78rem/1 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;box-shadow:0 8px 24px rgba(23,48,68,.10)}
+.resource-home:hover{transform:translateY(-1px);box-shadow:0 11px 28px rgba(23,48,68,.15)}
+@media (min-width:900px){
+  main{max-width:1380px!important;padding:14px 22px!important;gap:10px!important}
+  header{display:flex!important;align-items:baseline!important;gap:16px!important;padding:0 10px!important}
+  header .eyebrow{font-size:.68rem!important;white-space:nowrap}
+  header h1{font-size:clamp(1.55rem,2.2vw,2.25rem)!important;margin:0!important}
+  .shell{max-width:1260px!important;width:100%!important;margin:0 auto!important;padding:10px!important;border-radius:24px!important}
+  .toolbar{justify-content:center!important;gap:8px!important;padding-bottom:9px!important}
+  .toolbar-label{font-size:.82rem!important}
+  .chip{padding:8px 13px!important;font-size:.8rem!important}
+  .stage{min-height:0!important;height:min(74vh,760px)!important;max-height:760px!important;border-radius:20px!important}
+  .controlbar{bottom:14px!important;transform:translateX(-50%) scale(.94)!important}
+  .answer-panel{max-width:560px!important}
+}
+@media (min-width:1400px){.shell{max-width:1320px!important}.stage{height:min(76vh,820px)!important;max-height:820px!important}}
+</style>
 </head>
-<body>
+<body><a id="resourceHome" class="resource-home" href="../../index.html" aria-label="Volver a recursos">← Recursos</a>
+<script>(function(){const b=document.getElementById('resourceHome');if(window.self!==window.top&&b)b.style.display='none';})();</script>
+
 <main>
 <header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Explorador de límites</h1></header>
 <section class="shell">
