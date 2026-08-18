@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>LIM-01 · Cuando la gráfica oscila</title>
+<style>
+:root{--ink:#173044;--muted:#647985;--accent:#128596;--accent2:#18a0ad;--ok:#178353;--gold:#c79b31;--line:#d0e1e4;--soft:#eaf7f8}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 2%,#dff6f8 0,transparent 35%),radial-gradient(circle at 96% 2%,#fff0d8 0,transparent 30%),#f5fafb}button{font:inherit}.app{height:100dvh;max-width:900px;margin:auto;padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px}.top{flex:0 0 auto}.eyebrow{font-size:.66rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}h1{font-size:clamp(1.5rem,5vw,2.3rem);line-height:.96;letter-spacing:-.045em;margin:3px 0 0}.selector{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:7px 9px;border-radius:19px;background:rgba(255,255,255,.69);border:1px solid rgba(201,219,222,.88);backdrop-filter:blur(10px);flex:0 0 auto}.selector .label{font-size:.8rem;font-weight:850;margin-right:2px}.chip{border:1px solid #c9dadd;background:rgba(255,255,255,.76);color:var(--ink);border-radius:999px;padding:8px 12px;font-weight:850;cursor:pointer;transition:.2s ease}.chip.active{background:linear-gradient(135deg,#0f8696,#18a0ad);border-color:transparent;color:white;box-shadow:0 7px 20px rgba(18,133,150,.22)}.chip.done{background:#e7f7ee;border-color:#acdabe;color:#157449}.stage{position:relative;flex:1 1 auto;min-height:0;border:1px solid rgba(197,216,220,.92);border-radius:28px;overflow:hidden;background:rgba(255,255,255,.74);box-shadow:0 16px 50px rgba(23,48,68,.11)}svg{width:100%;height:100%;display:block;background:#fcfefe}.axis{stroke:#71868e;stroke-width:1.25;vector-effect:non-scaling-stroke}.gridline{stroke:#d8e6e8;stroke-width:.75;vector-effect:non-scaling-stroke}.curve{fill:none;stroke:#1e4357;stroke-width:1.05;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}.trail{fill:none;stroke:#1596a6;stroke-width:1.35;vector-effect:non-scaling-stroke;stroke-linecap:round;opacity:.38}.runner{fill:#1596a6;stroke:#fff;stroke-width:1.35;vector-effect:non-scaling-stroke}.envelope{fill:none;stroke:#d39f35;stroke-width:1.05;vector-effect:non-scaling-stroke;stroke-dasharray:5 5;opacity:.72}.intro{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);width:min(82%,520px);padding:18px 20px;text-align:center;border:1px solid rgba(198,217,220,.68);border-radius:24px;background:rgba(250,253,253,.42);backdrop-filter:blur(7px);box-shadow:0 15px 45px rgba(23,48,68,.09);transition:.25s ease;pointer-events:none}.intro strong{font-size:1.08rem}.intro p{font-size:.82rem;line-height:1.45;color:var(--muted);margin:6px 0 0}.intro.hidden{opacity:0;transform:translate(-50%,-46%) scale(.97)}.formula{position:absolute;top:15px;left:17px;padding:7px 11px;border-radius:15px;background:rgba(255,255,255,.56);backdrop-filter:blur(7px);font-family:"STIX Two Math","Cambria Math",Georgia,serif;font-size:clamp(1rem,3.5vw,1.4rem);box-shadow:0 5px 16px rgba(23,48,68,.07);opacity:0;transition:.2s}.formula.show{opacity:1}.zoomtag{position:absolute;top:16px;right:16px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.58);backdrop-filter:blur(7px);font-size:.7rem;font-weight:850;color:#52707d;opacity:0;transition:.2s}.zoomtag.show{opacity:1}.dock{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid rgba(191,214,218,.9);border-radius:999px;background:rgba(249,253,253,.66);backdrop-filter:blur(11px);box-shadow:0 12px 34px rgba(23,48,68,.14)}.play{width:61px;height:61px;border:0;border-radius:50%;display:grid;place-items:center;background:#c8e8eb;color:white;font-size:1.7rem;cursor:default;transition:.2s ease}.play.ready{cursor:pointer;background:linear-gradient(135deg,#0f8797,#21a8b4);animation:pulse 1.35s infinite}.play.replay{cursor:pointer;background:linear-gradient(135deg,#0f8797,#21a8b4);font-size:1.45rem}.cue{max-width:320px;font-size:.76rem;line-height:1.25;font-weight:800;color:#42616f}.answer{position:absolute;right:14px;top:14px;width:min(48%,370px);padding:13px;border:1px solid rgba(188,213,217,.82);border-radius:22px;background:rgba(248,252,252,.56);backdrop-filter:blur(9px);box-shadow:0 14px 38px rgba(23,48,68,.12);opacity:0;transform:translateY(-7px);pointer-events:none;transition:.23s ease}.answer.show{opacity:1;transform:none;pointer-events:auto}.qtitle{font-weight:900;font-size:.88rem;line-height:1.3;margin-bottom:9px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:7px}.choice{border:1px solid #c8dade;background:rgba(255,255,255,.69);color:var(--ink);border-radius:14px;padding:9px 7px;font-size:.79rem;font-weight:850;cursor:pointer}.choice.wide{grid-column:1/-1}.feedback{position:absolute;left:14px;bottom:94px;max-width:min(66%,460px);padding:10px 13px;border-radius:16px;background:rgba(247,252,250,.66);border:1px solid #add8bd;color:#166f48;font-size:.77rem;font-weight:800;line-height:1.3;backdrop-filter:blur(8px);box-shadow:0 9px 28px rgba(23,48,68,.10);opacity:0;transform:translateY(6px);transition:.2s;pointer-events:none}.feedback.show{opacity:1;transform:none}.feedback.bad{border-color:#e3c2b8;color:#9a442d;background:rgba(255,249,247,.72)}.win{position:absolute;inset:0;display:grid;place-items:center;background:rgba(246,251,251,.30);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.3s}.win.show{opacity:1;pointer-events:auto}.winbox{width:min(78%,470px);text-align:center;padding:24px 20px;border-radius:28px;background:rgba(255,253,244,.88);border:1px solid #e7d19a;box-shadow:0 18px 60px rgba(23,48,68,.18);animation:pop .45s ease}.star{font-size:2.5rem;color:var(--gold)}.win h2{margin:4px 0 6px;font-size:1.45rem}.win p{margin:0 0 15px;color:var(--muted);font-size:.85rem;line-height:1.4}.win button{border:0;border-radius:999px;padding:10px 15px;font-weight:900;color:white;background:linear-gradient(135deg,#0f8797,#21a8b4);cursor:pointer}.progress{position:absolute;right:15px;bottom:16px;display:flex;gap:6px;pointer-events:none}.dot{width:10px;height:10px;border-radius:50%;background:#d5e2e5;border:1px solid #bccfd3}.dot.done{background:var(--ok);border-color:var(--ok)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(20,151,166,.28)}50%{box-shadow:0 0 0 14px rgba(20,151,166,0)}}@keyframes pop{0%{transform:scale(.82);opacity:0}100%{transform:scale(1);opacity:1}}
+@media(max-width:620px){.app{padding:8px}.selector{padding:6px 7px}.selector .label{width:100%;font-size:.72rem}.chip{padding:7px 10px;font-size:.78rem}.answer{top:12px;right:10px;width:min(61%,315px);padding:10px}.qtitle{font-size:.76rem}.choice{font-size:.72rem;padding:8px 5px}.dock{bottom:10px}.play{width:56px;height:56px}.cue{max-width:220px;font-size:.68rem}.feedback{bottom:82px;left:10px;font-size:.69rem}.intro{width:84%;padding:15px}.intro p{font-size:.74rem}}
+</style></head><body><main class="app"><header class="top"><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Cuando la gráfica oscila</h1></header><section class="selector"><span class="label">¿Qué gráfica quieres explorar?</span><button class="chip" data-case="sin">y = sin(1/x)</button><button class="chip" data-case="xsin">y = x·sin(1/x)</button></section><section class="stage"><svg id="graph" viewBox="-1.2 -1.3 2.4 2.6" preserveAspectRatio="xMidYMid meet"><g transform="scale(1,-1)"><g id="grid"></g><line id="xaxis" class="axis"/><line id="yaxis" class="axis"/><g id="envelopes"></g><path id="curveL" class="curve"/><path id="curveR" class="curve"/><path id="trailL" class="trail"/><path id="trailR" class="trail"/><circle id="runnerL" class="runner" r=".026" opacity="0"/><circle id="runnerR" class="runner" r=".026" opacity="0"/></g></svg><div id="intro" class="intro"><strong>Observa ambos lados mientras hacemos zoom.</strong><p>El acercamiento será continuo. Fíjate en la amplitud de las oscilaciones y en lo que ocurre cada vez más cerca de 0.</p></div><div id="formula" class="formula"></div><div id="zoomtag" class="zoomtag"></div><div class="dock"><button id="play" class="play" disabled>▶</button><div id="cue" class="cue">Elige una gráfica para comenzar.</div></div><div id="answer" class="answer"><div id="qtitle" class="qtitle"></div><div class="choices"><button class="choice" data-answer="0">0</button><button class="choice" data-answer="posinf">+∞</button><button class="choice" data-answer="neginf">−∞</button><button class="choice wide" data-answer="nostable">No se estabiliza</button></div></div><div id="feedback" class="feedback"></div><div class="progress"><span id="dot-sin" class="dot"></span><span id="dot-xsin" class="dot"></span></div><div id="win" class="win"><div class="winbox"><div class="star">★</div><h2>¡Misión completada!</h2><p>Viste dos gráficas oscilantes con comportamientos muy distintos cerca de 0.</p><button id="again">Volver a explorar</button></div></div></section></main>
+<script>
+(()=>{
+const svg=document.querySelector('#graph');
+const wide={x:-1.2,y:-1.3,w:2.4,h:2.6};
+const cases={
+ sin:{label:'y = sin(1/x)',fn:x=>Math.sin(1/x),answer:'nostable',boxes:[wide,{x:-.38,y:-1.22,w:.76,h:2.44},{x:-.11,y:-1.16,w:.22,h:2.32},{x:-.032,y:-1.12,w:.064,h:2.24}]},
+ xsin:{label:'y = x·sin(1/x)',fn:x=>x*Math.sin(1/x),answer:'0',boxes:[wide,{x:-.42,y:-.42,w:.84,h:.84},{x:-.20,y:-.20,w:.40,h:.40},{x:-.08,y:-.08,w:.16,h:.16}]}
+};
+let selected=null,animating=false,finishedAnim=false,currentBox={...wide};const done=new Set();
+const $=s=>document.querySelector(s),curveL=$('#curveL'),curveR=$('#curveR'),trailL=$('#trailL'),trailR=$('#trailR'),runnerL=$('#runnerL'),runnerR=$('#runnerR'),env=$('#envelopes'),grid=$('#grid'),xaxis=$('#xaxis'),yaxis=$('#yaxis'),intro=$('#intro'),formula=$('#formula'),zoomtag=$('#zoomtag'),play=$('#play'),cue=$('#cue'),answer=$('#answer'),qtitle=$('#qtitle'),feedback=$('#feedback'),win=$('#win');
+function setBox(b){currentBox={...b};svg.setAttribute('viewBox',`${b.x} ${b.y} ${b.w} ${b.h}`);drawGrid(b);drawCurves(b);updateRunnerSize(b)}
+function mix(a,b,t){return a+(b-a)*t}function ease(t){return t*t*(3-2*t)}function mixBox(a,b,t){return{x:mix(a.x,b.x,t),y:mix(a.y,b.y,t),w:mix(a.w,b.w,t),h:mix(a.h,b.h,t)}}
+function niceStep(span){const p=Math.pow(10,Math.floor(Math.log10(span/7)));const q=span/(p*7);return p*(q>5?10:q>2?5:q>1?2:1)}
+function drawGrid(b){const sx=niceStep(b.w),sy=niceStep(b.h),x0=Math.floor(b.x/sx)*sx,x1=b.x+b.w,y0=Math.floor(b.y/sy)*sy,y1=b.y+b.h;let h='';for(let x=x0;x<=x1+sx*.2;x+=sx)h+=`<line class="gridline" x1="${x}" x2="${x}" y1="${b.y}" y2="${y1}"/>`;for(let y=y0;y<=y1+sy*.2;y+=sy)h+=`<line class="gridline" x1="${b.x}" x2="${x1}" y1="${y}" y2="${y}"/>`;grid.innerHTML=h;xaxis.setAttribute('x1',b.x);xaxis.setAttribute('x2',x1);xaxis.setAttribute('y1',0);xaxis.setAttribute('y2',0);yaxis.setAttribute('x1',0);yaxis.setAttribute('x2',0);yaxis.setAttribute('y1',b.y);yaxis.setAttribute('y2',y1)}
+function branchPath(fn,side,b){
+  /* No intentamos representar frecuencias menores que la resolución física
+     de la pantalla. En sin(1/x), la distancia aproximada entre oscilaciones
+     es 2πx²; a partir del tamaño de un píxel calculamos hasta dónde conviene
+     dibujar sin producir una franja negra por aliasing. */
+  const pxWorld=b.w/Math.max(320,svg.clientWidth||760);
+  const xResolve=Math.sqrt(Math.max(pxWorld*1.35,1e-10)/Math.PI);
+  const xEdge=side<0?Math.abs(Math.min(b.x,-1e-12)):Math.abs(Math.max(b.x+b.w,1e-12));
+  const xMax=Math.max(xResolve*1.15,xEdge);
+  const xMin=Math.max(xResolve,2e-6);
+  if(xMax<=xMin)return '';
+  const tMin=1/xMax,tMax=1/xMin;
+  const cycles=Math.max(1,(tMax-tMin)/(2*Math.PI));
+  const N=Math.max(420,Math.min(5200,Math.ceil(cycles*34)));
+  const pts=[];
+  for(let i=0;i<N;i++){
+    const u=i/(N-1);
+    /* muestreo uniforme en fase: conserva la forma de las oscilaciones */
+    const t=tMin+(tMax-tMin)*u;
+    const x=side/t,y=fn(x);
+    if(x>=b.x-b.w*.02&&x<=b.x+b.w*1.02&&y>=b.y-b.h*.10&&y<=b.y+b.h*1.10)pts.push([x,y]);
+  }
+  if(side<0)pts.reverse();
+  return pts.map((p,i)=>(i?'L':'M')+p[0].toPrecision(9)+' '+p[1].toPrecision(9)).join(' ')
+}
+function drawCurves(b){const c=cases[selected||'xsin'];curveL.setAttribute('d',branchPath(c.fn,-1,b));curveR.setAttribute('d',branchPath(c.fn,1,b));curveL.style.opacity=curveR.style.opacity=selected?'1':'.62';if(selected==='xsin'){const x1=b.x,x2=b.x+b.w;env.innerHTML=`<path class="envelope" d="M ${x1} ${Math.abs(x1)} L 0 0 L ${x2} ${Math.abs(x2)}"/><path class="envelope" d="M ${x1} ${-Math.abs(x1)} L 0 0 L ${x2} ${-Math.abs(x2)}"/>`}else env.innerHTML=''}
+function updateRunnerSize(b){
+  const px=b.w/Math.max(320,svg.clientWidth||760);
+  const r=px*(selected==='xsin'?1.7:2.15);
+  runnerL.setAttribute('r',r);runnerR.setAttribute('r',r)
+}
+function resetAnimation(){trailL.setAttribute('d','');trailR.setAttribute('d','');runnerL.setAttribute('opacity','0');runnerR.setAttribute('opacity','0');finishedAnim=false;answer.classList.remove('show');feedback.classList.remove('show','bad');zoomtag.classList.remove('show');play.textContent='▶';play.classList.remove('replay');setBox(wide);if(selected){play.disabled=false;play.classList.add('ready');cue.textContent='Pulsa ▶ para acercarte continuamente a 0.'}}
+function selectCase(k){if(animating)return;selected=k;document.querySelectorAll('.chip').forEach(b=>b.classList.toggle('active',b.dataset.case===k));intro.classList.add('hidden');formula.textContent=cases[k].label;formula.classList.add('show');resetAnimation()}
+document.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>selectCase(b.dataset.case)));
+function shortTrail(side,mag,fn){
+  const pts=[];
+  for(let j=5;j>=0;j--){
+    const xx=mag*Math.pow(1.055,j)*(side<0?-1:1);
+    pts.push([xx,fn(xx)])
+  }
+  return pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' ')
+}
+function animate(){
+ if(!selected||animating)return;
+ animating=true;play.disabled=true;play.classList.remove('ready','replay');answer.classList.remove('show');feedback.classList.remove('show','bad');
+ runnerL.setAttribute('opacity','1');runnerR.setAttribute('opacity','1');zoomtag.classList.add('show');
+ const c=cases[selected],start=wide,end=c.boxes[c.boxes.length-1];
+ const duration=10000;
+ const began=performance.now();
+ let lastHeavy=0;
+ function cameraBox(t){
+   /* Interpolación geométrica: el acercamiento conserva una velocidad visual
+      mucho más uniforme que interpolar linealmente el ancho de la ventana. */
+   const w=Math.exp(mix(Math.log(start.w),Math.log(end.w),t));
+   const h=Math.exp(mix(Math.log(start.h),Math.log(end.h),t));
+   return{x:-w/2,y:-h/2,w,h};
+ }
+ function lightSetBox(b,heavy){
+   currentBox={...b};
+   svg.setAttribute('viewBox',`${b.x} ${b.y} ${b.w} ${b.h}`);
+   if(heavy){drawGrid(b);drawCurves(b)}
+   updateRunnerSize(b);
+ }
+ function frame(now){
+   const raw=Math.min(1,(now-began)/duration);
+   /* ease suave sin detenerse en ningún nivel */
+   const t=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2;
+   const box=cameraBox(t);
+   const heavy=(now-lastHeavy>145)||raw===1;
+   if(heavy)lastHeavy=now;
+   lightSetBox(box,heavy);
+   /* El recorrido de los puntos no queda atado al zoom. En particular,
+      para x·sin(1/x) la cámara deja más contexto visible mientras los puntos
+      siguen avanzando hasta quedar muy cerca del origen. */
+   const startMag=wide.w*.30;
+   const endMag=selected==='sin' ? .0048 : .0032;
+   const mag=Math.exp(mix(Math.log(startMag),Math.log(endMag),t));
+   const xl=-mag,xr=mag,yl=c.fn(xl),yr=c.fn(xr);
+   runnerL.setAttribute('cx',xl);runnerL.setAttribute('cy',yl);
+   runnerR.setAttribute('cx',xr);runnerR.setAttribute('cy',yr);
+   trailL.setAttribute('d',shortTrail(-1,mag,c.fn));trailR.setAttribute('d',shortTrail(1,mag,c.fn));
+   const level=1+Math.floor(raw*3.999);
+   zoomtag.textContent=raw<1?'Acercándonos a 0…':'Muy cerca de 0';
+   if(raw<1){requestAnimationFrame(frame)}else finish();
+ }
+ function finish(){
+   /* Mantener un instante la escena final antes de retirar los puntos ayuda
+      a que el estudiante perciba el último nivel de aproximación. */
+   setTimeout(()=>{
+     runnerL.setAttribute('opacity','0');runnerR.setAttribute('opacity','0');trailL.setAttribute('d','');trailR.setAttribute('d','');
+     animating=false;finishedAnim=true;play.disabled=false;play.textContent='↻';play.classList.add('replay');zoomtag.textContent='Muy cerca de 0';
+     cue.textContent=selected==='sin'?'Al ampliar, aparecen nuevas oscilaciones y su altura sigue siendo prácticamente la misma.':'Al ampliar alrededor de (0,0), las oscilaciones siguen apareciendo, pero quedan encerradas en una franja cada vez menor.';
+     qtitle.textContent='Según lo que observaste, ¿cuánto vale el límite cuando x → 0?';answer.classList.add('show')
+   },260);
+ }
+ requestAnimationFrame(frame)
+}
+play.addEventListener('click',()=>{if(finishedAnim){resetAnimation();setTimeout(animate,120)}else animate()});
+document.querySelectorAll('.choice').forEach(btn=>btn.addEventListener('click',()=>{if(!selected||!finishedAnim)return;const ok=btn.dataset.answer===cases[selected].answer;feedback.classList.remove('bad');if(ok){done.add(selected);$('#dot-'+selected).classList.add('done');document.querySelector('.chip[data-case="'+selected+'"]').classList.add('done');feedback.textContent=selected==='sin'?'Correcto. El zoom revela nuevas oscilaciones, pero su amplitud no se reduce: no aparece una única altura límite.':'Correcto. Las oscilaciones continúan, pero las envolventes y = ±|x| se cierran sobre 0; por eso el límite es 0.';feedback.classList.add('show');if(navigator.vibrate)navigator.vibrate(45);if(done.size===2)setTimeout(()=>win.classList.add('show'),850)}else{feedback.textContent='No todavía. Repite la animación y compara qué ocurre con la amplitud al profundizar el zoom.';feedback.classList.add('show','bad');if(navigator.vibrate)navigator.vibrate([20,40,20])}}));
+$('#again').addEventListener('click',()=>{done.clear();document.querySelectorAll('.dot,.chip').forEach(el=>el.classList.remove('done','active'));win.classList.remove('show');selected=null;formula.classList.remove('show');intro.classList.remove('hidden');play.disabled=true;play.textContent='▶';play.className='play';cue.textContent='Elige una gráfica para comenzar.';answer.classList.remove('show');feedback.classList.remove('show','bad');zoomtag.classList.remove('show');trailL.setAttribute('d','');trailR.setAttribute('d','');runnerL.setAttribute('opacity','0');runnerR.setAttribute('opacity','0');setBox(wide)});setBox(wide)})();
+</script></body></html>

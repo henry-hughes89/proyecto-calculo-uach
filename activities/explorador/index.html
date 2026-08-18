@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>LIM-01 · Explorador de límites · 01n</title>
+<style>
+:root{
+  --ink:#173044; --muted:#657783; --accent:#128596; --accent2:#f0a84f;
+  --ok:#15794d; --bad:#b84c44; --grid:#d7e5e8; --axis:#74878f;
+  --glass:rgba(247,252,252,.70); --glass-strong:rgba(250,253,253,.82);
+  --line:rgba(188,211,215,.72); --shadow:0 18px 52px rgba(23,48,68,.18);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 7% 1%,#dff5f7 0,transparent 34%),
+    radial-gradient(circle at 96% 4%,#fff0d7 0,transparent 30%),
+    #f7fafb;
+}
+main{height:100dvh;max-width:1100px;margin:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+header{flex:0 0 auto;padding:0 6px}
+.eyebrow{font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);font-weight:900}
+h1{font-size:clamp(1.35rem,4vw,2rem);line-height:1;margin:3px 0 0;letter-spacing:-.03em}
+.shell{flex:1;min-height:0;border:1px solid rgba(201,219,222,.88);border-radius:22px;background:rgba(255,255,255,.72);box-shadow:0 16px 55px rgba(23,48,68,.11);padding:8px;display:flex;flex-direction:column;overflow:hidden}
+.toolbar{flex:0 0 auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:0 0 7px}
+.toolbar-label{font-size:.72rem;font-weight:820;color:#415968;margin-right:2px}
+.chip{appearance:none;border:1px solid #cedcdf;background:rgba(255,255,255,.88);color:var(--ink);border-radius:999px;padding:6px 10px;font-size:.72rem;font-weight:820;cursor:pointer;transition:.2s ease;box-shadow:0 3px 10px rgba(23,48,68,.04)}
+.chip:hover{transform:translateY(-1px);border-color:var(--accent)}
+.chip.active{background:linear-gradient(135deg,#0f8493,#1b9ba8);border-color:transparent;color:#fff;box-shadow:0 8px 20px rgba(18,133,150,.25)}
+.chip.global{background:rgba(255,255,255,.88);border-color:#cedcdf}
+.chip.global.active{background:linear-gradient(135deg,#0f8493,#1b9ba8);border-color:transparent;color:#fff}
+.chip.done{background:linear-gradient(135deg,#e6f7ed,#d8f1e3);border-color:#a6d5bb;color:#126a43;box-shadow:0 5px 14px rgba(21,121,77,.12)}
+.chip.done::after{content:'Completado ✓';display:block;font-size:.48rem;line-height:1.05;margin-top:1px;font-weight:900;letter-spacing:.01em}
+.chip.done.active{background:linear-gradient(135deg,#dff5e8,#cdebd9);color:#0f6540;border-color:#8ecaaa}
+.stage{position:relative;flex:1;min-height:0;border-radius:18px;overflow:hidden;border:1px solid #d4e3e6;background:#fbfefe}
+svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
+.grid{stroke:var(--grid);stroke-width:.032}.axis{stroke:var(--axis);stroke-width:.058}.curve{fill:none;stroke:#213d4d;stroke-width:.112;stroke-linecap:round;stroke-linejoin:round}
+.open-dot{fill:#fff;stroke:#213d4d;stroke-width:.09}.closed-dot{fill:#213d4d}.trace{fill:none;stroke:var(--accent2);stroke-width:.13;stroke-linecap:round;stroke-linejoin:round}.runner{fill:var(--accent2);stroke:#fff;stroke-width:.07;filter:drop-shadow(0 0 .15px rgba(0,0,0,.45))}
+.a-line{stroke:var(--accent);stroke-width:.075;stroke-dasharray:.19 .13;opacity:0}.a-label,.h-label{font-size:.44px;font-weight:900;fill:#0e6674;opacity:0}.h-line{stroke:#a36f29;stroke-width:.07;stroke-dasharray:.2 .15;opacity:0}.h-label{fill:#865d23;text-anchor:start}
+
+/* Mensaje inicial */
+.intro{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:min(84%,430px);padding:16px 18px;border:1px solid rgba(199,220,224,.48);border-radius:20px;background:rgba(247,252,252,.36);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--shadow);text-align:center;transition:.25s ease;z-index:5}
+.intro.hidden{opacity:0;pointer-events:none;transform:translate(-50%,-46%)}.intro strong{font-size:1rem}.intro p{font-size:.78rem;line-height:1.4;color:#496170;margin:7px 0 0}
+
+/* Barra de control: selector lateral + un único play */
+.controlbar{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;padding:7px 9px 6px;border:1px solid rgba(198,217,221,.75);border-radius:24px;background:rgba(248,252,252,.58);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 12px 34px rgba(23,48,68,.16);z-index:6;opacity:0;pointer-events:none;transition:.22s ease}
+.controlbar.show{opacity:1;pointer-events:auto}.controlbar.guide-glow{animation:guideGlow 1.25s ease-in-out infinite}
+@keyframes guideGlow{0%,100%{box-shadow:0 12px 34px rgba(23,48,68,.16),0 0 0 0 rgba(18,133,150,.10)}50%{box-shadow:0 16px 42px rgba(18,133,150,.28),0 0 0 10px rgba(18,133,150,.12);border-color:rgba(93,190,202,.92)}}.controlrow{display:flex;align-items:center;gap:7px}.nextcue{font-size:.62rem;font-weight:820;color:#496573;text-align:center;max-width:260px;line-height:1.2;min-height:.8rem;transition:.2s}.nextcue strong{color:#0b7584}.sidebtn{appearance:none;border:1px solid rgba(196,214,219,.9);background:rgba(255,255,255,.76);border-radius:999px;padding:8px 11px;font-size:.71rem;font-weight:820;color:#526976;cursor:pointer;transition:.18s ease;white-space:nowrap}.sidebtn.active{color:#0c6774;border-color:#70c0ca;background:rgba(225,247,249,.88);box-shadow:inset 0 0 0 1px rgba(18,133,150,.07)}.sidebtn.done{color:var(--ok);border-color:#a8d6bd;background:rgba(236,249,241,.90)}.sidebtn.done::after{content:' ✓'}
+.playbtn{appearance:none;border:0;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:1.35rem;cursor:pointer;background:linear-gradient(145deg,#0f8493,#18a0ad);color:white;box-shadow:0 8px 22px rgba(18,133,150,.33),inset 0 1px 0 rgba(255,255,255,.35);transition:.18s ease}.playbtn:active{transform:scale(.95)}.playbtn:disabled{opacity:.32;filter:grayscale(.3);cursor:default}.playbtn.ready{animation:pulse 1.35s ease-in-out infinite}.playbtn.replay{background:linear-gradient(145deg,#324d5c,#526c78);animation:none}
+@keyframes pulse{0%,100%{box-shadow:0 8px 22px rgba(18,133,150,.28),0 0 0 0 rgba(18,133,150,.28)}50%{box-shadow:0 10px 28px rgba(18,133,150,.42),0 0 0 10px rgba(18,133,150,0)}}
+
+.formula-pill{position:absolute;left:12px;top:12px;padding:7px 10px;border-radius:12px;border:1px solid rgba(199,218,222,.72);background:rgba(248,252,252,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-size:1.08rem;z-index:4;opacity:0;transition:.2s ease;pointer-events:none}.formula-pill.show{opacity:1}.formula-pill math,.bilateral-label math{font-family:"STIX Two Math","Cambria Math","Times New Roman",serif;font-size:1.08em}.mathprompt{display:flex;align-items:center;gap:.25em}.answer-title math{font-family:"STIX Two Math","Cambria Math","Times New Roman",serif;font-size:1em}
+
+/* Respuesta compacta y transparente */
+.answerpanel{position:absolute;right:10px;top:10px;width:min(310px,78%);padding:10px;border-radius:17px;border:1px solid rgba(193,214,218,.72);background:rgba(247,252,252,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 15px 38px rgba(23,48,68,.16);z-index:8;opacity:0;pointer-events:none;transform:translateY(-8px);transition:.22s ease}.answerpanel.show{opacity:1;pointer-events:auto;transform:none}.answer-title{font-size:.74rem;font-weight:880;margin-bottom:7px}.answerline{display:flex;gap:6px}.answer-display{height:38px;min-width:0;flex:1;border:1px solid rgba(191,211,215,.86);border-radius:10px;background:rgba(255,255,255,.55);display:flex;align-items:center;padding:7px 9px;font-family:"STIX Two Math","Cambria Math",serif;font-size:1rem}.answer-display.empty{font-family:Inter,system-ui,sans-serif;font-size:.72rem;color:#86969e}.check{appearance:none;border:0;border-radius:10px;padding:0 11px;background:linear-gradient(135deg,#0f8493,#1598a6);color:#fff;font-weight:850;font-size:.7rem;cursor:pointer}.check:disabled{opacity:.35}
+.pad{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:6px}.key{appearance:none;min-height:31px;border:1px solid rgba(197,214,218,.86);border-radius:9px;background:rgba(255,255,255,.62);font-weight:820;color:var(--ink);font-size:.74rem;cursor:pointer}.key.special{background:rgba(227,246,248,.76);color:#0c6774}.key.wide{grid-column:span 2}.key.noexist{grid-column:span 2}
+
+
+/* Notación matemática compacta tipo LaTeX */
+.limitmath{display:inline-flex;align-items:center;gap:.20em;font-family:Georgia,"Times New Roman",serif;color:var(--ink);line-height:1;white-space:nowrap}
+.limitmath .limstack{display:inline-flex;flex-direction:column;align-items:center;line-height:.76;transform:translateY(.08em)}
+.limitmath .limword{font-size:1.16em;font-style:normal}
+.limitmath .limsub{font-size:.50em;letter-spacing:-.02em;margin-top:.20em}
+.limitmath .fx{font-size:1.12em;font-style:italic}.limitmath sup{font-size:.68em;vertical-align:.42em;margin-left:.03em}.limitmath .eq{font-family:Georgia,"Times New Roman",serif;font-size:1.02em;margin-left:.05em}
+.answer-title .limitmath{font-size:1.03em;margin-left:.12em;vertical-align:middle}.formula-pill .limitmath{font-size:1.08em}.bilateral-label .limitmath{font-size:1.13em}
+.key.noexist{line-height:1.02}.key.noexist small{display:block;font-size:.49rem;font-weight:700;color:#4c7880;margin-top:2px}
+.victory{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%) scale(.82);z-index:14;display:flex;align-items:center;gap:9px;padding:10px 15px;border-radius:999px;background:rgba(232,249,239,.86);border:1px solid rgba(126,201,157,.88);box-shadow:0 16px 42px rgba(21,121,77,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#116a43;font-weight:900;font-size:.8rem;opacity:0;pointer-events:none}.victory.show{animation:victoryPop .85s cubic-bezier(.2,.9,.25,1)}.victory .vcheck{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#168554;color:white;font-size:1rem;box-shadow:0 0 0 0 rgba(22,133,84,.25)}
+@keyframes victoryPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.72)}22%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-55%) scale(.98)}}
+.stage.winflash{animation:winFlash .65s ease}
+@keyframes winFlash{0%,100%{box-shadow:none}40%{box-shadow:inset 0 0 0 3px rgba(38,164,104,.20),inset 0 0 50px rgba(38,164,104,.08)}}
+
+/* Feedback en esquina; se cierra tocando fuera */
+.toast{position:absolute;left:10px;bottom:76px;top:auto;width:min(285px,72%);padding:10px 11px;border-radius:14px;border:1px solid rgba(198,216,220,.72);background:rgba(247,252,252,.68);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 14px 35px rgba(23,48,68,.14);font-size:.72rem;line-height:1.38;z-index:9;opacity:0;pointer-events:none;transform:translateY(-7px);transition:.2s ease}.toast.show{opacity:1;pointer-events:auto;transform:none}.toast.ok{border-color:rgba(158,209,181,.82);color:#0d6940}.toast.bad{border-color:rgba(232,184,179,.85);color:#923831}.toast strong{color:inherit}
+
+/* Bilateral: mismo panel, no scroll */
+.compare-mini{display:flex;gap:5px;margin:0 0 6px}.resultbadge{flex:1;border:1px solid rgba(194,214,218,.82);border-radius:9px;padding:5px 6px;background:rgba(255,255,255,.52);text-align:center;font-size:.66rem}.resultbadge b{display:block;font-family:"STIX Two Math","Cambria Math",serif;font-size:.96rem;margin-top:1px}.bilateral-label{font-family:"STIX Two Math","Cambria Math",serif;font-size:.95rem;margin-bottom:5px}
+
+/* Micro-check general */
+.status{position:absolute;right:12px;bottom:74px;display:flex;gap:5px;z-index:5;pointer-events:none}.dotstatus{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:.68rem;font-weight:900;background:rgba(255,255,255,.6);border:1px solid rgba(196,214,218,.8);color:#809098;backdrop-filter:blur(6px)}.dotstatus.done{background:rgba(232,248,239,.82);border-color:#a6d5bb;color:var(--ok)}
+
+
+/* Logro final */
+.finalwin{position:absolute;inset:0;z-index:30;display:grid;place-items:center;padding:18px;background:rgba(20,35,45,.18);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);opacity:0;pointer-events:none;transition:.32s ease}.finalwin.show{opacity:1;pointer-events:auto}.finalcard{width:min(430px,88%);padding:22px 20px 18px;border-radius:24px;text-align:center;background:linear-gradient(145deg,rgba(255,252,235,.94),rgba(255,246,210,.91));border:1px solid rgba(205,164,67,.55);box-shadow:0 22px 70px rgba(90,66,20,.28),0 0 0 1px rgba(255,255,255,.55) inset;transform:translateY(12px) scale(.94);transition:.36s cubic-bezier(.2,.9,.25,1)}.finalwin.show .finalcard{transform:none}.finalmedal{width:64px;height:64px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;font-size:1.8rem;background:linear-gradient(145deg,#f8d877,#c9982f);color:#fff7dd;box-shadow:0 10px 28px rgba(174,126,34,.32),inset 0 2px 0 rgba(255,255,255,.45);animation:medalPop .7s cubic-bezier(.2,.9,.25,1)}@keyframes medalPop{0%{transform:scale(.35) rotate(-16deg);opacity:0}65%{transform:scale(1.12) rotate(4deg)}100%{transform:scale(1);opacity:1}}.finalcard h2{margin:0;font-size:1.35rem;letter-spacing:-.02em;color:#6d5015}.finalcard p{margin:8px auto 14px;max-width:330px;font-size:.78rem;line-height:1.4;color:#675d49}.finalactions{display:flex;justify-content:center;gap:8px}.finalbtn{appearance:none;border:1px solid rgba(177,143,66,.42);border-radius:999px;padding:9px 14px;background:rgba(255,255,255,.64);color:#6a531f;font-size:.72rem;font-weight:850;cursor:pointer}.finalbtn:hover{background:#fff}.goldflash{animation:goldFlash .9s ease}@keyframes goldFlash{0%,100%{box-shadow:inset 0 0 0 rgba(237,190,71,0)}45%{box-shadow:inset 0 0 90px rgba(237,190,71,.22)}}
+
+@media(min-width:700px){main{padding:14px}.toolbar-label{font-size:.8rem}.chip{font-size:.78rem;padding:7px 12px}.answerpanel{width:330px}.toast{font-size:.78rem}}
+@media(max-width:430px){main{padding:6px;gap:5px}header{padding:0 4px}.eyebrow{font-size:.54rem}h1{font-size:1.22rem}.shell{padding:6px;border-radius:17px}.toolbar{gap:4px;padding-bottom:5px}.toolbar-label{width:100%;font-size:.64rem}.chip{font-size:.66rem;padding:5px 8px}.stage{border-radius:14px}.controlbar{bottom:7px;padding:5px 7px;gap:4px}.sidebtn{font-size:.64rem;padding:7px 8px}.playbtn{width:43px;height:43px;font-size:1.15rem}.formula-pill{left:7px;top:7px;font-size:.93rem;padding:5px 8px}.answerpanel{top:7px;right:7px;width:min(294px,82%);padding:8px}.pad{gap:4px}.key{min-height:29px;font-size:.69rem}.toast{bottom:62px;top:auto;left:7px;width:min(250px,66%);font-size:.68rem}.status{bottom:64px;right:8px}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Explorador de límites</h1></header>
+<section class="shell">
+  <div class="toolbar"><span class="toolbar-label">¿Qué límite quieres analizar?</span>
+    <button class="chip" data-target="-3">x → −3</button><button class="chip" data-target="0">x → 0</button><button class="chip" data-target="2">x → 2</button><button class="chip" data-target="4">x → 4</button>
+    <button class="chip global" data-target="neginf">x → −∞</button><button class="chip global" data-target="posinf">x → +∞</button>
+  </div>
+  <div class="stage" id="stage">
+    <svg id="graph" viewBox="-6 -6 13 12" aria-label="Gráfica interactiva de una función por tramos">
+      <g id="viewport" transform="scale(1,-1)">
+        <defs><pattern id="gridPattern" width="1" height="1" patternUnits="userSpaceOnUse"><path d="M 1 0 L 0 0 0 1" fill="none" stroke="#d7e5e8" stroke-width=".032"/></pattern></defs>
+        <rect x="-10000" y="-10000" width="20000" height="20000" fill="url(#gridPattern)"></rect>
+        <line x1="-10000" x2="10000" y1="0" y2="0" class="axis"></line><line x1="0" x2="0" y1="-10000" y2="10000" class="axis"></line>
+        <path id="p1" class="curve"></path><path id="p2" class="curve"></path><path id="p3" class="curve"></path><path id="p4" class="curve"></path><path id="p5" class="curve"></path>
+        <circle class="open-dot" cx="-3" cy="2" r=".14"></circle><circle class="closed-dot" cx="-3" cy="0" r=".14"></circle>
+        <circle class="open-dot" cx="0" cy="1" r=".14"></circle><circle class="closed-dot" cx="0" cy="3" r=".14"></circle>
+        <line id="aline" class="a-line" x1="-3" x2="-3" y1="-10000" y2="10000"></line>
+        <line id="hline" class="h-line" x1="-10000" x2="10000" y1="-2" y2="-2"></line>
+        <path id="trace" class="trace"></path><circle id="runner" class="runner" r=".15" opacity="0"></circle>
+      </g>
+      <text id="alabel" class="a-label">x = a</text><text id="hlabel" class="h-label">y = −2</text>
+    </svg>
+
+    <div id="intro" class="intro"><strong>¿Qué límite quieres analizar?</strong><p>Selecciona uno de los límites de arriba. Después la interfaz te indicará el siguiente paso.</p></div>
+    <div id="formula" class="formula-pill"></div>
+
+    <div id="controlbar" class="controlbar">
+      <div class="controlrow">
+        <button id="leftSide" class="sidebtn">x → ·⁻</button>
+        <button id="play" class="playbtn" disabled aria-label="Reproducir">▶</button>
+        <button id="rightSide" class="sidebtn">x → ·⁺</button>
+      </div>
+      <div id="nextCue" class="nextcue"></div>
+    </div>
+
+    <div id="answerpanel" class="answerpanel">
+      <div id="answerTitle" class="answer-title">Selecciona tu resultado</div>
+      <div id="compareMini" class="compare-mini" style="display:none"><div class="resultbadge">Izquierda<b id="leftVal">—</b></div><div class="resultbadge">Derecha<b id="rightVal">—</b></div></div>
+      <div id="bilateralLabel" class="bilateral-label" style="display:none"></div>
+      <div class="answerline"><div id="answer" class="answer-display empty">Tu resultado</div><button id="check" class="check">Comprobar</button></div>
+      <div id="pad" class="pad"></div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <div id="victory" class="victory"><span class="vcheck">✓</span><span id="victoryText">¡Correcto!</span></div>
+
+    <div id="finalwin" class="finalwin" aria-hidden="true">
+      <div class="finalcard">
+        <div class="finalmedal">★</div>
+        <h2>¡Laboratorio completado!</h2>
+        <p>Resolviste correctamente todos los límites de esta gráfica. Ya exploraste comportamientos laterales, infinitos y una asíntota horizontal.</p>
+        <div class="finalactions"><button id="exploreAgain" class="finalbtn">Volver a explorar</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg';
+const svg=document.getElementById('graph'), stage=document.getElementById('stage');
+const trace=document.getElementById('trace'),runner=document.getElementById('runner'),aline=document.getElementById('aline'),alabel=document.getElementById('alabel'),hline=document.getElementById('hline'),hlabel=document.getElementById('hlabel');
+const intro=document.getElementById('intro'),formula=document.getElementById('formula'),controlbar=document.getElementById('controlbar'),leftSide=document.getElementById('leftSide'),rightSide=document.getElementById('rightSide'),play=document.getElementById('play'),nextCue=document.getElementById('nextCue'),answerpanel=document.getElementById('answerpanel'),answer=document.getElementById('answer'),check=document.getElementById('check'),toast=document.getElementById('toast'),victory=document.getElementById('victory'),victoryText=document.getElementById('victoryText');
+const compareMini=document.getElementById('compareMini'),leftVal=document.getElementById('leftVal'),rightVal=document.getElementById('rightVal'),bilateralLabel=document.getElementById('bilateralLabel'),answerTitle=document.getElementById('answerTitle');
+const finalwin=document.getElementById('finalwin'),exploreAgain=document.getElementById('exploreAgain');
+
+const W=13,H=12;
+let camX=.5,camY=0;
+function setCamera(cx=.5,cy=0){camX=cx;camY=cy;const xmin=cx-W/2,ymin=-cy-H/2;svg.setAttribute('viewBox',`${xmin} ${ymin} ${W} ${H}`);alabel.setAttribute('y',ymin+.55);hlabel.setAttribute('x',xmin+.62);hlabel.setAttribute('y',2.58)}
+function smoothCamera(tx,ty,a=.18){setCamera(camX+(tx-camX)*a,camY+(ty-camY)*a)}
+function restoreScene(clearPath=true){const sx=camX,sy=camY,start=performance.now(),dur=430;function frame(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p);setCamera(sx+(.5-sx)*e,sy*(1-e));if(p<1)requestAnimationFrame(frame);else{setCamera(.5,0);if(clearPath){trace.setAttribute('d','');runner.setAttribute('opacity','0')}}}requestAnimationFrame(frame)}
+function sample(id,fn,x0,x1,steps=900,warp='none'){let d='',pen=false;for(let i=0;i<=steps;i++){const t=i/steps;let q=t;if(warp==='left')q=t*t*t;else if(warp==='right')q=1-Math.pow(1-t,3);else if(warp==='both')q=(1-Math.cos(Math.PI*t))/2;const x=x0+(x1-x0)*q,y=fn(x);if(!Number.isFinite(y)||Math.abs(y)>5000){pen=false;continue}d+=(pen?'L':'M')+x.toFixed(5)+' '+y.toFixed(5)+' ';pen=true}document.getElementById(id).setAttribute('d',d)}
+const fns={p1:x=>-.5*x+.5,p2:x=>1-x/3,p3:x=>2.5+1/(2-x),p4:x=>1/(x-2)-1/(4-x),p5:x=>-2+3/(x-4)};
+sample('p1',fns.p1,-60,-3.02,1200);sample('p2',fns.p2,-2.98,-.02,1000);sample('p3',fns.p3,0,1.9993,2400,'right');sample('p4',fns.p4,2.0007,3.9993,4200,'both');sample('p5',fns.p5,4.0007,70,3200,'left');
+const cases={
+ '-3':{left:{kind:'finite',value:2,fn:fns.p1,start:-5.2},right:{kind:'finite',value:2,fn:fns.p2,start:-1.2},bilateral:{kind:'finite',value:2}},
+ '0':{left:{kind:'finite',value:1,fn:fns.p2,start:-1.5},right:{kind:'finite',value:3,fn:fns.p3,start:.8},bilateral:{kind:'none'}},
+ '2':{left:{kind:'posinf',fn:fns.p3,start:1.0},right:{kind:'posinf',fn:fns.p4,start:2.55},bilateral:{kind:'posinf'}},
+ '4':{left:{kind:'neginf',fn:fns.p4,start:3.45},right:{kind:'posinf',fn:fns.p5,start:4.55},bilateral:{kind:'none'}}
+};
+const globals={neginf:{kind:'posinf',fn:fns.p1,start:-4.2,end:-34,label:'−∞'},posinf:{kind:'finite',value:-2,fn:fns.p5,start:5.1,end:42,label:'+∞',horizontal:-2}};
+let target=null,selected=null,chosenSide=null,answered={left:false,right:false,bilateral:false},mode='idle',answerValue='',timer=null,animating=false,lastAnimation=null;
+const completedTargets=new Set();
+
+const TOTAL_TARGETS=6;
+let finalShown=false;
+function checkFinalAchievement(){
+  if(finalShown||completedTargets.size<TOTAL_TARGETS)return;
+  finalShown=true;
+  setTimeout(()=>{
+    toast.className='toast';
+    answerpanel.classList.remove('show');
+    controlbar.classList.remove('guide-glow');
+    stage.classList.remove('goldflash');void stage.offsetWidth;stage.classList.add('goldflash');
+    finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false');
+    if(navigator.vibrate){try{navigator.vibrate([55,45,70,45,110])}catch(e){}}
+  },650);
+}
+exploreAgain.onclick=()=>{finalwin.classList.remove('show');finalwin.setAttribute('aria-hidden','true')};
+
+function mathLimit(sub){
+  const clean=sub.replaceAll('−','-');
+  const m=clean.match(/^x → (.+?)([⁻⁺])?$/);
+  let dest=m?m[1]:clean.replace(/^x → /,'');
+  let side=m&&m[2]?m[2]:'';
+  let d=dest==='-∞'?'−∞':dest==='+∞'?'+∞':dest.replace('-', '−');
+  if(side)d+=`<sup>${side==='⁻'?'−':'+'}</sup>`;
+  return `<span class="limitmath"><span class="limstack"><span class="limword">lim</span><span class="limsub"><i>x</i> → ${d}</span></span><span class="fx">f(x)</span></span>`;
+}
+function promptLimit(){
+  if(target==='neginf')return mathLimit('x → −∞');
+  if(target==='posinf')return mathLimit('x → +∞');
+  if(selected!==null&&chosenSide)return mathLimit(`x → ${String(selected).replace('-','−')}${chosenSide==='left'?'⁻':'⁺'}`);
+  if(selected!==null)return mathLimit(`x → ${String(selected).replace('-','−')}`);
+  return '';
+}
+function setCue(text,em=false){nextCue.innerHTML=em?`<strong>${text}</strong>`:text}
+function celebrate(text='¡Correcto!',big=false){
+  victoryText.textContent=text; victory.classList.remove('show'); void victory.offsetWidth; victory.classList.add('show');
+  stage.classList.remove('winflash'); void stage.offsetWidth; stage.classList.add('winflash');
+  if(navigator.vibrate){try{navigator.vibrate(big?[35,45,35]:25)}catch(e){}}
+}
+function pretty(spec){if(spec.kind==='finite')return String(spec.value).replace('-', '−');if(spec.kind==='posinf')return '+∞';if(spec.kind==='neginf')return '−∞';return 'No existe'}
+function renderAnswer(){answer.textContent=answerValue||'Tu resultado';answer.classList.toggle('empty',!answerValue);updateNoExistKey()}
+function resetUI(){if(timer){clearInterval(timer);timer=null}animating=false;trace.setAttribute('d','');runner.setAttribute('opacity','0');answerpanel.classList.remove('show');toast.className='toast';toast.textContent='';compareMini.style.display='none';bilateralLabel.style.display='none';answerValue='';renderAnswer();answered={left:false,right:false,bilateral:false};chosenSide=null;lastAnimation=null;mode='idle';play.textContent='▶';play.classList.remove('replay');play.disabled=true;leftSide.className='sidebtn';rightSide.className='sidebtn';setCamera(.5,0);hline.style.opacity=0;hlabel.style.opacity=0;setCue('')}
+function moveALine(to){const from=parseFloat(aline.getAttribute('x1'))||to,start=performance.now(),dur=380;aline.style.opacity=1;alabel.style.opacity=1;function step(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p),x=from+(to-from)*e;aline.setAttribute('x1',x);aline.setAttribute('x2',x);alabel.setAttribute('x',x+.12);if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)}
+function setTarget(t){
+  resetUI();target=t;intro.classList.add('hidden');
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.target===t));
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('done',completedTargets.has(c.dataset.target)));
+  controlbar.classList.add('show','guide-glow');
+  if(t==='neginf'||t==='posinf'){
+    selected=null;leftSide.style.display='none';rightSide.style.display='none';play.disabled=false;play.classList.add('ready');formula.classList.add('show');formula.innerHTML=`${mathLimit(t==='neginf'?'x → −∞':'x → +∞')} <span class="eq">= ?</span>`;aline.style.opacity=0;alabel.style.opacity=0;
+    if(t==='posinf'){hline.style.opacity=1;hlabel.style.opacity=1}else{hline.style.opacity=0;hlabel.style.opacity=0}
+    setCue('Pulsa ▶ para observar la aproximación.',true)
+  }else{
+    selected=Number(t);leftSide.style.display='';rightSide.style.display='';
+    const n=String(selected).replace('-','−'); leftSide.textContent=`x → ${n}⁻`; rightSide.textContent=`x → ${n}⁺`;
+    moveALine(selected);alabel.textContent=`x = ${n}`;formula.classList.remove('show');formula.innerHTML='';play.disabled=true;play.classList.remove('ready');
+    setCue('Elige uno de los dos límites laterales para comenzar.',true)
+  }
+}
+function chooseSide(s){if(animating||selected===null)return;controlbar.classList.remove('guide-glow');chosenSide=s;leftSide.classList.toggle('active',s==='left');rightSide.classList.toggle('active',s==='right');play.disabled=false;play.classList.add('ready');play.classList.remove('replay');play.textContent='▶';lastAnimation=null;formula.innerHTML=`${mathLimit(`x → ${String(selected).replace('-','−')}${s==='left'?'⁻':'⁺'}`)} <span class="eq">= ?</span>`;answerpanel.classList.remove('show');setCue('Ahora pulsa ▶ para observar la aproximación.',true)}
+leftSide.onclick=()=>chooseSide('left');rightSide.onclick=()=>chooseSide('right');
+
+function localSequence(a,s,spec){const dir=s==='left'?-1:1,dist=Math.abs(spec.start-a),inf=spec.kind==='posinf'||spec.kind==='neginf',steps=inf?160:90,minDelta=inf?.0025:.028,arr=[];for(let i=0;i<steps;i++){const t=i/(steps-1),e=1-Math.pow(1-t,3.0),delta=dist*(1-e)+minDelta*e;arr.push(a+dir*delta)}return arr}
+function globalSequence(spec){const arr=[],steps=185;for(let i=0;i<steps;i++){const t=i/(steps-1),e=t*t*(3-2*t);arr.push(spec.start+(spec.end-spec.start)*e)}return arr}
+function followVertical(y){if(y>4)smoothCamera(.5,y-3.1,.20);else if(y<-4)smoothCamera(.5,y+3.1,.20)}
+function followGlobal(x,y,p,spec){const dir=Math.sign(spec.end-spec.start)||1;let tx=.5;if(p<.72){if(x>5)tx=x-4.0;if(x<-5)tx=x+4.0}else if(p<.84){const freeze=spec.end-dir*7.1,q=(p-.72)/.12,follow=x-dir*4;tx=follow+(freeze-follow)*q}else{tx=spec.end-dir*7.1}let ty=0;if(y>4.2)ty=y-3.2;if(y<-4.2)ty=y+3.2;smoothCamera(tx,ty,p>.84?.34:.18)}
+function finishAnimation(kind){if(timer){clearInterval(timer);timer=null}animating=false;play.disabled=false;play.classList.remove('ready');play.classList.add('replay');play.textContent='↻';mode='answer';answerValue='';renderAnswer();answerTitle.innerHTML=`¿Cuánto vale ${promptLimit()}, según lo que observaste?`;answerpanel.classList.add('show');setCue('Selecciona tu resultado o pulsa ↻ para repetir la animación.')}
+function runLocal(s){if(animating)return;controlbar.classList.remove('guide-glow');answerpanel.classList.remove('show');toast.className='toast';animating=true;lastAnimation={type:'local',side:s};play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';trace.setAttribute('d','');runner.setAttribute('opacity','1');setCamera(.5,0);const spec=cases[selected][s],inf=spec.kind==='posinf'||spec.kind==='neginf',seq=localSequence(selected,s,spec);let i=0,path='';const draw=()=>{if(i>=seq.length){finishAnimation('side');return}const x=seq[i++],y=spec.fn(x);if(!Number.isFinite(y)){finishAnimation('side');return}if(inf)followVertical(y);runner.setAttribute('cx',x);runner.setAttribute('cy',y);path+=(path?'L':'M')+x.toFixed(4)+' '+y.toFixed(4)+' ';trace.setAttribute('d',path);if(inf && i>seq.length*.94)runner.setAttribute('opacity',String(Math.max(0,1-(i/seq.length-.94)/.06)))};draw();timer=setInterval(draw,inf?24:28)}
+function runGlobal(){if(animating)return;controlbar.classList.remove('guide-glow');answerpanel.classList.remove('show');toast.className='toast';animating=true;lastAnimation={type:'global'};play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';trace.setAttribute('d','');runner.setAttribute('opacity','1');setCamera(.5,0);const spec=globals[target],seq=globalSequence(spec);let i=0,path='';const draw=()=>{if(i>=seq.length){finishAnimation('side');return}const x=seq[i++],y=spec.fn(x),p=i/seq.length;followGlobal(x,y,p,spec);runner.setAttribute('cx',x);runner.setAttribute('cy',y);path+=(path?'L':'M')+x.toFixed(4)+' '+y.toFixed(4)+' ';trace.setAttribute('d',path)};draw();timer=setInterval(draw,25)}
+play.onclick=()=>{if(play.classList.contains('replay')&&lastAnimation){if(lastAnimation.type==='global')runGlobal();else runLocal(lastAnimation.side);return}if(target==='neginf'||target==='posinf')runGlobal();else if(chosenSide)runLocal(chosenSide)};
+
+
+function updateNoExistKey(){const b=document.getElementById('noexistKey');if(!b)return;if(mode==='bilateral')b.innerHTML='<span>No existe</span><small>límites laterales distintos</small>';else b.innerHTML='<span>No existe</span>'}
+
+function normalize(s){return s.trim().toLowerCase().replaceAll(' ','').replaceAll('−','-').replace('infinito','inf').replace('infinity','inf').replace('∞','inf').normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+function parseNumeric(n){const t=n.replace(',','.');if(/^[-+]?\d*\.?\d+$/.test(t))return Number(t);const m=t.match(/^([-+]?\d*\.?\d+)\/([-+]?\d*\.?\d+)$/);if(m&&Number(m[2])!==0)return Number(m[1])/Number(m[2]);return NaN}
+function correct(raw,spec){const n=normalize(raw);if(spec.kind==='finite'){const x=parseNumeric(n);return Number.isFinite(x)&&Math.abs(x-spec.value)<1e-7}if(spec.kind==='posinf')return n==='inf'||n==='+inf';if(spec.kind==='neginf')return n==='-inf';return ['noexiste','ne','nohaylimite'].includes(n)}
+function showToast(text,ok=true){toast.innerHTML=text;toast.className='toast show '+(ok?'ok':'bad')}
+function markSide(s){answered[s]=true;(s==='left'?leftSide:rightSide).classList.add('done')}
+function showBilateral(){toast.className='toast';mode='bilateral';answerValue='';renderAnswer();answerTitle.textContent='Compara los límites laterales';compareMini.style.display='flex';leftVal.textContent=pretty(cases[selected].left);rightVal.textContent=pretty(cases[selected].right);bilateralLabel.style.display='block';bilateralLabel.innerHTML=`${mathLimit(`x → ${String(selected).replace('-','−')}`)} <span class="eq">= ?</span>`;answerpanel.classList.add('show');play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';formula.innerHTML=`${mathLimit(`x → ${String(selected).replace('-','−')}`)} <span class="eq">= ?</span>`;setCue('Compara ambos límites laterales y elige la conclusión.')}
+check.onclick=()=>{if(!answerValue)return;let spec;if(mode==='bilateral')spec=cases[selected].bilateral;else if(target==='neginf'||target==='posinf')spec=globals[target];else spec=cases[selected][chosenSide];if(correct(answerValue,spec)){if(mode==='bilateral'){answered.bilateral=true;answerpanel.classList.remove('show');restoreScene(true);celebrate('¡Caso completado!',true);showToast('<strong>¡Completado!</strong> Has resuelto correctamente los dos laterales y el límite bilateral.');const chip=document.querySelector(`.chip[data-target="${target}"]`);if(chip){chip.classList.add('done');completedTargets.add(target);checkFinalAchievement()}play.disabled=true}else if(target==='neginf'||target==='posinf'){answerpanel.classList.remove('show');restoreScene(true);celebrate('¡Caso completado!',true);showToast(spec.horizontal!==undefined?`<strong>¡Completado!</strong> La gráfica se aproxima a <i>y</i> = ${spec.horizontal}; esa recta es una asíntota horizontal.`:`<strong>¡Completado!</strong> Has identificado correctamente el comportamiento cuando <i>x</i> se aleja.`);const chip=document.querySelector(`.chip[data-target="${target}"]`);if(chip){chip.classList.add('done');completedTargets.add(target);checkFinalAchievement()}}else{markSide(chosenSide);answerpanel.classList.remove('show');restoreScene(true);celebrate('¡Límite lateral logrado!');showToast(`<strong>Correcto.</strong> ${chosenSide==='left'?'Lateral izquierdo':'Lateral derecho'} completado.`);if(answered.left&&answered.right){setTimeout(()=>{toast.className='toast';showBilateral()},900)}else{chosenSide=null;leftSide.classList.remove('active');rightSide.classList.remove('active');play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';formula.classList.remove('show');formula.innerHTML='';controlbar.classList.add('guide-glow');setCue('Elige el límite lateral que falta.',true)}}}else{if(mode==='bilateral'&&answerValue==='No existe'&&(spec.kind==='posinf'||spec.kind==='neginf')){showToast(`<strong>Revisa la opción.</strong> Los dos límites laterales tienen el mismo comportamiento ${pretty(spec)}. Aquí debes seleccionar ese comportamiento; «No existe» se reserva en este ejercicio para laterales distintos.`,false)}else{showToast('<strong>Intenta otra vez.</strong> Repite la animación y observa hacia qué altura —o comportamiento— se dirige el punto.',false)}}};
+
+function addKey(k,cls=''){const b=document.createElement('button');b.type='button';b.className='key '+cls;if(k==='No existe'){b.id='noexistKey';b.innerHTML='<span>No existe</span>'}else b.textContent=k;b.onclick=e=>{e.stopPropagation();if(k==='C')answerValue='';else if(k==='⌫')answerValue=answerValue.slice(0,-1);else if(['+∞','−∞','No existe'].includes(k))answerValue=k;else if(k==='−'){if(!answerValue.startsWith('−')&&!answerValue.startsWith('-'))answerValue='−'+answerValue}else if((k==='.'||k==='/')&&answerValue.includes(k))return;else answerValue+=k;renderAnswer()};document.getElementById('pad').appendChild(b)}
+['1','2','3','4','5','6','7','8','9','0','−','.','/','⌫','C'].forEach(k=>addKey(k));addKey('+∞','special');addKey('−∞','special');addKey('No existe','special noexist');
+
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{if(animating)return;setTarget(c.dataset.target)});
+stage.addEventListener('pointerdown',e=>{if(e.target.closest('.answerpanel,.toast,.controlbar,.chip'))return;if(toast.classList.contains('show'))toast.className='toast'});
+setCamera(.5,0);
+</script>
+</body>
+</html>
