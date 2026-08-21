@@ -1,7 +1,241 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LIM-01 · Laboratorio interactivo</title><style>
-:root{--ink:#173044;--muted:#647985;--accent:#128596}*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 2%,#dff6f8 0,transparent 35%),radial-gradient(circle at 96% 2%,#fff0d8 0,transparent 30%),#f5fafb}.home{min-height:100dvh;max-width:1120px;margin:auto;padding:32px 22px}.eyebrow{font-size:.72rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}h1{font-size:clamp(2.2rem,6vw,4.3rem);line-height:.95;letter-spacing:-.05em;margin:8px 0 12px}.lead{color:var(--muted);max-width:720px;line-height:1.5;font-size:1.03rem}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:30px}.card{position:relative;text-align:left;border:1px solid #cddfe2;background:rgba(255,255,255,.72);border-radius:28px;padding:24px;min-height:250px;color:var(--ink);box-shadow:0 16px 45px rgba(23,48,68,.10);cursor:pointer;transition:.2s}.card:hover{transform:translateY(-3px);box-shadow:0 20px 55px rgba(23,48,68,.15)}.tag{font-size:.72rem;font-weight:850;color:#52707d}.symbol{font-family:Georgia,serif;font-size:3rem;color:var(--accent);margin:18px 0 8px}.card h2{font-size:1.4rem;margin:0 0 8px}.card p{color:var(--muted);line-height:1.45;margin:0}.go{position:absolute;right:20px;bottom:18px;font-size:1.6rem;color:var(--accent)}.viewer{position:fixed;inset:0;background:#f5fafb;display:none;z-index:10}.viewer.show{display:flex;align-items:center;justify-content:center;padding:0}.viewer-frame-wrap{width:100%;height:100%;position:relative;background:#f5fafb}iframe{border:0;width:100%;height:100%;display:block}.back{position:absolute;z-index:20;top:12px;right:14px;border:1px solid #c8dadd;background:rgba(255,255,255,.78);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);border-radius:999px;padding:9px 13px;font-weight:850;color:var(--ink);cursor:pointer;box-shadow:0 8px 24px rgba(23,48,68,.10)}
-@media(max-width:700px){.grid{grid-template-columns:1fr}.home{padding:20px 14px}.card{min-height:200px}}
-@media(min-width:1000px){.home{display:flex;flex-direction:column;justify-content:center}.grid{gap:24px}.card{min-height:285px}.viewer{background:radial-gradient(circle at 8% 2%,#dff6f8 0,transparent 35%),radial-gradient(circle at 96% 2%,#fff0d8 0,transparent 30%),#f5fafb}.viewer-frame-wrap{width:min(1440px,100vw);height:100vh;box-shadow:0 0 70px rgba(23,48,68,.08)}}
-</style></head><body><main id="home" class="home"><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Laboratorio interactivo</h1><p class="lead">Elige una misión. La gráfica será la protagonista: observa, decide y comprueba.</p><section class="grid"><button class="card" data-open="explorador"><span class="tag">Recurso 1 · completo</span><div class="symbol">lim</div><h2>Explorador de límites</h2><p>Límites laterales, bilateral, comportamientos infinitos y asíntotas.</p><span class="go">→</span></button><button class="card" data-open="oscilacion"><span class="tag">Recurso 2 · en revisión</span><div class="symbol">∿</div><h2>Cuando la gráfica oscila</h2><p>Zoom progresivo hacia 0 para comparar dos comportamientos oscilantes.</p><span class="go">→</span></button></section></main><section id="viewer" class="viewer"><div class="viewer-frame-wrap"><button id="back" class="back">← Recursos</button><iframe id="frame" title="Actividad LIM-01"></iframe></div></section><script>
-const routes={explorador:'activities/explorador/index.html',oscilacion:'activities/oscilacion/index.html'};const frame=document.querySelector('#frame'),viewer=document.querySelector('#viewer');function openPage(name){if(!routes[name])return;frame.src=routes[name];viewer.classList.add('show');history.replaceState(null,'','#'+name)}function closePage(){viewer.classList.remove('show');frame.src='about:blank';history.replaceState(null,'',location.pathname+location.search)}document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.open)));document.querySelector('#back').addEventListener('click',closePage);window.addEventListener('keydown',e=>{if(e.key==='Escape'&&viewer.classList.contains('show'))closePage()});const hash=location.hash.slice(1);if(routes[hash])openPage(hash);
-</script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LIM-01 · Laboratorio interactivo</title>
+<style>
+:root{--ink:#173044;--muted:#647985;--accent:#128596}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 2%,#dff6f8 0,transparent 35%),radial-gradient(circle at 96% 2%,#fff0d8 0,transparent 30%),#f5fafb}
+.home{min-height:100dvh;max-width:1180px;margin:auto;padding:30px 22px;display:flex;flex-direction:column;justify-content:center}
+.eyebrow{font-size:.72rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:clamp(2.2rem,6vw,4.1rem);line-height:.96;letter-spacing:-.05em;margin:8px 0 12px}
+.lead{color:var(--muted);max-width:760px;line-height:1.5;font-size:1.03rem}
+.section-label{margin-top:26px;font-size:.74rem;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:#5e7782}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:10px}
+.card{position:relative;text-align:left;border:1px solid #cddfe2;background:rgba(255,255,255,.74);border-radius:26px;padding:22px;min-height:238px;color:var(--ink);box-shadow:0 16px 45px rgba(23,48,68,.10);cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 20px 55px rgba(23,48,68,.15);border-color:#a9cdd2}
+.tag{font-size:.69rem;font-weight:850;color:#52707d}
+.symbol{font-family:Georgia,serif;font-size:2.75rem;color:var(--accent);margin:17px 0 7px}
+.card h2{font-size:1.25rem;margin:0 0 8px}
+.card p{color:var(--muted);line-height:1.42;margin:0;font-size:.93rem}
+.go{position:absolute;right:18px;bottom:16px;font-size:1.5rem;color:var(--accent)}
+.viewer{position:fixed;inset:0;background:#f5fafb;display:none;z-index:10}
+.viewer.show{display:flex;align-items:center;justify-content:center}
+.viewer-frame-wrap{width:100%;height:100%;position:relative;background:#f5fafb}
+iframe{border:0;width:100%;height:100%;display:block}
+.back{position:absolute;z-index:60;top:10px;right:12px;border:1px solid #c8dadd;background:rgba(255,255,255,.80);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);border-radius:999px;padding:8px 12px;font-weight:850;color:var(--ink);cursor:pointer;box-shadow:0 8px 24px rgba(23,48,68,.10)}
+@media(max-width:840px){.grid{grid-template-columns:1fr}.home{justify-content:flex-start;padding:20px 14px}.card{min-height:174px}.symbol{font-size:2.2rem;margin:12px 0 6px}}
+@media(min-width:1000px){.viewer{background:radial-gradient(circle at 8% 2%,#dff6f8 0,transparent 35%),radial-gradient(circle at 96% 2%,#fff0d8 0,transparent 30%),#f5fafb}.viewer-frame-wrap{width:min(1440px,100vw);height:100vh;box-shadow:0 0 70px rgba(23,48,68,.08)}}
+
+.hero{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 300px;
+  gap:26px;
+  align-items:center;
+}
+.hero-copy{min-width:0}
+.mascot-wrap{
+  position:relative;
+  min-height:160px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+.mascot{
+  width:min(300px,100%);
+  height:auto;
+  overflow:visible;
+  filter:drop-shadow(0 10px 20px rgba(18,133,150,.10));
+}
+.mascot-body{stroke-width:7}
+.mascot-hand{stroke-width:5.5}
+.mascot-face{stroke-width:4}
+.mascot-bubble{
+  position:absolute;
+  top:0;
+  right:6px;
+  padding:8px 12px;
+  border-radius:16px 16px 4px 16px;
+  background:rgba(255,255,255,.84);
+  border:1px solid #c8dadd;
+  box-shadow:0 8px 24px rgba(23,48,68,.10);
+  font-size:.78rem;
+  font-weight:850;
+  color:#315566;
+  white-space:nowrap;
+}
+.mascot-bubble::after{
+  content:"";
+  position:absolute;
+  right:18px;
+  bottom:-7px;
+  width:13px;
+  height:13px;
+  background:rgba(255,255,255,.84);
+  border-right:1px solid #c8dadd;
+  border-bottom:1px solid #c8dadd;
+  transform:rotate(45deg);
+}
+
+
+@media(max-width:840px){
+  .hero{
+    grid-template-columns:minmax(0,1fr) 138px;
+    gap:8px;
+    align-items:center;
+  }
+  .mascot-wrap{min-height:108px;align-items:flex-end}
+  .mascot{width:145px}
+  .mascot-bubble{
+    top:-1px;
+    right:0;
+    font-size:.62rem;
+    padding:6px 8px;
+  }
+  .lead{font-size:.94rem;max-width:460px}
+}
+@media(max-width:520px){
+  .hero{
+    grid-template-columns:minmax(0,1fr) 108px;
+    gap:4px;
+  }
+  h1{font-size:clamp(2rem,10vw,2.8rem)}
+  .lead{font-size:.88rem;line-height:1.38}
+  .mascot-wrap{min-height:94px}
+  .mascot{width:116px}
+  .mascot-bubble{
+    font-size:.54rem;
+    top:-3px;
+    padding:5px 7px;
+  }
+}
+
+
+/* --- v11.2: mascota oficial como PNG transparente --- */
+.hero{
+  grid-template-columns:minmax(0,1fr) minmax(220px,320px) !important;
+  gap:20px !important;
+  align-items:center !important;
+}
+.mascot-wrap{
+  position:relative !important;
+  min-height:150px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.mascot-img{
+  display:block;
+  width:min(320px,100%) !important;
+  height:auto !important;
+  max-height:190px !important;
+  object-fit:contain !important;
+  filter:drop-shadow(0 11px 23px rgba(18,133,150,.10));
+}
+.mascot,.mascot-bubble{display:none !important}
+
+@media(max-width:840px){
+  .hero{
+    grid-template-columns:minmax(0,1fr) 150px !important;
+    gap:8px !important;
+  }
+  .mascot-wrap{min-height:105px !important}
+  .mascot-img{
+    width:150px !important;
+    max-height:118px !important;
+  }
+}
+@media(max-width:520px){
+  .hero{
+    grid-template-columns:minmax(0,1fr) 118px !important;
+    gap:4px !important;
+  }
+  .mascot-wrap{min-height:90px !important}
+  .mascot-img{
+    width:118px !important;
+    max-height:96px !important;
+  }
+}
+
+</style>
+</head>
+<body>
+<main id="home" class="home">
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">Proyecto Cálculo · LIM-01</div>
+      <h1>Laboratorio interactivo</h1>
+      <p class="lead">Explora límites, observa qué ocurre y pon a prueba tus conclusiones.</p>
+    </div>
+
+    <div class="mascot-wrap">
+      <img
+        src="assets/mascota/mascota_explica.png"
+        alt="Mascota del Proyecto Cálculo"
+        class="mascot-img"
+      >
+    </div>
+  </section>
+
+  <div class="section-label">Explorar límites</div>
+  <section class="grid">
+    <button class="card" data-open="explorador1">
+      <span class="tag">Explorador 1 · primeros límites</span>
+      <div class="symbol">lim</div>
+      <h2>Comportamientos fundamentales</h2>
+      <p>Límites laterales y bilaterales, saltos, asíntotas y comportamiento cuando x se aleja.</p>
+      <span class="go">→</span>
+    </button>
+
+    <button class="card" data-open="explorador2">
+      <span class="tag">Explorador 2 · valores exactos</span>
+      <div class="symbol">√</div>
+      <h2>Lee valores exactos</h2>
+      <p>Consulta coordenadas, trabaja con fracciones y raíces y distingue valores exactos de aproximaciones.</p>
+      <span class="go">→</span>
+    </button>
+
+    <button class="card" data-open="oscilacion">
+      <span class="tag">Descubrir · oscilación</span>
+      <div class="symbol">∿</div>
+      <h2>Cuando la gráfica oscila</h2>
+      <p>Acércate a 0 y compara dos comportamientos oscilantes mediante zoom y recorridos simultáneos.</p>
+      <span class="go">→</span>
+    </button>
+  </section>
+</main>
+
+<section id="viewer" class="viewer">
+  <div class="viewer-frame-wrap">
+    <button id="back" class="back">← Recursos</button>
+    <iframe id="frame" title="Actividad LIM-01"></iframe>
+  </div>
+</section>
+
+<script>
+const routes={
+  explorador1:'activities/explorador1/index.html',
+  explorador2:'activities/explorador2/index.html',
+  oscilacion:'activities/oscilacion/index.html'
+};
+const frame=document.querySelector('#frame'),viewer=document.querySelector('#viewer');
+function openPage(name){
+  if(!routes[name])return;
+  frame.src=routes[name];
+  viewer.classList.add('show');
+  history.replaceState(null,'','#'+name)
+}
+function closePage(){
+  viewer.classList.remove('show');
+  frame.src='about:blank';
+  history.replaceState(null,'',location.pathname+location.search)
+}
+document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.open)));
+document.querySelector('#back').addEventListener('click',closePage);
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&viewer.classList.contains('show'))closePage()});
+const hash=location.hash.slice(1);if(routes[hash])openPage(hash);
+</script>
+</body>
+</html>
