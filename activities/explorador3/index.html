@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>LIM-01 · Explorador 1 · Comportamientos fundamentales</title>
+<title>LIM-01 · Explorador de límites · 01n</title>
 <style>
 :root{
   --ink:#173044; --muted:#657783; --accent:#128596; --accent2:#f0a84f;
@@ -752,14 +752,19 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
 </head>
 <body>
 <main>
-<header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Explorador 1 · Comportamientos fundamentales</h1></header>
+<header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Explorador 3 · Límite e imagen</h1></header>
 <section class="shell">
   <div class="toolbar mode-toolbar">
     <div class="family-row family-row-limits">
       <div class="family-box family-limits">
         <span class="family-title">Límites</span>
         <div class="family-buttons">
-          <button class="chip limit-chip" data-target="-3">x → −3</button><button class="chip limit-chip" data-target="0">x → 0</button><button class="chip limit-chip" data-target="2">x → 2</button><button class="chip limit-chip" data-target="4">x → 4</button><button class="chip limit-chip global" data-target="neginf">x → −∞</button><button class="chip limit-chip global" data-target="posinf">x → +∞</button>
+          <button class="chip limit-chip" data-target="-2">x → −2</button>
+          <button class="chip limit-chip" data-target="0">x → 0</button>
+          <button class="chip limit-chip" data-target="2">x → 2</button>
+          <button class="chip limit-chip" data-target="4">x → 4</button>
+          <button class="chip limit-chip global" data-target="neginf">x → −∞</button>
+          <button class="chip limit-chip global" data-target="posinf">x → +∞</button>
         </div>
       </div>
     </div>
@@ -768,7 +773,10 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
       <div class="family-box family-values">
         <span class="family-title">Valores de la función</span>
         <div class="family-buttons">
-          <button class="value-chip" data-value-target="-3">f(−3)</button><button class="value-chip" data-value-target="0">f(0)</button><button class="value-chip" data-value-target="2">f(2)</button><button class="value-chip" data-value-target="4">f(4)</button>
+          <button class="value-chip" data-value-target="-2">f(−2)</button>
+          <button class="value-chip" data-value-target="0">f(0)</button>
+          <button class="value-chip" data-value-target="2">f(2)</button>
+          <button class="value-chip" data-value-target="4">f(4)</button>
         </div>
       </div>
 
@@ -824,14 +832,13 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
         <line x1="-10000" x2="10000" y1="0" y2="0" class="axis"></line><line x1="0" x2="0" y1="-10000" y2="10000" class="axis"></line>
         <path id="p1" class="curve"></path><path id="p2" class="curve"></path><path id="p3" class="curve"></path><path id="p4" class="curve"></path><path id="p5" class="curve"></path>
         <g id="keypoints">
-          <circle class="open-dot keypoint" cx="-3" cy="2" r=".14"></circle>
-          <circle class="point-hit" cx="-3" cy="2" r=".36" data-x="-3" data-y="2" data-approx="" data-kind="Círculo abierto"></circle>
-          <circle class="closed-dot keypoint" cx="-3" cy="0" r=".14"></circle>
-          <circle class="point-hit" cx="-3" cy="0" r=".36" data-x="-3" data-y="0" data-approx="" data-kind="Punto definido"></circle>
-          <circle class="open-dot keypoint" cx="0" cy="1" r=".14"></circle>
-          <circle class="point-hit" cx="0" cy="1" r=".36" data-x="0" data-y="1" data-approx="" data-kind="Círculo abierto"></circle>
-          <circle class="closed-dot keypoint" cx="0" cy="3" r=".14"></circle>
-          <circle class="point-hit" cx="0" cy="3" r=".36" data-x="0" data-y="3" data-approx="" data-kind="Punto definido"></circle>
+          <circle class="closed-dot keypoint" cx="-2" cy="1" r=".14"></circle><circle class="point-hit" cx="-2" cy="1" r=".36" data-x="-2" data-y="1" data-approx="" data-kind="Punto definido"></circle>
+          <circle class="open-dot keypoint" cx="0" cy="1.5" r=".14"></circle><circle class="point-hit" cx="0" cy="1.5" r=".36" data-x="0" data-y="3/2" data-approx="0;1.5" data-decimal-mode="exact" data-kind="Círculo abierto"></circle>
+          <circle class="closed-dot keypoint" cx="0" cy="2.5" r=".14"></circle><circle class="point-hit" cx="0" cy="2.5" r=".36" data-x="0" data-y="5/2" data-approx="0;2.5" data-decimal-mode="exact" data-kind="Punto definido"></circle>
+          <circle class="open-dot keypoint" cx="2" cy="1.4142135623730951" r=".14"></circle><circle class="point-hit" cx="2" cy="1.4142135623730951" r=".36" data-x="2" data-y="√2" data-approx="2;1.4142" data-decimal-mode="approx" data-kind="Círculo abierto"></circle>
+          <circle class="open-dot keypoint" cx="4" cy="3" r=".14"></circle><circle class="point-hit" cx="4" cy="3" r=".36" data-x="4" data-y="3" data-approx="" data-kind="Círculo abierto"></circle>
+          <circle class="open-dot keypoint" cx="4" cy="-2" r=".14"></circle><circle class="point-hit" cx="4" cy="-2" r=".36" data-x="4" data-y="−2" data-approx="" data-kind="Círculo abierto"></circle>
+          <circle class="closed-dot keypoint" cx="4" cy="1" r=".14"></circle><circle class="point-hit" cx="4" cy="1" r=".36" data-x="4" data-y="1" data-approx="" data-kind="Punto definido"></circle>
         </g>
         <line id="aline" class="a-line" x1="-2" x2="-2" y1="-10000" y2="10000"></line>
         <line id="hline" class="h-line" x1="-10000" x2="10000" y1="-1" y2="-1"></line>
@@ -869,7 +876,7 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
       <text id="alabel" class="a-label">x = a</text><text id="hlabel" class="h-label">y = −1</text>
     </svg>
 
-    <div id="intro" class="intro"><strong>¿Qué límite quieres analizar?</strong><p>Explora límites laterales y bilaterales, asíntotas y comportamientos al infinito. También puedes consultar valores de la función y estudiar su dominio e imagen.</p></div>
+    <div id="intro" class="intro"><strong>¿Qué límite quieres analizar?</strong><p>Investiga qué ocurre cerca de un número y compáralo con el valor que toma la función exactamente allí. Recuerda: acercarse a <i>a</i> y evaluar en <i>a</i> son preguntas diferentes.</p></div>
     <div id="formula" class="formula-pill"></div>
     <div class="point-hint">✦ ¿Necesitas una altura exacta? Toca un punto abierto o cerrado.</div>
     <div id="coordPop" class="coord-pop">
@@ -953,22 +960,30 @@ function smoothCamera(tx,ty,a=.18){setCamera(camX+(tx-camX)*a,camY+(ty-camY)*a)}
 function restoreScene(clearPath=true){const sx=camX,sy=camY,start=performance.now(),dur=430;function frame(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p);setCamera(sx+(.5-sx)*e,sy*(1-e));if(p<1)requestAnimationFrame(frame);else{setCamera(.5,0);if(clearPath){trace.setAttribute('d','');runner.setAttribute('opacity','0')}}}requestAnimationFrame(frame)}
 function sample(id,fn,x0,x1,steps=900,warp='none'){let d='',pen=false;for(let i=0;i<=steps;i++){const t=i/steps;let q=t;if(warp==='left')q=t*t*t;else if(warp==='right')q=1-Math.pow(1-t,3);else if(warp==='both')q=(1-Math.cos(Math.PI*t))/2;const x=x0+(x1-x0)*q,y=fn(x);if(!Number.isFinite(y)||Math.abs(y)>5000){pen=false;continue}d+=(pen?'L':'M')+x.toFixed(5)+' '+y.toFixed(5)+' ';pen=true}document.getElementById(id).setAttribute('d',d)}
 const SQ=Math.sqrt(2);
-const fns={p1:x=>-.5*x+.5,p2:x=>1-x/3,p3:x=>2.5+1/(2-x),p4:x=>1/(x-2)-1/(4-x),p5:x=>-2+3/(x-4)};
-sample('p1',fns.p1,-60,-3.02,1200);sample('p2',fns.p2,-2.98,-.02,1000);sample('p3',fns.p3,0,1.9993,2400,'right');sample('p4',fns.p4,2.0007,3.9993,4200,'both');sample('p5',fns.p5,4.0007,70,3200,'left');
+const fns={
+ p1:x=>1+.16*(x+2),
+ p2:x=>1+.25*(x+2),
+ p3:x=>1.5+((SQ-1.5)/2)*x,
+ p4:x=>SQ+((3-SQ)/2)*(x-2),
+ p5:x=>-2+(x-4)/(1+(x-4))
+};
+sample('p1',fns.p1,-45,-2.001,1500,'right');sample('p2',fns.p2,-1.999,-.001,1100,'both');sample('p3',fns.p3,.001,1.999,1100,'both');sample('p4',fns.p4,2.001,3.999,1100,'both');sample('p5',fns.p5,4.001,55,2500,'left');
 const cases={
- '-3':{left:{kind:'finite',value:2,exact:'2',fn:fns.p1,start:-5.2},right:{kind:'finite',value:2,exact:'2',fn:fns.p2,start:-1.2},bilateral:{kind:'finite',value:2,exact:'2'},image:{kind:'finite',value:0,exact:'0'}},
- '0':{left:{kind:'finite',value:1,exact:'1',fn:fns.p2,start:-1.5},right:{kind:'finite',value:3,exact:'3',fn:fns.p3,start:.8},bilateral:{kind:'none'},image:{kind:'finite',value:3,exact:'3'}},
- '2':{left:{kind:'posinf',fn:fns.p3,start:1.0},right:{kind:'posinf',fn:fns.p4,start:2.55},bilateral:{kind:'posinf'},image:{kind:'undefined'}},
- '4':{left:{kind:'neginf',fn:fns.p4,start:3.45},right:{kind:'posinf',fn:fns.p5,start:4.55},bilateral:{kind:'none'},image:{kind:'undefined'}}
+ '-2':{left:{kind:'finite',value:1,exact:'1',fn:fns.p1,start:-4.5},right:{kind:'finite',value:1,exact:'1',fn:fns.p2,start:-.7},bilateral:{kind:'finite',value:1,exact:'1'},image:{kind:'finite',value:1,exact:'1'}},
+ '0':{left:{kind:'finite',value:1.5,exact:'3/2',fn:fns.p2,start:-1.2},right:{kind:'finite',value:1.5,exact:'3/2',fn:fns.p3,start:.9},bilateral:{kind:'finite',value:1.5,exact:'3/2'},image:{kind:'finite',value:2.5,exact:'5/2'}},
+ '2':{left:{kind:'finite',value:SQ,exact:'√2',fn:fns.p3,start:1.0},right:{kind:'finite',value:SQ,exact:'√2',fn:fns.p4,start:2.8},bilateral:{kind:'finite',value:SQ,exact:'√2'},image:{kind:'undefined'}},
+ '4':{left:{kind:'finite',value:3,exact:'3',fn:fns.p4,start:3.0},right:{kind:'finite',value:-2,exact:'−2',fn:fns.p5,start:5.0},bilateral:{kind:'none'},image:{kind:'finite',value:1,exact:'1'}}
 };
-const globals={neginf:{kind:'posinf',fn:fns.p1,start:-4.2,end:-34,label:'−∞'},posinf:{kind:'finite',value:-2,exact:'−2',fn:fns.p5,start:5.1,end:42,label:'+∞',horizontal:-2}};
+const globals={neginf:{kind:'neginf',fn:fns.p1,start:-4.2,end:-34,label:'−∞'},posinf:{kind:'finite',value:-1,exact:'−1',fn:fns.p5,start:6,end:42,label:'+∞',horizontal:-1}};
+
 const setDescriptions={
- domain:{intervals:[{from:-Infinity,to:2},{from:2,to:4},{from:4,to:Infinity}],extendsLeft:true,extendsRight:true},
- range:{intervals:[{from:-Infinity,to:Infinity}],extendsDown:true,extendsUp:true}
+ domain:{intervals:[{from:-Infinity,to:2},{from:2,to:Infinity}],extendsLeft:true,extendsRight:true},
+ range:{intervals:[{from:-Infinity,to:3,leftClosed:false,rightClosed:false}],extendsDown:true,extendsUp:false}
 };
+
 let target=null,selected=null,chosenSide=null,answered={left:false,right:false,bilateral:false,image:false},mode='idle',answerValue='',timer=null,animating=false,lastAnimation=null;
 const partialProgress={
- '-3':{left:false,right:false,bilateral:false,image:false},
+ '-2':{left:false,right:false,bilateral:false,image:false},
  '0':{left:false,right:false,bilateral:false,image:false},
  '2':{left:false,right:false,bilateral:false,image:false},
  '4':{left:false,right:false,bilateral:false,image:false}
@@ -980,8 +995,8 @@ let setToolMode=null,setToolRAF=null,setToolRunning=false;
 const TOTAL_TARGETS=6;
 let finalShown=false;
 function checkFinalAchievement(){
- const requiredLimits=["-3", "0", "2", "4", "neginf", "posinf"];
- const requiredValues=["-3", "0", "2", "4"];
+ const requiredLimits=['-2','0','2','4','neginf','posinf'];
+ const requiredValues=['-2','0','2','4'];
  if(requiredLimits.every(x=>completedTargets.has(x))&&requiredValues.every(x=>completedValues.has(x))){
    finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false')
  }
@@ -1034,8 +1049,8 @@ function setToolPhase(text=''){
 function showSetResult(mode){
   setResultTitle.textContent=mode==='domain'?'Dominio de la función':'Imagen de la función';
   setResultMath.innerHTML=mode==='domain'
-    ?'<span>Dom(<i>f</i>) = ℝ ∖ {2, 4}</span>'
-    :'<span>Im(<i>f</i>) = ℝ</span>';
+    ?'<span>Dom(<i>f</i>) = (−∞, 2) ∪ (2, +∞)</span>'
+    :'<span>Im(<i>f</i>) = (−∞, 3)</span>';
   setResult.classList.add('show');setResult.setAttribute('aria-hidden','false')
 }
 function flashHit(x,y,secondary=false){
@@ -1046,23 +1061,37 @@ function flashHit(x,y,secondary=false){
 }
 function hideHits(){setHits.style.opacity=0}
 function domainIntersections(x){
- const ys=[],e=.04;
- if(x<-3-e)ys.push(fns.p1(x));
- else if(Math.abs(x+3)<=e)ys.push(0);
- else if(x>-3+e&&x<0-e)ys.push(fns.p2(x));
- else if(Math.abs(x)<=e)ys.push(3);
- else if(x>0+e&&x<2-e)ys.push(fns.p3(x));
- else if(Math.abs(x-2)<=e){}
- else if(x>2+e&&x<4-e)ys.push(fns.p4(x));
- else if(Math.abs(x-4)<=e){}
- else if(x>4+e)ys.push(fns.p5(x));
- return ys
+  const ys=[];
+  const eps=.035;
+  if(x<-2-eps)ys.push(fns.p1(x));
+  else if(Math.abs(x+2)<=eps)ys.push(1); // punto cerrado en x=-2
+  else if(x>-2+eps && x<0-eps)ys.push(fns.p2(x));
+  else if(Math.abs(x)<=eps)ys.push(2.5); // punto cerrado; el círculo abierto no define f(0)
+  else if(x>0+eps && x<2-eps)ys.push(fns.p3(x));
+  else if(Math.abs(x-2)<=eps){ /* ningún punto */ }
+  else if(x>2+eps && x<4-eps)ys.push(fns.p4(x));
+  else if(Math.abs(x-4)<=eps)ys.push(1); // punto cerrado en x=4
+  else if(x>4+eps)ys.push(fns.p5(x));
+  return ys
 }
 function nearestRangeIntersection(y){
- const pieces=[[fns.p1,-40,-3.001,900],[fns.p2,-2.999,-.001,260],[fns.p3,.001,1.999,500],[fns.p4,2.001,3.999,950],[fns.p5,4.001,45,950]];
- let best=null,bestErr=Infinity;
- for(const [fn,a,b,n] of pieces)for(let i=0;i<=n;i++){const x=a+(b-a)*i/n,yy=fn(x),err=Math.abs(yy-y);if(err<bestErr){bestErr=err;best={x,y:yy}}}
- return bestErr<.075?best:null
+  // Busca un punto representativo de la gráfica a esa altura.
+  // Se muestrean los cinco tramos, incluyendo bastante a la izquierda.
+  const pieces=[
+    [fns.p1,-40,-2.001,950],
+    [fns.p2,-1.999,-.001,260],
+    [fns.p3,.001,1.999,260],
+    [fns.p4,2.001,3.999,260],
+    [fns.p5,4.001,45,950]
+  ];
+  let best=null,bestErr=Infinity;
+  for(const [fn,a,b,n] of pieces){
+    for(let i=0;i<=n;i++){
+      const x=a+(b-a)*i/n,yy=fn(x),err=Math.abs(yy-y);
+      if(err<bestErr){bestErr=err;best={x,y:yy}}
+    }
+  }
+  return bestErr<.055?best:null
 }
 function animateLinear(duration,onFrame){
   return new Promise(resolve=>{
@@ -1103,15 +1132,42 @@ async function pauseDomainAt(x,kind){
 }
 async function runDomainTool(){
  setToolInfo.classList.add('domain-reading');domainBand.style.opacity=1;domainSweep.style.opacity=1;
- const steps=[[-6,-3,'En x = −3 hay un círculo abierto, pero también un punto cerrado. Por eso −3 pertenece al dominio.','success'],
- [-3,0,'En x = 0 también existe un punto cerrado, así que 0 pertenece al dominio.','success'],
- [0,2,'En x = 2 no hay ningún punto de la gráfica. Por eso 2 queda fuera del dominio.','attention'],
- [2,4,'En x = 4 tampoco hay ningún punto de la gráfica. Por eso 4 queda fuera del dominio.','attention'],
- [4,7,'La gráfica vuelve a existir para x > 4.','success']];
- setToolPhase('Dominio · inicio');setToolMessage('domain','La vertical recorrerá la gráfica. Si encuentra al menos un punto, ese valor de x pertenece al dominio.');await waitForContinue();
- for(let i=0;i<steps.length;i++){const [x0,x1,msg,style]=steps[i];await domainSweepSegment(x0,x1,3300);setToolPhase(`Dominio · paso ${i+1}`);setToolMessage('domain',msg,style);await waitForContinue()}
- hideHits();setToolPhase('Dominio · conclusión');setToolMessage('domain','El dominio contiene todos los reales excepto 2 y 4.','success');await waitForContinue();
- domainSweep.style.opacity=.32;setToolPhase('');setToolInfo.classList.remove('domain-reading');showSetResult('domain')
+ setToolPhase('Dominio · paso 1');setToolMessage('domain','La recta vertical recorrerá la gráfica. Si encuentra al menos un punto, ese valor de <i>x</i> pertenece al dominio.');await waitForContinue();
+ await domainSweepSegment(-6,0,5200);await pauseDomainAt(0,'closed-with-holes');
+ setToolPhase('Dominio · paso 2');setToolMessage('domain','En <i>x</i> = 0 hay un círculo abierto, pero también un punto cerrado. Por eso 0 sí pertenece al dominio.','success');await waitForContinue();
+ await domainSweepSegment(0,2,2600);await pauseDomainAt(2,'missing');
+ setToolPhase('Dominio · paso 3');setToolMessage('domain','En <i>x</i> = 2 la vertical no encuentra ningún punto. Por eso 2 queda fuera del dominio.','attention');await waitForContinue();
+ await domainSweepSegment(2,4,2600);await pauseDomainAt(4,'closed-with-holes');
+ setToolPhase('Dominio · paso 4');setToolMessage('domain','En <i>x</i> = 4 hay un punto cerrado. Basta un punto para que 4 pertenezca al dominio.','success');await waitForContinue();
+ await domainSweepSegment(4,7,3400);hideHits();
+ setToolPhase('Dominio · conclusión');setToolMessage('domain','La franja inferior reúne exactamente los valores de <i>x</i> para los que alguna vertical encontró gráfica.','success');await waitForContinue();
+ setToolPhase('');setToolInfo.classList.remove('domain-reading');domainSweep.style.opacity=.32;showSetResult('domain')
+}
+
+
+
+async function rangeSweepSegment(y0,y1,duration,showEncounter=true){
+  let lastFlash=0;
+  await animateLinear(duration,(e)=>{
+    const y=y0+(y1-y0)*e;
+    rangeSweep.setAttribute('y1',y);
+    rangeSweep.setAttribute('y2',y);
+
+    /* La franja se construye exactamente desde el borde inferior visible
+       hasta la altura alcanzada por el barrido. */
+    const clipY=parseFloat(rangeClipRect.getAttribute('y'));
+    rangeClipRect.setAttribute('height',Math.max(0,y-clipY));
+
+    const hit=nearestRangeIntersection(y);
+    if(hit){
+      if(showEncounter && performance.now()-lastFlash>360){
+        flashHit(hit.x,hit.y);
+        lastFlash=performance.now();
+      }
+    }else{
+      hideHits();
+    }
+  });
 }
 
 function visibleRangeBounds(){
@@ -1134,24 +1190,58 @@ function configureRangeBandForVisibleWindow(){
 }
 
 async function prepareRangeInfinity(){
- setToolPhase('Imagen · paso 1');setToolInfo.classList.add('reading');
- configureRangeBandForVisibleWindow();rangeBand.style.opacity=1;rangeSweep.style.opacity=1;
- setToolMessage('range','<strong>La imagen se extiende en ambas direcciones.</strong><br>Esta gráfica alcanza alturas arbitrariamente pequeñas y arbitrariamente grandes. El barrido recorrerá toda la ventana visible de abajo hacia arriba.','gold');
+ setToolPhase('Imagen · paso 1');
+ setToolInfo.classList.add('reading');
+ configureRangeBandForVisibleWindow();
+ rangeBand.style.opacity=1;rangeSweep.style.opacity=1;
+ setToolMessage('range',
+   '<strong>La imagen continúa hacia −∞.</strong><br>Esta función alcanza alturas cada vez menores. Por eso el barrido comienza en el borde inferior visible y la franja amarilla toca ese margen para indicar que continúa más abajo.',
+   'gold');
  await waitForContinue()
 }
+
 async function runRangeTool(){
  await prepareRangeInfinity();
- const bounds=visibleRangeBounds();
- const rect=rangeBand.querySelector('rect');rect.setAttribute('y',bounds.bottom);rect.setAttribute('height',Math.max(.1,bounds.top-bounds.bottom));
- rangeClipRect.setAttribute('y',bounds.bottom);rangeClipRect.setAttribute('height','0');
- rangeSweep.setAttribute('y1',bounds.bottom);rangeSweep.setAttribute('y2',bounds.bottom);
- setToolPhase('Imagen · paso 2');setToolMessage('range','La horizontal subirá. Cada altura donde encuentre algún punto se incorpora a la imagen.');await waitForContinue();
- const mid=(bounds.bottom+bounds.top)/2;
- await rangeSweepSegment(bounds.bottom,mid,8200);
- setToolPhase('Imagen · paso 3');setToolMessage('range','Hasta aquí, todas las horizontales han encontrado gráfica. Continuemos hacia arriba.','success');await waitForContinue();
- await rangeSweepSegment(mid,bounds.top,8200);
- setToolPhase('Imagen · conclusión');setToolMessage('range','La gráfica alcanza todas las alturas reales. Por eso la imagen es todo ℝ.','success');await waitForContinue();
- rangeSweep.style.opacity=.32;setToolPhase('');setToolInfo.classList.remove('reading');showSetResult('range')
+ const bounds=configureRangeBandForVisibleWindow();
+
+ setToolPhase('Imagen · paso 2');
+ setToolMessage('range','<strong>Barrido horizontal de abajo hacia arriba.</strong><br>Cada horizontal que encuentre al menos un punto agrega esa altura a la imagen.');
+ await waitForContinue();
+
+ await rangeSweepSegment(bounds.visibleFrom,-2.15,7600);
+ setToolPhase('Imagen · paso 3');
+ setToolMessage('range','Estas alturas sí aparecen en la gráfica. La franja crece porque cada horizontal encuentra algún punto.','success');
+ await waitForContinue();
+
+ await rangeSweepSegment(-2.15,0,4700);
+ setToolPhase('Imagen · paso 4');
+ setToolMessage('range','Seguimos encontrando puntos: estas alturas también pertenecen a la imagen.','success');
+ await waitForContinue();
+
+ await rangeSweepSegment(0,1.55,4200);
+ setToolPhase('Imagen · paso 5');
+ setToolMessage('range','La horizontal sigue encontrando gráfica. Continuamos incorporando alturas.','success');
+ await waitForContinue();
+
+ await rangeSweepSegment(1.55,2.80,3700);
+ setToolPhase('Imagen · paso 6');
+ setToolMessage('range','Nos acercamos a la altura 3. Observa qué ocurre exactamente allí.','gold');
+ await waitForContinue();
+
+ await rangeSweepSegment(2.80,2.96,1700);
+ await rangeSweepSegment(2.96,3,1500,false);
+ rangeSweep.setAttribute('y1',3);rangeSweep.setAttribute('y2',3);hideHits();
+
+ setToolPhase('Imagen · paso 7');
+ setToolMessage('range','En <i>y</i> = 3 sólo hay un <strong>círculo abierto</strong>: ningún punto tiene exactamente esa altura. Por eso 3 no pertenece a la imagen.','attention');
+ await waitForContinue();
+
+ setToolPhase('Imagen · conclusión');
+ setToolMessage('range','Conclusión: la función alcanza todas las alturas menores que 3, pero no alcanza la altura 3.','success');
+ await waitForContinue();
+
+ rangeSweep.style.opacity=.32;rangeInfinityLabel.classList.remove('show');rangeBandEdge.classList.remove('show');
+ setToolPhase('');setToolInfo.classList.remove('reading');showSetResult('range')
 }
 
 async function beginSetTool(mode){

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>LIM-01 · Explorador de límites · 01n</title>
+<title>LIM-01 · Explorador 2 · Valores exactos</title>
 <style>
 :root{
   --ink:#173044; --muted:#657783; --accent:#128596; --accent2:#f0a84f;
@@ -494,15 +494,292 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
   }
 }
 
+
+.undefined-row{margin-top:6px;display:grid;grid-template-columns:1fr}
+.undefined-key{min-height:38px!important;background:rgba(255,238,205,.96)!important;color:#76551c!important;border-color:#e6c98e!important;font-weight:850!important}
+.image-question .special-row{display:none!important}
+.image-question #undefinedRow{display:grid!important}
+.image-question #compareMini{display:none!important}
+.image-question #bilateralLabel{display:block!important}
+
+
+.function-tools{position:absolute;left:10px;bottom:10px;z-index:11;display:flex;align-items:center;gap:5px;padding:5px 6px 5px 9px;border-radius:999px;border:1px solid rgba(195,216,220,.76);background:rgba(248,252,252,.66);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 8px 24px rgba(23,48,68,.10)}
+.function-tools-label{font-size:.54rem;font-weight:820;color:#667c86;margin-right:2px;white-space:nowrap}
+.function-tool-btn{border:1px solid transparent;border-radius:999px;padding:5px 8px;font-size:.56rem;font-weight:850;cursor:pointer;transition:.18s ease}
+.domain-btn{color:#0d6e78;background:rgba(215,244,246,.92);border-color:rgba(97,189,198,.42)}
+.range-btn{color:#7c5b22;background:rgba(255,241,207,.94);border-color:rgba(218,178,85,.46)}
+.function-tool-btn:hover,.function-tool-btn.active{transform:translateY(-1px);box-shadow:0 5px 14px rgba(23,48,68,.12)}
+.domain-btn.active{box-shadow:0 0 0 4px rgba(62,178,189,.12),0 5px 14px rgba(23,48,68,.12)}
+.range-btn.active{box-shadow:0 0 0 4px rgba(220,175,71,.13),0 5px 14px rgba(23,48,68,.12)}
+.set-tool-info{position:absolute;left:12px;top:12px;z-index:16;max-width:320px;padding:8px 11px;border-radius:14px;border:1px solid rgba(193,214,219,.74);background:rgba(248,252,252,.76);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 10px 28px rgba(23,48,68,.12);opacity:0;pointer-events:none;transform:translateY(-5px);transition:.2s ease}
+.set-tool-info.show{opacity:1;transform:none}
+.set-tool-eyebrow{font-size:.48rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#5d7781;margin-bottom:3px}
+.set-tool-text{font-size:.62rem;line-height:1.3;font-weight:720;color:#385866}
+.set-result{position:absolute;right:12px;top:12px;z-index:18;min-width:230px;max-width:320px;padding:10px 12px;border-radius:17px;border:1px solid rgba(193,214,219,.8);background:rgba(250,253,253,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 15px 38px rgba(23,48,68,.16);opacity:0;pointer-events:none;transform:translateY(-6px) scale(.98);transition:.2s ease}
+.set-result.show{opacity:1;pointer-events:auto;transform:none}
+.set-result-title{font-size:.58rem;text-transform:uppercase;letter-spacing:.07em;font-weight:900;color:#617983}
+.set-result-math{margin-top:6px;font-family:"STIX Two Math","Cambria Math",Georgia,serif;font-size:1.03rem;font-weight:700;color:#173044;white-space:nowrap}
+.set-result-actions{display:flex;justify-content:flex-end;gap:5px;margin-top:8px}
+.set-result-actions button{border:1px solid #c6dadd;background:rgba(255,255,255,.72);border-radius:999px;padding:5px 8px;font-size:.53rem;font-weight:820;color:#456571;cursor:pointer}
+.set-viz{pointer-events:none}
+.domain-band{fill:#32aebb;opacity:.82}.domain-hole{fill:#fff;stroke:#168996;stroke-width:.05}
+.range-band{fill:#e4b64f;opacity:.86}.range-hole{fill:#fff;stroke:#b98827;stroke-width:.05}
+.domain-sweep{stroke:#1ba1ae;stroke-width:.065;stroke-dasharray:.14 .11}.range-sweep{stroke:#d39d2f;stroke-width:.065;stroke-dasharray:.14 .11}
+.stage.set-mode .controlbar,.stage.set-mode .answer-toggle{opacity:.22;pointer-events:none}.stage.set-mode .point-hint{opacity:.18}.stage.set-mode .function-tools{opacity:.95}
+@media(max-width:560px){.function-tools{left:8px;bottom:8px;padding:4px 5px 4px 7px}.function-tools-label{font-size:.49rem}.function-tool-btn{font-size:.52rem;padding:5px 7px}.set-tool-info{left:8px;top:8px;max-width:72%;padding:7px 9px}.set-result{right:8px;top:8px;min-width:210px;max-width:78%;padding:9px 10px}.set-result-math{font-size:.92rem}}
+
+
+/* --- v04: barridos pedagógicos con pausas y encuentros --- */
+.set-hit{
+  fill:#ffffff;
+  stroke:#1697a4;
+  stroke-width:.07;
+  filter:drop-shadow(0 0 .13px rgba(22,151,164,.95));
+}
+.set-hit.secondary{
+  stroke:#d09a2d;
+}
+.set-hit.flash{
+  animation:setHitPulse .58s ease-in-out 2;
+}
+@keyframes setHitPulse{
+  0%,100%{r:.13;opacity:.55}
+  50%{r:.22;opacity:1}
+}
+.domain-miss-ring{
+  fill:#fff;
+  stroke:#c95c4b;
+  stroke-width:.065;
+}
+.domain-miss-x{
+  stroke:#c95c4b;
+  stroke-width:.055;
+  stroke-linecap:round;
+}
+.range-arrow-line,.range-arrow-head{
+  stroke:#d39d2f;
+  stroke-width:.06;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.set-tool-info.attention{
+  border-color:rgba(204,99,74,.55);
+  background:rgba(255,246,242,.88);
+}
+.set-tool-info.attention .set-tool-eyebrow{color:#ad4f3f}
+.set-tool-info.success{
+  border-color:rgba(59,166,137,.50);
+  background:rgba(242,252,247,.88);
+}
+.set-tool-info.success .set-tool-eyebrow{color:#2d8a70}
+.set-tool-info.gold{
+  border-color:rgba(211,157,47,.50);
+  background:rgba(255,249,232,.90);
+}
+.set-tool-info.gold .set-tool-eyebrow{color:#a87516}
+
+
+.set-tool-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.set-tool-eyebrow{margin-bottom:0!important}
+.set-phase{display:none;padding:3px 7px;border-radius:999px;background:rgba(255,255,255,.66);border:1px solid rgba(185,205,210,.75);color:#667b84;font-size:.44rem;font-weight:900;letter-spacing:.04em}
+.set-phase.show{display:inline-flex}
+.range-arrow-line.strong{stroke-width:.11!important;stroke:#d69a1f!important;filter:drop-shadow(0 0 .08px rgba(214,154,31,.85))}
+.range-arrow-head.strong{stroke-width:.11!important;stroke:#d69a1f!important}
+.range-infinity-label{position:absolute;left:14px;bottom:82px;z-index:17;width:92px;text-align:center;opacity:0;pointer-events:none;transform:translateY(7px);transition:.25s ease}
+.range-infinity-label.show{opacity:1;transform:none}
+.range-infinity-arrow{font-size:2.3rem;line-height:.8;color:#d69a1f;font-weight:900;text-shadow:0 4px 14px rgba(214,154,31,.22);animation:rangeArrowPulse 1.25s ease-in-out infinite}
+.range-infinity-text{margin-top:3px;font-family:"STIX Two Math","Cambria Math",Georgia,serif;font-size:1.15rem;font-weight:800;color:#8f681c}
+.range-infinity-caption{margin-top:2px;font-size:.43rem;line-height:1.18;color:#846e45;font-weight:760}
+@keyframes rangeArrowPulse{0%,100%{transform:translateY(0);opacity:.68}50%{transform:translateY(7px);opacity:1}}
+.set-tool-info.reading{max-width:365px}
+.set-tool-info.reading .set-tool-text{font-size:.64rem;line-height:1.38}
+@media(max-width:560px){
+  .range-infinity-label{left:9px;bottom:76px;width:78px}
+  .range-infinity-arrow{font-size:1.9rem}
+  .range-infinity-text{font-size:1rem}
+  .range-infinity-caption{font-size:.39rem}
+}
+
+
+.mode-toolbar{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:7px!important}
+.mode-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.mode-label{min-width:142px;font-size:.62rem!important;color:#536d78!important}
+.value-chip,.meta-chip{border:1px solid #cadcdf;background:rgba(255,255,255,.76);color:#173044;border-radius:999px;padding:7px 11px;font-weight:840;font-size:.66rem;cursor:pointer}
+.value-chip.active{background:#e9f4ff;border-color:#9fbfdc;color:#305f83}.domain-top{background:#daf6f8;color:#0c6d77}.range-top{background:#fff2d3;color:#7a5a1f}.meta-chip.active{box-shadow:0 0 0 4px rgba(40,150,163,.10)}
+.set-tool-actions{display:none;justify-content:flex-end;margin-top:8px}.set-tool-actions.show{display:flex}.set-continue{border:0;border-radius:999px;background:#138a99;color:#fff;padding:7px 12px;font-size:.56rem;font-weight:900;cursor:pointer}
+.stage.set-mode #controlbar,.stage.set-mode #answerToggle,.stage.set-mode #formula,.stage.set-mode .point-hint,.stage.set-mode #intro,.stage.set-mode #toast,.stage.set-mode #victory{opacity:0!important;pointer-events:none!important}
+.stage.set-mode #aline,.stage.set-mode #alabel,.stage.set-mode #hline,.stage.set-mode #hlabel{opacity:0!important}
+.function-tools{display:none!important}
+@media(max-width:560px){.mode-label{min-width:100%;font-size:.56rem!important}.value-chip,.meta-chip{padding:6px 9px;font-size:.60rem}.mode-row{gap:5px}}
+
+
+/* --- v07: dos filas y tres familias cromáticas --- */
+.mode-toolbar{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:7px!important;
+  padding:10px!important;
+}
+.family-row{width:100%}
+.family-row-secondary{
+  display:grid;
+  grid-template-columns:minmax(0,1.65fr) minmax(190px,.75fr);
+  gap:7px;
+}
+.family-box{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:7px 9px;
+  border-radius:18px;
+  border:1px solid transparent;
+}
+.family-title{
+  flex:0 0 auto;
+  font-size:.58rem;
+  font-weight:900;
+  letter-spacing:.015em;
+  white-space:nowrap;
+}
+.family-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  align-items:center;
+}
+.family-limits{
+  background:rgba(222,247,248,.72);
+  border-color:rgba(87,180,190,.28);
+}
+.family-limits .family-title{color:#0e727d}
+.family-values{
+  background:rgba(232,242,253,.76);
+  border-color:rgba(117,158,198,.28);
+}
+.family-values .family-title{color:#3d668e}
+.family-more{
+  background:rgba(255,244,219,.82);
+  border-color:rgba(215,171,74,.30);
+}
+.family-more .family-title{color:#80601f}
+
+.family-limits .chip,
+.family-values .value-chip,
+.family-more .meta-chip{
+  margin:0!important;
+}
+
+/* Continue: visible, clickable and intentionally prominent */
+.set-tool-info.show{
+  pointer-events:auto!important;
+}
+.set-tool-actions{
+  margin-top:10px!important;
+}
+.set-tool-actions.show{
+  display:flex!important;
+}
+.set-continue{
+  min-width:128px;
+  min-height:38px;
+  font-size:.63rem!important;
+  padding:8px 15px!important;
+  background:linear-gradient(135deg,#118995,#18a1af)!important;
+  box-shadow:0 0 0 5px rgba(19,145,158,.12),0 9px 22px rgba(19,138,153,.25)!important;
+  animation:continueGlow 1.45s ease-in-out infinite;
+}
+@keyframes continueGlow{
+  0%,100%{transform:scale(1);box-shadow:0 0 0 4px rgba(19,145,158,.10),0 8px 20px rgba(19,138,153,.20)}
+  50%{transform:scale(1.035);box-shadow:0 0 0 8px rgba(19,145,158,.16),0 10px 25px rgba(19,138,153,.27)}
+}
+
+/* f(a) is a separate mode: no lateral controls */
+.stage.value-mode #controlbar,
+.stage.value-mode #answerToggle,
+.stage.value-mode #nextCue{
+  opacity:0!important;
+  pointer-events:none!important;
+}
+.stage.value-mode #intro{opacity:0!important;pointer-events:none!important}
+
+/* Domain/Image stay clean */
+.stage.set-mode #controlbar,
+.stage.set-mode #answerToggle,
+.stage.set-mode #formula,
+.stage.set-mode .point-hint,
+.stage.set-mode #intro,
+.stage.set-mode #toast,
+.stage.set-mode #victory{
+  opacity:0!important;
+  pointer-events:none!important;
+}
+
+/* slower-domain message gets a little more room */
+.set-tool-info.domain-reading{
+  max-width:390px;
+}
+
+@media(max-width:650px){
+  .family-row-secondary{
+    grid-template-columns:minmax(0,1.5fr) minmax(150px,.8fr);
+    gap:5px;
+  }
+  .family-box{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:5px;
+    padding:6px 7px;
+  }
+  .family-title{font-size:.52rem}
+  .family-buttons{gap:4px}
+  .family-values .value-chip,.family-more .meta-chip{font-size:.56rem;padding:6px 8px}
+}
+
+
+.value-chip.done{background:rgba(224,247,232,.96)!important;border-color:#8fcda6!important;color:#237646!important}
+.value-chip.done::after{content:" ✓";font-weight:950}
+.family-more .range-top{background:rgba(242,229,255,.96)!important;border-color:rgba(153,113,194,.38)!important;color:#6d4c8c!important}
+.set-tool-info{top:auto!important;bottom:14px!important;left:50%!important;transform:translate(-50%,7px)!important;width:min(92%,560px)!important;max-width:560px!important}
+.set-tool-info.show{transform:translate(-50%,0)!important}
+.set-result{top:14px!important;bottom:auto!important}
+.set-tool-actions{justify-content:center!important}
+
+
+.range-band-edge{position:absolute;left:8px;bottom:8px;z-index:15;display:none;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;background:rgba(255,246,220,.92);border:1px solid rgba(211,157,47,.38);color:#8a681f;font-size:.48rem;font-weight:850;pointer-events:none}
+.range-band-edge.show{display:flex}.range-band-edge .edge-arrow{font-size:1rem;line-height:1;animation:rangeArrowPulse 1.2s ease-in-out infinite}
+
 </style>
 </head>
 <body>
 <main>
 <header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Explorador 2 · Valores exactos</h1></header>
 <section class="shell">
-  <div class="toolbar"><span class="toolbar-label">¿Qué límite quieres analizar?</span>
-    <button class="chip" data-target="-2">x → −2</button><button class="chip" data-target="1">x → 1</button><button class="chip" data-target="3">x → 3</button><button class="chip" data-target="5">x → 5</button>
-    <button class="chip global" data-target="neginf">x → −∞</button><button class="chip global" data-target="posinf">x → +∞</button>
+  <div class="toolbar mode-toolbar">
+    <div class="family-row family-row-limits">
+      <div class="family-box family-limits">
+        <span class="family-title">Límites</span>
+        <div class="family-buttons">
+          <button class="chip limit-chip" data-target="-2">x → −2</button><button class="chip limit-chip" data-target="1">x → 1</button><button class="chip limit-chip" data-target="3">x → 3</button><button class="chip limit-chip" data-target="5">x → 5</button><button class="chip limit-chip global" data-target="neginf">x → −∞</button><button class="chip limit-chip global" data-target="posinf">x → +∞</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="family-row family-row-secondary">
+      <div class="family-box family-values">
+        <span class="family-title">Valores de la función</span>
+        <div class="family-buttons">
+          <button class="value-chip" data-value-target="-2">f(−2)</button><button class="value-chip" data-value-target="1">f(1)</button><button class="value-chip" data-value-target="3">f(3)</button><button class="value-chip" data-value-target="5">f(5)</button>
+        </div>
+      </div>
+
+      <div class="family-box family-more">
+        <span class="family-title">Más sobre la función</span>
+        <div class="family-buttons">
+          <button id="domainBtnTop" class="meta-chip domain-top" type="button">Dominio</button>
+          <button id="rangeBtnTop" class="meta-chip range-top" type="button">Imagen</button>
+        </div>
+      </div>
+    </div>
   </div>
   <div id="answerpanel" class="answerpanel">
       <div class="answer-top">
@@ -533,6 +810,9 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
         <div id="infinityPad" class="infinity-pad"></div>
         <div id="noExistPad" class="noexist-pad"></div>
       </div>
+      <div id="undefinedRow" class="undefined-row" style="display:none">
+        <button id="undefinedKey" type="button" class="key undefined-key">f(a) no está definida</button>
+      </div>
     </div>
 
     
@@ -544,23 +824,60 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
         <line x1="-10000" x2="10000" y1="0" y2="0" class="axis"></line><line x1="0" x2="0" y1="-10000" y2="10000" class="axis"></line>
         <path id="p1" class="curve"></path><path id="p2" class="curve"></path><path id="p3" class="curve"></path><path id="p4" class="curve"></path><path id="p5" class="curve"></path>
         <g id="keypoints">
-          <circle class="open-dot keypoint" cx="-2" cy="1.5" r=".14"></circle><circle class="point-hit" cx="-2" cy="1.5" r=".36" data-x="-2" data-y="3/2" data-approx="-2;1,5" data-kind="Círculo abierto"></circle>
-          <circle class="open-dot keypoint" cx="-2" cy="-.5" r=".14"></circle><circle class="point-hit" cx="-2" cy="-.5" r=".36" data-x="-2" data-y="−1/2" data-approx="-2;−0,5" data-kind="Círculo abierto"></circle>
-          <circle class="closed-dot keypoint" cx="-2" cy="2.5" r=".14"></circle><circle class="point-hit" cx="-2" cy="2.5" r=".36" data-x="-2" data-y="5/2" data-approx="-2;2,5" data-kind="Punto definido"></circle>
-          <circle class="open-dot keypoint" cx="1" cy=".5" r=".14"></circle><circle class="point-hit" cx="1" cy=".5" r=".36" data-x="1" data-y="1/2" data-approx="1;0,5" data-kind="Círculo abierto"></circle>
-          <circle class="closed-dot keypoint" cx="1" cy="2" r=".14"></circle><circle class="point-hit" cx="1" cy="2" r=".36" data-x="1" data-y="2" data-approx="" data-kind="Punto definido"></circle>
-          <circle class="open-dot keypoint" cx="3" cy="1.41421356237" r=".14"></circle><circle class="point-hit" cx="3" cy="1.41421356237" r=".36" data-x="3" data-y="√2" data-approx="3;1,414" data-kind="Círculo abierto"></circle>
-          <circle class="open-dot keypoint" cx="3" cy="-1.41421356237" r=".14"></circle><circle class="point-hit" cx="3" cy="-1.41421356237" r=".36" data-x="3" data-y="−√2" data-approx="3;−1,414" data-kind="Círculo abierto"></circle>
-          <circle class="open-dot keypoint" cx="5" cy="-.91421356237" r=".14"></circle><circle class="point-hit" cx="5" cy="-.91421356237" r=".36" data-x="5" data-y="1/2−√2" data-approx="5;−0,914" data-kind="Círculo abierto"></circle>
+          <circle class="open-dot keypoint" cx="-2" cy="1.5" r=".14"></circle>
+          <circle class="point-hit" cx="-2" cy="1.5" r=".36" data-x="-2" data-y="3/2" data-approx="-2;1.5" data-kind="Círculo abierto" data-decimal-mode="exact"></circle>
+          <circle class="open-dot keypoint" cx="-2" cy="-0.5" r=".14"></circle>
+          <circle class="point-hit" cx="-2" cy="-0.5" r=".36" data-x="-2" data-y="−1/2" data-approx="-2;−0.5" data-kind="Círculo abierto" data-decimal-mode="exact"></circle>
+          <circle class="closed-dot keypoint" cx="-2" cy="2.5" r=".14"></circle>
+          <circle class="point-hit" cx="-2" cy="2.5" r=".36" data-x="-2" data-y="5/2" data-approx="-2;2.5" data-kind="Punto definido" data-decimal-mode="exact"></circle>
+          <circle class="open-dot keypoint" cx="1" cy="0.5" r=".14"></circle>
+          <circle class="point-hit" cx="1" cy="0.5" r=".36" data-x="1" data-y="1/2" data-approx="1;0.5" data-kind="Círculo abierto" data-decimal-mode="exact"></circle>
+          <circle class="closed-dot keypoint" cx="1" cy="2" r=".14"></circle>
+          <circle class="point-hit" cx="1" cy="2" r=".36" data-x="1" data-y="2" data-approx="" data-kind="Punto definido"></circle>
+          <circle class="open-dot keypoint" cx="3" cy="1.4142135623730951" r=".14"></circle>
+          <circle class="point-hit" cx="3" cy="1.4142135623730951" r=".36" data-x="3" data-y="√2" data-approx="3;1.4142" data-kind="Círculo abierto" data-decimal-mode="approx"></circle>
+          <circle class="open-dot keypoint" cx="3" cy="-1.4142135623730951" r=".14"></circle>
+          <circle class="point-hit" cx="3" cy="-1.4142135623730951" r=".36" data-x="3" data-y="−√2" data-approx="3;−1.4142" data-kind="Círculo abierto" data-decimal-mode="approx"></circle>
+          <circle class="open-dot keypoint" cx="5" cy="-0.9142135623730951" r=".14"></circle>
+          <circle class="point-hit" cx="5" cy="-0.9142135623730951" r=".36" data-x="5" data-y="1/2−√2" data-approx="5;−0.9142" data-kind="Círculo abierto" data-decimal-mode="approx"></circle>
         </g>
         <line id="aline" class="a-line" x1="-2" x2="-2" y1="-10000" y2="10000"></line>
-        <line id="hline" class="h-line" x1="-10000" x2="10000" y1=".5" y2=".5"></line>
+        <line id="hline" class="h-line" x1="-10000" x2="10000" y1="-1" y2="-1"></line>
+        <g id="setViz" class="set-viz" opacity="0">
+          <defs>
+            <clipPath id="domainClip"><rect id="domainClipRect" x="-6" y="-5.75" width="0" height=".5"></rect></clipPath>
+            <clipPath id="rangeClip"><rect id="rangeClipRect" x="-5.95" y="-6" width=".5" height="0"></rect></clipPath>
+          </defs>
+          <g id="domainBand" clip-path="url(#domainClip)" opacity="0">
+            <rect x="-6" y="-5.58" width="7.92" height=".18" rx=".09" class="domain-band"></rect>
+            <rect x="2.08" y="-5.58" width="4.92" height=".18" rx=".09" class="domain-band"></rect>
+            <circle cx="2" cy="-5.49" r=".105" class="domain-hole"></circle>
+          </g>
+          <g id="rangeBand" clip-path="url(#rangeClip)" opacity="0">
+            <rect x="-5.72" y="-6" width=".18" height="9" rx=".09" class="range-band"></rect>
+            <circle cx="-5.63" cy="3" r=".105" class="range-hole"></circle>
+          </g>
+          <line id="domainSweep" x1="-6" x2="-6" y1="-100" y2="100" class="domain-sweep" opacity="0"></line>
+          <line id="rangeSweep" x1="-100" x2="100" y1="-6" y2="-6" class="range-sweep" opacity="0"></line>
+          <g id="setHits" opacity="0">
+            <circle id="setHit1" r=".13" class="set-hit"></circle>
+            <circle id="setHit2" r=".13" class="set-hit secondary"></circle>
+          </g>
+          <g id="domainMiss" opacity="0">
+            <circle cx="2" cy="-5.49" r=".17" class="domain-miss-ring"></circle>
+            <path d="M1.89 -5.60 L2.11 -5.38 M2.11 -5.60 L1.89 -5.38" class="domain-miss-x"></path>
+          </g>
+          <g id="rangeDownArrow" opacity="0">
+            <line x1="-5.63" x2="-5.63" y1="-4.55" y2="-5.78" class="range-arrow-line strong"></line>
+            <path d="M-5.80 -5.58 L-5.63 -5.84 L-5.46 -5.58" class="range-arrow-head strong"></path>
+          </g>
+        </g>
         <path id="trace" class="trace"></path><circle id="runner" class="runner" r=".15" opacity="0"></circle>
       </g>
-      <text id="alabel" class="a-label">x = a</text><text id="hlabel" class="h-label">y = 1/2</text>
+      <text id="alabel" class="a-label">x = a</text><text id="hlabel" class="h-label">y = −1</text>
     </svg>
 
-    <div id="intro" class="intro"><strong>¿Qué límite quieres analizar?</strong><p>Selecciona un límite. Algunas alturas se expresan con fracciones o raíces. Si lo necesitas, toca un punto abierto o cerrado para consultar su coordenada exacta.</p></div>
+    <div id="intro" class="intro"><strong>¿Qué límite quieres analizar?</strong><p>Trabaja con fracciones, raíces y valores exactos. Toca puntos relevantes para consultar sus coordenadas y distinguir forma decimal exacta de aproximación decimal.</p></div>
     <div id="formula" class="formula-pill"></div>
     <div class="point-hint">✦ ¿Necesitas una altura exacta? Toca un punto abierto o cerrado.</div>
     <div id="coordPop" class="coord-pop">
@@ -570,6 +887,26 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
       <div id="coordApprox" class="coord-approx"></div>
     </div>
     <button id="answerToggle" class="answer-toggle">Responder</button>
+<div id="setToolInfo" class="set-tool-info" aria-hidden="true">
+      <div class="set-tool-head">
+        <div id="setToolEyebrow" class="set-tool-eyebrow">Dominio</div>
+        <div id="setPhase" class="set-phase"></div>
+      </div>
+      <div id="setToolText" class="set-tool-text"></div>
+      <div class="set-tool-actions"><button id="setContinue" class="set-continue" type="button">Continuar</button></div>
+    </div>
+<div class="range-infinity-text">−∞</div>
+      <div class="range-infinity-caption">alturas cada vez menores</div>
+    </div>
+
+    <div id="setResult" class="set-result" aria-hidden="true">
+      <div id="setResultTitle" class="set-result-title"></div>
+      <div id="setResultMath" class="set-result-math"></div>
+      <div class="set-result-actions">
+        <button id="setReplay" type="button">↻ Repetir</button>
+        <button id="setClose" type="button">Cerrar</button>
+      </div>
+    </div>
 
     <div id="controlbar" class="controlbar">
       <div class="controlrow">
@@ -587,7 +924,7 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
       <div class="finalcard">
         <div class="finalmedal">★</div>
         <h2>¡Laboratorio completado!</h2>
-        <p>Resolviste correctamente todos los límites de esta gráfica, incluidos valores racionales, raíces, comportamientos infinitos y una asíntota horizontal.</p>
+        <p>Completaste la exploración: comparaste límites con valores de la función y observaste que pueden coincidir, ser distintos o incluso que uno de ellos no exista.</p>
         <div class="finalactions"><button id="exploreAgain" class="finalbtn">Volver a explorar</button></div>
       </div>
     </div>
@@ -604,10 +941,22 @@ const finalwin=document.getElementById('finalwin'),exploreAgain=document.getElem
 const answerToggle=document.getElementById('answerToggle');
 const coordPop=document.getElementById('coordPop'),coordKind=document.getElementById('coordKind'),coordExact=document.getElementById('coordExact'),coordApproxBtn=document.getElementById('coordApproxBtn'),coordApprox=document.getElementById('coordApprox');
 const clearKey=document.getElementById('clearKey');
+const undefinedRow=document.getElementById('undefinedRow'),undefinedKey=document.getElementById('undefinedKey');
+const domainBtn=document.getElementById('domainBtnTop'),rangeBtn=document.getElementById('rangeBtnTop');
+const valueChips=[...document.querySelectorAll('.value-chip')];
+const setToolInfo=document.getElementById('setToolInfo'),setToolEyebrow=document.getElementById('setToolEyebrow'),setToolText=document.getElementById('setToolText');
+const setPhase=document.getElementById('setPhase');
+const rangeInfinityLabel={classList:{add(){},remove(){},toggle(){}}},rangeBandEdge={classList:{add(){},remove(){},toggle(){}}};
+const setContinue=document.getElementById('setContinue'),setToolActions=setContinue.parentElement;
+const setResult=document.getElementById('setResult'),setResultTitle=document.getElementById('setResultTitle'),setResultMath=document.getElementById('setResultMath'),setReplay=document.getElementById('setReplay'),setClose=document.getElementById('setClose');
+const setViz=document.getElementById('setViz'),domainBand=document.getElementById('domainBand'),rangeBand=document.getElementById('rangeBand'),domainSweep=document.getElementById('domainSweep'),rangeSweep=document.getElementById('rangeSweep'),domainClipRect=document.getElementById('domainClipRect'),rangeClipRect=document.getElementById('rangeClipRect');
+const setHits=document.getElementById('setHits'),setHit1=document.getElementById('setHit1'),setHit2=document.getElementById('setHit2'),domainMiss=document.getElementById('domainMiss'),rangeDownArrow=document.getElementById('rangeDownArrow');
+
+
 
 const W=13,H=12;
 let camX=.5,camY=0;
-function setCamera(cx=.5,cy=0){camX=cx;camY=cy;const xmin=cx-W/2,ymin=-cy-H/2;svg.setAttribute('viewBox',`${xmin} ${ymin} ${W} ${H}`);alabel.setAttribute('y',ymin+.55);hlabel.setAttribute('x',xmin+.62);hlabel.setAttribute('y',-.68)}
+function setCamera(cx=.5,cy=0){camX=cx;camY=cy;const xmin=cx-W/2,ymin=-cy-H/2;svg.setAttribute('viewBox',`${xmin} ${ymin} ${W} ${H}`);alabel.setAttribute('y',ymin+.55);hlabel.setAttribute('x',xmin+.62);hlabel.setAttribute('y',1.82)}
 function smoothCamera(tx,ty,a=.18){setCamera(camX+(tx-camX)*a,camY+(ty-camY)*a)}
 function restoreScene(clearPath=true){const sx=camX,sy=camY,start=performance.now(),dur=430;function frame(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p);setCamera(sx+(.5-sx)*e,sy*(1-e));if(p<1)requestAnimationFrame(frame);else{setCamera(.5,0);if(clearPath){trace.setAttribute('d','');runner.setAttribute('opacity','0')}}}requestAnimationFrame(frame)}
 function sample(id,fn,x0,x1,steps=900,warp='none'){let d='',pen=false;for(let i=0;i<=steps;i++){const t=i/steps;let q=t;if(warp==='left')q=t*t*t;else if(warp==='right')q=1-Math.pow(1-t,3);else if(warp==='both')q=(1-Math.cos(Math.PI*t))/2;const x=x0+(x1-x0)*q,y=fn(x);if(!Number.isFinite(y)||Math.abs(y)>5000){pen=false;continue}d+=(pen?'L':'M')+x.toFixed(5)+' '+y.toFixed(5)+' ';pen=true}document.getElementById(id).setAttribute('d',d)}
@@ -615,36 +964,231 @@ const SQ=Math.sqrt(2);
 const fns={p1:x=>.5*x+2.5,p2:x=>(x+2)/3-.5,p3:x=>.5+(SQ-.5)*(x-1)/2,p4:x=>-SQ+(x-3)/4,p5:x=>.5+2/(x-5)};
 sample('p1',fns.p1,-60,-2.001,1800,'right');sample('p2',fns.p2,-1.999,.999,1300,'both');sample('p3',fns.p3,1.001,2.999,1300,'both');sample('p4',fns.p4,3.001,4.999,1300,'both');sample('p5',fns.p5,5.0004,80,4200,'left');
 const cases={
- '-2':{left:{kind:'finite',value:1.5,exact:'3/2',fn:fns.p1,start:-4.7},right:{kind:'finite',value:-.5,exact:'−1/2',fn:fns.p2,start:-.7},bilateral:{kind:'none'}},
- '1':{left:{kind:'finite',value:.5,exact:'1/2',fn:fns.p2,start:-.4},right:{kind:'finite',value:.5,exact:'1/2',fn:fns.p3,start:2.1},bilateral:{kind:'finite',value:.5,exact:'1/2'}},
- '3':{left:{kind:'finite',value:SQ,exact:'√2',irrational:true,fn:fns.p3,start:2.0},right:{kind:'finite',value:-SQ,exact:'−√2',irrational:true,fn:fns.p4,start:4.0},bilateral:{kind:'none'}},
- '5':{left:{kind:'finite',value:.5-SQ,exact:'1/2−√2',irrational:true,fn:fns.p4,start:4.05},right:{kind:'posinf',fn:fns.p5,start:5.65},bilateral:{kind:'none'}}
+ '-2':{left:{kind:'finite',value:1.5,exact:'3/2',fn:fns.p1,start:-4.7},right:{kind:'finite',value:-.5,exact:'−1/2',fn:fns.p2,start:-.7},bilateral:{kind:'none'},image:{kind:'finite',value:2.5,exact:'5/2'}},
+ '1':{left:{kind:'finite',value:.5,exact:'1/2',fn:fns.p2,start:-.4},right:{kind:'finite',value:.5,exact:'1/2',fn:fns.p3,start:2.1},bilateral:{kind:'finite',value:.5,exact:'1/2'},image:{kind:'finite',value:2,exact:'2'}},
+ '3':{left:{kind:'finite',value:SQ,exact:'√2',fn:fns.p3,start:2.0},right:{kind:'finite',value:-SQ,exact:'−√2',fn:fns.p4,start:4.0},bilateral:{kind:'none'},image:{kind:'undefined'}},
+ '5':{left:{kind:'finite',value:.5-SQ,exact:'1/2−√2',fn:fns.p4,start:4.05},right:{kind:'posinf',fn:fns.p5,start:5.65},bilateral:{kind:'none'},image:{kind:'undefined'}}
 };
 const globals={neginf:{kind:'neginf',fn:fns.p1,start:-4.2,end:-36,label:'−∞'},posinf:{kind:'finite',value:.5,exact:'1/2',fn:fns.p5,start:7,end:44,label:'+∞',horizontal:.5}};
-let target=null,selected=null,chosenSide=null,answered={left:false,right:false,bilateral:false},mode='idle',answerValue='',timer=null,animating=false,lastAnimation=null;
+const setDescriptions={
+ domain:{intervals:[{from:-Infinity,to:3},{from:3,to:5},{from:5,to:Infinity}],extendsLeft:true,extendsRight:true},
+ range:{intervals:[{from:-Infinity,to:Infinity}],extendsDown:true,extendsUp:true}
+};
+let target=null,selected=null,chosenSide=null,answered={left:false,right:false,bilateral:false,image:false},mode='idle',answerValue='',timer=null,animating=false,lastAnimation=null;
 const partialProgress={
- '-2':{left:false,right:false,bilateral:false},
- '1':{left:false,right:false,bilateral:false},
- '3':{left:false,right:false,bilateral:false},
- '5':{left:false,right:false,bilateral:false}
+ '-2':{left:false,right:false,bilateral:false,image:false},
+ '1':{left:false,right:false,bilateral:false,image:false},
+ '3':{left:false,right:false,bilateral:false,image:false},
+ '5':{left:false,right:false,bilateral:false,image:false}
 };
 const completedTargets=new Set();
+const completedValues=new Set();
+let setToolMode=null,setToolRAF=null,setToolRunning=false;
 
 const TOTAL_TARGETS=6;
 let finalShown=false;
 function checkFinalAchievement(){
-  if(finalShown||completedTargets.size<TOTAL_TARGETS)return;
-  finalShown=true;
-  setTimeout(()=>{
-    toast.className='toast';
-    answerpanel.classList.remove('show');
-    controlbar.classList.remove('guide-glow');
-    stage.classList.remove('goldflash');void stage.offsetWidth;stage.classList.add('goldflash');
-    finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false');
-    if(navigator.vibrate){try{navigator.vibrate([55,45,70,45,110])}catch(e){}}
-  },650);
+ const requiredLimits=["-2", "1", "3", "5", "neginf", "posinf"];
+ const requiredValues=["-2", "1", "3", "5"];
+ if(requiredLimits.every(x=>completedTargets.has(x))&&requiredValues.every(x=>completedValues.has(x))){
+   finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false')
+ }
 }
 exploreAgain.onclick=()=>{finalwin.classList.remove('show');finalwin.setAttribute('aria-hidden','true')};
+
+
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+let continueResolver=null;
+function waitForContinue(){
+  setToolActions.classList.add('show');
+  setContinue.disabled=false;
+  return new Promise(resolve=>{continueResolver=resolve})
+}
+setContinue.onclick=e=>{
+  e.preventDefault();e.stopPropagation();
+  if(!continueResolver)return;
+  setContinue.disabled=true;
+  setToolActions.classList.remove('show');
+  const r=continueResolver;continueResolver=null;
+  r()
+};
+function stopSetToolAnimation(){
+  if(setToolRAF){cancelAnimationFrame(setToolRAF);setToolRAF=null}
+  setToolRunning=false
+}
+function resetSetViz(hideAll=true){
+  stopSetToolAnimation();
+  domainSweep.style.opacity=0;rangeSweep.style.opacity=0;
+  domainBand.style.opacity=0;rangeBand.style.opacity=0;
+  setHits.style.opacity=0;domainMiss.style.opacity=0;rangeDownArrow.style.opacity=0;
+  domainClipRect.setAttribute('width','0');rangeClipRect.setAttribute('height','0');
+  setToolInfo.classList.remove('attention','success','gold');
+  if(hideAll)setViz.setAttribute('opacity','0')
+}
+function setToolMessage(mode,text=null,style=null){
+  setToolEyebrow.textContent=mode==='domain'?'Dominio':'Imagen';
+  setToolInfo.classList.remove('attention','success','gold');
+  if(style)setToolInfo.classList.add(style);
+  if(text){setToolText.innerHTML=text;return}
+  setToolText.innerHTML=mode==='domain'
+    ?'La recta vertical barre la gráfica. Si encuentra al menos un punto, ese valor de <i>x</i> pertenece al dominio.'
+    :'La recta horizontal barre la gráfica. Si encuentra al menos un punto, esa altura pertenece a la imagen.'
+}
+function setToolPhase(text=''){
+  setPhase.textContent=text;
+  setPhase.classList.toggle('show',!!text);
+}
+function showSetResult(mode){
+  setResultTitle.textContent=mode==='domain'?'Dominio de la función':'Imagen de la función';
+  setResultMath.innerHTML=mode==='domain'
+    ?'<span>Dom(<i>f</i>) = ℝ ∖ {3, 5}</span>'
+    :'<span>Im(<i>f</i>) = ℝ</span>';
+  setResult.classList.add('show');setResult.setAttribute('aria-hidden','false')
+}
+function flashHit(x,y,secondary=false){
+  const hit=secondary?setHit2:setHit1;
+  hit.setAttribute('cx',x);hit.setAttribute('cy',y);
+  setHits.style.opacity=1;
+  hit.classList.remove('flash');void hit.getBoundingClientRect();hit.classList.add('flash')
+}
+function hideHits(){setHits.style.opacity=0}
+function domainIntersections(x){
+ const ys=[],e=.04;
+ if(x<-2-e)ys.push(fns.p1(x));
+ else if(Math.abs(x+2)<=e)ys.push(2.5);
+ else if(x>-2+e&&x<1-e)ys.push(fns.p2(x));
+ else if(Math.abs(x-1)<=e)ys.push(2);
+ else if(x>1+e&&x<3-e)ys.push(fns.p3(x));
+ else if(Math.abs(x-3)<=e){}
+ else if(x>3+e&&x<5-e)ys.push(fns.p4(x));
+ else if(Math.abs(x-5)<=e){}
+ else if(x>5+e)ys.push(fns.p5(x));
+ return ys
+}
+function nearestRangeIntersection(y){
+ const pieces=[[fns.p1,-40,-2.001,900],[fns.p2,-1.999,.999,320],[fns.p3,1.001,2.999,320],[fns.p4,3.001,4.999,320],[fns.p5,5.001,45,950]];
+ let best=null,bestErr=Infinity;
+ for(const [fn,a,b,n] of pieces)for(let i=0;i<=n;i++){const x=a+(b-a)*i/n,yy=fn(x),err=Math.abs(yy-y);if(err<bestErr){bestErr=err;best={x,y:yy}}}
+ return bestErr<.075?best:null
+}
+function animateLinear(duration,onFrame){
+  return new Promise(resolve=>{
+    const start=performance.now();
+    function frame(now){
+      const p=Math.min(1,(now-start)/duration),e=p*p*(3-2*p);
+      onFrame(e,p);
+      if(p<1)setToolRAF=requestAnimationFrame(frame);else{setToolRAF=null;resolve()}
+    }
+    setToolRAF=requestAnimationFrame(frame)
+  })
+}
+async function domainSweepSegment(x0,x1,duration){
+  await animateLinear(duration,(e)=>{
+    const x=x0+(x1-x0)*e;
+    domainSweep.setAttribute('x1',x);domainSweep.setAttribute('x2',x);
+    domainClipRect.setAttribute('width',Math.max(0,x+6));
+    const ys=domainIntersections(x);
+    if(ys.length){flashHit(x,ys[0])}else hideHits()
+  })
+}
+async function pauseDomainAt(x,kind){
+  domainSweep.setAttribute('x1',x);domainSweep.setAttribute('x2',x);
+  if(kind==='closed-with-holes'){
+    const y= x===0 ? 2.5 : 1;
+    flashHit(x,y);
+    setToolMessage('domain',
+      `En <i>x</i> = ${x}, puede haber círculos abiertos, pero también existe un punto cerrado. Basta <strong>un solo punto</strong> sobre esta vertical para que ${x} pertenezca al dominio.`,
+      'success');
+    await sleep(1500)
+  }else if(kind==='missing'){
+    hideHits();domainMiss.style.opacity=1;
+    setToolMessage('domain',
+      'En <i>x</i> = 2, la vertical no encuentra ningún punto de la gráfica. Por eso 2 <strong>no pertenece</strong> al dominio.',
+      'attention');
+    await sleep(1850);domainMiss.style.opacity=0
+  }
+}
+async function runDomainTool(){
+ setToolInfo.classList.add('domain-reading');domainBand.style.opacity=1;domainSweep.style.opacity=1;
+ const steps=[[-6,-2,'En x = −2 hay círculos abiertos, pero también un punto cerrado. Por eso −2 pertenece al dominio.','success'],
+ [-2,1,'En x = 1 también hay un punto cerrado. Por eso 1 pertenece al dominio.','success'],
+ [1,3,'En x = 3 no hay ningún punto definido. Por eso 3 queda fuera del dominio.','attention'],
+ [3,5,'En x = 5 tampoco hay ningún punto definido. Por eso 5 queda fuera del dominio.','attention'],
+ [5,7,'La gráfica continúa para x > 5.','success']];
+ setToolPhase('Dominio · inicio');setToolMessage('domain','La vertical recorrerá la gráfica. Si encuentra al menos un punto, ese valor de x pertenece al dominio.');await waitForContinue();
+ for(let i=0;i<steps.length;i++){const [x0,x1,msg,style]=steps[i];await domainSweepSegment(x0,x1,3300);setToolPhase(`Dominio · paso ${i+1}`);setToolMessage('domain',msg,style);await waitForContinue()}
+ hideHits();setToolPhase('Dominio · conclusión');setToolMessage('domain','El dominio contiene todos los reales excepto 3 y 5.','success');await waitForContinue();
+ domainSweep.style.opacity=.32;setToolPhase('');setToolInfo.classList.remove('domain-reading');showSetResult('domain')
+}
+
+function visibleRangeBounds(){
+ const vb=svg.viewBox.baseVal;
+ return {bottom:vb.y,top:vb.y+vb.height}
+}
+function configureRangeBandForVisibleWindow(){
+ const {bottom,top}=visibleRangeBounds(),spec=setDescriptions.range,interval=spec.intervals[0];
+ const visibleFrom=Math.max(bottom,Number.isFinite(interval.from)?interval.from:bottom);
+ const visibleTo=Math.min(top,Number.isFinite(interval.to)?interval.to:top);
+ const rect=rangeBand.querySelector('rect');
+ rect.setAttribute('y',visibleFrom);
+ rect.setAttribute('height',Math.max(.1,visibleTo-visibleFrom));
+ rangeClipRect.setAttribute('y',visibleFrom);
+ rangeClipRect.setAttribute('height','0');
+ rangeSweep.setAttribute('y1',visibleFrom);rangeSweep.setAttribute('y2',visibleFrom);
+ rangeInfinityLabel.classList.toggle('show',!!spec.extendsDown);
+ rangeBandEdge.classList.toggle('show',!!spec.extendsDown);
+ return {bottom,top,visibleFrom,visibleTo}
+}
+
+async function prepareRangeInfinity(){
+ setToolPhase('Imagen · paso 1');setToolInfo.classList.add('reading');
+ configureRangeBandForVisibleWindow();rangeBand.style.opacity=1;rangeSweep.style.opacity=1;
+ setToolMessage('range','<strong>La imagen se extiende en ambas direcciones.</strong><br>Esta gráfica alcanza alturas arbitrariamente pequeñas y arbitrariamente grandes. El barrido recorrerá toda la ventana visible de abajo hacia arriba.','gold');
+ await waitForContinue()
+}
+async function runRangeTool(){
+ await prepareRangeInfinity();
+ const bounds=visibleRangeBounds();
+ const rect=rangeBand.querySelector('rect');rect.setAttribute('y',bounds.bottom);rect.setAttribute('height',Math.max(.1,bounds.top-bounds.bottom));
+ rangeClipRect.setAttribute('y',bounds.bottom);rangeClipRect.setAttribute('height','0');
+ rangeSweep.setAttribute('y1',bounds.bottom);rangeSweep.setAttribute('y2',bounds.bottom);
+ setToolPhase('Imagen · paso 2');setToolMessage('range','La horizontal subirá. Cada altura donde encuentre algún punto se incorpora a la imagen.');await waitForContinue();
+ const mid=(bounds.bottom+bounds.top)/2;
+ await rangeSweepSegment(bounds.bottom,mid,8200);
+ setToolPhase('Imagen · paso 3');setToolMessage('range','Hasta aquí, todas las horizontales han encontrado gráfica. Continuemos hacia arriba.','success');await waitForContinue();
+ await rangeSweepSegment(mid,bounds.top,8200);
+ setToolPhase('Imagen · conclusión');setToolMessage('range','La gráfica alcanza todas las alturas reales. Por eso la imagen es todo ℝ.','success');await waitForContinue();
+ rangeSweep.style.opacity=.32;setToolPhase('');setToolInfo.classList.remove('reading');showSetResult('range')
+}
+
+async function beginSetTool(mode){
+  stage.classList.remove('value-mode');
+  stopSetToolAnimation();setToolMode=mode;setToolRunning=true;setToolPhase('');rangeInfinityLabel.classList.remove('show');rangeBandEdge.classList.remove('show');setToolInfo.classList.remove('reading');
+  coordPop.classList.remove('show');closeAnswerPanel(false);toast.className='toast';intro.classList.add('hidden');formula.classList.remove('show');controlbar.classList.remove('guide-glow');aline.style.opacity=0;alabel.style.opacity=0;hline.style.opacity=0;hlabel.style.opacity=0;restoreScene(true);
+  stage.classList.add('set-mode');domainBtn.classList.toggle('active',mode==='domain');rangeBtn.classList.toggle('active',mode==='range');
+  setResult.classList.remove('show');setResult.setAttribute('aria-hidden','true');
+  setToolInfo.classList.add('show');setToolInfo.setAttribute('aria-hidden','false');
+  setViz.setAttribute('opacity','1');
+  domainBand.style.opacity=0;rangeBand.style.opacity=0;domainSweep.style.opacity=0;rangeSweep.style.opacity=0;
+  setHits.style.opacity=0;domainMiss.style.opacity=0;rangeDownArrow.style.opacity=0;
+  domainClipRect.setAttribute('width','0');rangeClipRect.setAttribute('height','0');
+  try{
+    if(mode==='domain')await runDomainTool();else await runRangeTool()
+  }finally{setToolRunning=false}
+}
+function closeSetTool(){
+  if(continueResolver){const r=continueResolver;continueResolver=null;r()}
+  setToolActions.classList.remove('show');setContinue.disabled=false;
+  setToolInfo.classList.remove('domain-reading');
+  stopSetToolAnimation();setToolMode=null;setToolPhase('');rangeInfinityLabel.classList.remove('show');rangeBandEdge.classList.remove('show');setToolInfo.classList.remove('reading');stage.classList.remove('set-mode');domainBtn.classList.remove('active');rangeBtn.classList.remove('active');
+  setToolInfo.classList.remove('show','attention','success','gold');setToolInfo.setAttribute('aria-hidden','true');
+  setResult.classList.remove('show');setResult.setAttribute('aria-hidden','true');setCamera(.5,0);resetSetViz(true)
+}
+domainBtn.onclick=e=>{e.stopPropagation();if(animating||setToolRunning)return;clearTopSelections();domainBtn.classList.add('active');beginSetTool('domain')};
+rangeBtn.onclick=e=>{e.stopPropagation();if(animating||setToolRunning)return;clearTopSelections();rangeBtn.classList.add('active');beginSetTool('range')};
+setReplay.onclick=e=>{e.stopPropagation();if(setToolMode&&!setToolRunning)beginSetTool(setToolMode)};
+setClose.onclick=e=>{e.stopPropagation();closeSetTool()};
 
 function mathLimit(sub){
   const clean=sub.replaceAll('−','-');
@@ -668,7 +1212,7 @@ function celebrate(text='¡Correcto!',big=false){
   stage.classList.remove('winflash'); void stage.offsetWidth; stage.classList.add('winflash');
   if(navigator.vibrate){try{navigator.vibrate(big?[35,45,35]:25)}catch(e){}}
 }
-function pretty(spec){if(spec.kind==='finite')return spec.exact||String(spec.value).replace('-', '−');if(spec.kind==='posinf')return '+∞';if(spec.kind==='neginf')return '−∞';return 'No existe'}
+function pretty(spec){if(spec.kind==='finite')return spec.exact||String(spec.value).replace('-', '−');if(spec.kind==='posinf')return '+∞';if(spec.kind==='neginf')return '−∞';if(spec.kind==='undefined')return 'No está definida';return 'No existe'}
 function renderAnswer(){answer.textContent=answerValue||'Tu resultado';answer.classList.toggle('empty',!answerValue);updateNoExistKey()}
 function savePartialProgress(){
   if(selected===null)return;
@@ -677,15 +1221,15 @@ function savePartialProgress(){
 }
 function restorePartialProgress(a){
   const key=String(a);
-  answered=partialProgress[key]?{...partialProgress[key]}:{left:false,right:false,bilateral:false};
+  answered=partialProgress[key]?{...partialProgress[key]} :{left:false,right:false,bilateral:false,image:false};
   leftSide.classList.toggle('done',answered.left);
   rightSide.classList.toggle('done',answered.right);
 }
 
-function resetUI(){if(timer){clearInterval(timer);timer=null}animating=false;trace.setAttribute('d','');runner.setAttribute('opacity','0');answerpanel.classList.remove('show');answerToggle.classList.remove('show');coordPop.classList.remove('show');toast.className='toast';toast.textContent='';compareMini.style.display='none';bilateralLabel.style.display='none';answerValue='';renderAnswer();answered={left:false,right:false,bilateral:false};chosenSide=null;lastAnimation=null;mode='idle';play.textContent='▶';play.classList.remove('replay');play.disabled=true;leftSide.className='sidebtn';rightSide.className='sidebtn';setCamera(.5,0);hline.style.opacity=0;hlabel.style.opacity=0;setCue('')}
+function resetUI(){if(timer){clearInterval(timer);timer=null}animating=false;trace.setAttribute('d','');runner.setAttribute('opacity','0');answerpanel.classList.remove('show','image-question');undefinedRow.style.display='none';answerToggle.classList.remove('show');coordPop.classList.remove('show');toast.className='toast';toast.textContent='';compareMini.style.display='none';bilateralLabel.style.display='none';answerValue='';renderAnswer();answered={left:false,right:false,bilateral:false,image:false};chosenSide=null;lastAnimation=null;mode='idle';play.textContent='▶';play.classList.remove('replay');play.disabled=true;leftSide.className='sidebtn';rightSide.className='sidebtn';setCamera(.5,0);hline.style.opacity=0;hlabel.style.opacity=0;setCue('')}
 function moveALine(to){const from=parseFloat(aline.getAttribute('x1'))||to,start=performance.now(),dur=380;aline.style.opacity=1;alabel.style.opacity=1;function step(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p),x=from+(to-from)*e;aline.setAttribute('x1',x);aline.setAttribute('x2',x);alabel.setAttribute('x',x+.12);if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)}
 function setTarget(t){
-  resetUI();target=t;intro.classList.add('hidden');
+  closeSetTool();stage.classList.remove('value-mode');resetUI();target=t;intro.classList.add('hidden');
   function exactCoord(s){
  s=String(s);
  const m=s.match(/^(−)?(\d+)\/(\d+)$/);
@@ -699,13 +1243,20 @@ function openCoordPop(pt,e){
  coordKind.textContent=pt.dataset.kind||'Punto';
  coordExact.innerHTML=`(${exactCoord(pt.dataset.x)}, ${exactCoord(pt.dataset.y)})`;
  const ap=pt.dataset.approx||'';
- coordApprox.classList.remove('show');
- coordApproxBtn.textContent='≈ Ver aproximación';
- coordApproxBtn.style.display=ap?'inline-block':'none';
- if(ap){
-   const [ax,ay]=ap.split(';');
-   coordApprox.textContent=`≈ (${ax}, ${ay})`
- }
+  const decimalMode=pt.dataset.decimalMode||'';
+  coordApprox.classList.remove('show');
+  coordApproxBtn.dataset.decimalMode=decimalMode;
+  coordApproxBtn.style.display=ap?'inline-block':'none';
+  if(ap){
+    const [ax,ay]=ap.split(';');
+    if(decimalMode==='exact'){
+      coordApproxBtn.textContent='= Ver forma decimal';
+      coordApprox.textContent=`= (${ax}, ${ay})`;
+    }else{
+      coordApproxBtn.textContent='≈ Ver aproximación decimal';
+      coordApprox.textContent=`≈ (${ax}, ${ay})`;
+    }
+  }
  let x=e.clientX-r.left+8,y=e.clientY-r.top-10;
  x=Math.min(Math.max(8,x),Math.max(8,r.width-250));
  y=Math.min(Math.max(8,y),Math.max(8,r.height-112));
@@ -723,9 +1274,12 @@ document.querySelectorAll('.point-hit').forEach(pt=>{
 coordApproxBtn.onclick=e=>{
  e.preventDefault();e.stopPropagation();
  coordApprox.classList.toggle('show');
- coordApproxBtn.textContent=coordApprox.classList.contains('show')?'≈ Ocultar aproximación':'≈ Ver aproximación';
- clearTimeout(coordTimer);
- coordTimer=setTimeout(()=>coordPop.classList.remove('show'),6000)
+ const showing=coordApprox.classList.contains('show');
+ const decimalMode=coordApproxBtn.dataset.decimalMode||'approx';
+ coordApproxBtn.textContent=decimalMode==='exact'
+   ?(showing?'= Ocultar forma decimal':'= Ver forma decimal')
+   :(showing?'≈ Ocultar aproximación decimal':'≈ Ver aproximación decimal');
+ clearTimeout(coordTimer);coordTimer=setTimeout(()=>coordPop.classList.remove('show'),6000)
 };
 
 document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.target===t));
@@ -740,8 +1294,7 @@ document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.data
     const n=String(selected).replace('-','−'); leftSide.textContent=`x → ${n}⁻`; rightSide.textContent=`x → ${n}⁺`;
     moveALine(selected);alabel.textContent=`x = ${n}`;formula.classList.remove('show');formula.innerHTML='';play.disabled=true;play.classList.remove('ready');
     if(answered.left&&answered.right&&!answered.bilateral){
-      setCue('Ya completaste ambos límites laterales. Ahora compáralos para concluir.',true);
-      setTimeout(()=>showBilateral(),180);
+      setCue('Ya completaste ambos límites laterales. Ahora compáralos para concluir.',true);setTimeout(()=>showBilateral(),180);
     }else if(answered.left||answered.right){
       setCue(`Ya completaste el lateral ${answered.left?'izquierdo':'derecho'}. Elige el que falta.`,true);
     }else{
@@ -808,11 +1361,35 @@ function classifyAnswer(raw,spec){
 function correct(raw,spec){return classifyAnswer(raw,spec)==='ok'}
 function showToast(text,ok=true){toast.innerHTML=text;toast.className='toast show '+(ok?'ok':'bad')}
 function markSide(s){answered[s]=true;(s==='left'?leftSide:rightSide).classList.add('done');savePartialProgress()}
-function showBilateral(){toast.className='toast';mode='bilateral';answerValue='';renderAnswer();answerTitle.textContent='Compara los límites laterales';compareMini.style.display='flex';leftVal.textContent=pretty(cases[selected].left);rightVal.textContent=pretty(cases[selected].right);bilateralLabel.style.display='block';bilateralLabel.innerHTML=`${mathLimit(`x → ${String(selected).replace('-','−')}`)} <span class="eq">= ?</span>`;openAnswerPanel();play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';formula.innerHTML=`${mathLimit(`x → ${String(selected).replace('-','−')}`)} <span class="eq">= ?</span>`;setCue('Compara ambos límites laterales y elige la conclusión.')}
+
+function clearTopSelections(){document.querySelectorAll('.chip,.value-chip,.meta-chip').forEach(el=>el.classList.remove('active'))}
+function setValueTarget(a){
+ closeSetTool();resetUI();target=null;selected=Number(a);intro.classList.add('hidden');clearTopSelections();
+ stage.classList.add('value-mode');stage.classList.remove('set-mode');
+ document.querySelector(`.value-chip[data-value-target="${a}"]`)?.classList.add('active');
+ controlbar.classList.remove('show','guide-glow');
+ moveALine(selected);aline.style.opacity=1;alabel.style.opacity=1;alabel.textContent=`x = ${String(selected).replace('-','−')}`;
+ setTimeout(()=>showImageQuestion(),420)
+}
+function showImageQuestion(){
+ if(selected===null)return;
+ toast.className='toast';mode='image';answerValue='';renderAnswer();chosenSide=null;
+ leftSide.classList.remove('active');rightSide.classList.remove('active');
+ answerpanel.classList.add('image-question');compareMini.style.display='none';bilateralLabel.style.display='block';
+ const n=String(selected).replace('-','−');
+ answerTitle.textContent='¿Cuál es el valor de la función?';
+ bilateralLabel.innerHTML=`<span class="fx" style="font-size:1.05rem"><i>f</i>(${n}) = ?</span>`;
+ undefinedKey.innerHTML=`<i>f</i>(${n}) no está definida`;
+ undefinedRow.style.display='grid';openAnswerPanel();
+ play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';
+ formula.classList.add('show');formula.innerHTML=`<span class="fx"><i>f</i>(${n})</span> <span class="eq">= ?</span>`;
+ setCue(`Observa qué ocurre exactamente en x = ${n}. Busca el punto cerrado, si existe.`,true);
+}
+function showBilateral(){answerpanel.classList.remove('image-question');undefinedRow.style.display='none';toast.className='toast';mode='bilateral';answerValue='';renderAnswer();answerTitle.textContent='Compara los límites laterales';compareMini.style.display='flex';leftVal.textContent=pretty(cases[selected].left);rightVal.textContent=pretty(cases[selected].right);bilateralLabel.style.display='block';bilateralLabel.innerHTML=`${mathLimit(`x → ${String(selected).replace('-','−')}`)} <span class="eq">= ?</span>`;openAnswerPanel();play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';formula.innerHTML=`${mathLimit(`x → ${String(selected).replace('-','−')}`)} <span class="eq">= ?</span>`;setCue('Compara ambos límites laterales y elige la conclusión.')}
 check.onclick=()=>{
  if(!answerValue)return;
- let spec;if(mode==='bilateral')spec=cases[selected].bilateral;else if(target==='neginf'||target==='posinf')spec=globals[target];else spec=cases[selected][chosenSide];
- const verdict=classifyAnswer(answerValue,spec);
+ let spec;if(mode==='image')spec=cases[selected].image;else if(mode==='bilateral')spec=cases[selected].bilateral;else if(target==='neginf'||target==='posinf')spec=globals[target];else spec=cases[selected][chosenSide];
+ const verdict=(spec.kind==='undefined'&&answerValue==='No definida')?'ok':classifyAnswer(answerValue,spec);
  if(verdict==='approx'){showToast(`<strong>Aún no.</strong> ${answerValue} es una aproximación compatible, pero aquí buscamos el valor exacto. Escríbelo con notación exacta.`,false);return}
  if(verdict!=='ok'){
   if(mode==='bilateral'&&answerValue==='No existe'&&(spec.kind==='posinf'||spec.kind==='neginf'))showToast(`<strong>Revisa la opción.</strong> Los dos límites laterales tienen el mismo comportamiento ${pretty(spec)}. «No existe» se reserva aquí para límites laterales distintos.`,false);
@@ -820,8 +1397,17 @@ check.onclick=()=>{
   return
  }
  closeAnswerPanel(false);
- if(mode==='bilateral'){
-  answered.bilateral=true;savePartialProgress();restoreScene(true);celebrate('¡Caso completado!',true);showToast('<strong>¡Completado!</strong> Has resuelto correctamente los dos límites laterales y el límite bilateral.');
+ if(mode==='image'){
+  answered.image=true;savePartialProgress();answerpanel.classList.remove('image-question');undefinedRow.style.display='none';restoreScene(true);celebrate('¡Caso completado!',true);
+  const lim=pretty(cases[selected].bilateral),img=pretty(cases[selected].image),n=String(selected).replace('-','−');let msg='';
+  if(cases[selected].image.kind==='undefined')msg=`<strong>¡Completado!</strong> El límite es ${lim}, pero <i>f</i>(${n}) no está definida.`;
+  else if(cases[selected].bilateral.kind==='finite'&&Math.abs(cases[selected].bilateral.value-cases[selected].image.value)<1e-10)msg=`<strong>¡Completado!</strong> Aquí el límite y el valor de la función coinciden: ambos valen ${img}.`;
+  else if(cases[selected].bilateral.kind==='none')msg=`<strong>¡Completado!</strong> El límite bilateral no existe, pero <i>f</i>(${n}) sí está definida y vale ${img}.`;
+  else msg=`<strong>¡Completado!</strong> El límite vale ${lim}, mientras que <i>f</i>(${n}) = ${img}. Son preguntas diferentes.`;
+  showToast(msg);const chip=document.querySelector(`.value-chip[data-value-target="${selected}"]`);if(chip)chip.classList.add('done');
+  completedValues.add(String(selected));celebrate('¡Valor correcto!',true);checkFinalAchievement();play.disabled=true;
+ }else if(mode==='bilateral'){
+  answered.bilateral=true;savePartialProgress();restoreScene(true);celebrate('¡Límite completado!',true);showToast('<strong>¡Completado!</strong> Resolviste correctamente los dos límites laterales y el límite bilateral.');
   const chip=document.querySelector(`.chip[data-target="${target}"]`);if(chip){chip.classList.add('done');completedTargets.add(target);checkFinalAchievement()}play.disabled=true
  }else if(target==='neginf'||target==='posinf'){
   restoreScene(true);celebrate('¡Caso completado!',true);if(target==='posinf'){hline.style.opacity=0;hlabel.style.opacity=0}
@@ -880,9 +1466,17 @@ clearKey.onclick=e=>{
  answerValue='';
  renderAnswer()
 };
+undefinedKey.onclick=e=>{e.stopPropagation();answerValue='No definida';renderAnswer()};
 
-document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{if(animating)return;setTarget(c.dataset.target)});
-stage.addEventListener('pointerdown',e=>{if(e.target.closest('.answerpanel,.toast,.controlbar,.chip,.coord-pop,.answer-toggle'))return;if(toast.classList.contains('show'))toast.className='toast';coordPop.classList.remove('show')});
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+  if(animating||setToolRunning)return;
+  clearTopSelections();setTarget(c.dataset.target);c.classList.add('active')
+});
+valueChips.forEach(c=>c.onclick=()=>{
+  if(animating||setToolRunning)return;
+  setValueTarget(c.dataset.valueTarget)
+});
+stage.addEventListener('pointerdown',e=>{if(e.target.closest('.answerpanel,.toast,.controlbar,.chip,.coord-pop,.answer-toggle,.function-tools,.set-result'))return;if(toast.classList.contains('show'))toast.className='toast';coordPop.classList.remove('show')});
 setCamera(.5,0);
 </script>
 </body>
