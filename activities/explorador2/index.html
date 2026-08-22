@@ -899,6 +899,27 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
   }
 }
 
+
+/* ===== v13.3 · transiciones limpias y lectura de dominio ===== */
+.set-tool-info{
+  top:auto!important;
+  bottom:104px!important;
+  left:50%!important;
+  transform:translate(-50%,7px)!important;
+  width:min(92%,560px)!important;
+  max-width:560px!important;
+}
+.set-tool-info.show{transform:translate(-50%,0)!important}
+.domain-hole{
+  fill:#fff!important;
+  stroke:#d29b2e!important;
+  stroke-width:.07!important;
+  filter:drop-shadow(0 0 .10px rgba(210,155,46,.45));
+}
+@media(max-width:650px){
+  .set-tool-info{bottom:92px!important;width:min(94%,560px)!important}
+}
+
 </style>
 </head>
 <body>
@@ -1265,7 +1286,7 @@ function openContinuity(a){
   dismissIntro(false);beginNavigationInteraction();
   a=String(a);
   if(!(completedValues.has(a)&&completedTargets.has(a)))return;
-  closeSetTool();closeAnswerPanel(false);coordPop.classList.remove('show');
+  closeSetTool();closeAnswerPanel(false);controlbar.classList.remove('show','guide-glow');formula.classList.remove('show');chosenSide=null;coordPop.classList.remove('show');
   continuityTarget=a;stage.classList.add('continuity-mode');
   const c=cases[a],n=a.replace('-','−');
   continuityTitle.innerHTML=`¿Es continua <i>f</i> en x = ${n}?`;
@@ -1388,9 +1409,19 @@ function visibleGraphBounds(){const vb=svg.viewBox.baseVal;return{left:vb.x,righ
 function svgEl(name,attrs={}){const el=document.createElementNS('http://www.w3.org/2000/svg',name);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));return el}
 function configureDomainBandResponsive(){
  const b=visibleGraphBounds();domainBand.innerHTML='';const y=b.bottom+.28;
- (setDescriptions.domain?.intervals||[]).forEach(it=>{
+ const intervals=setDescriptions.domain?.intervals||[];
+ intervals.forEach(it=>{
    const from=Number.isFinite(it.from)?Math.max(b.left,it.from):b.left,to=Number.isFinite(it.to)?Math.min(b.right,it.to):b.right;
    if(to>from)domainBand.appendChild(svgEl('rect',{x:from,y,width:to-from,height:.18,rx:.09,class:'domain-band'}))
+ });
+ /* Los huecos de la recta-resumen se deducen de la función, no se codifican
+    para una gráfica concreta. Esto sirve también para futuras funciones creadas. */
+ const boundaries=[...new Set(intervals.flatMap(it=>[it.from,it.to]).filter(Number.isFinite))]
+   .filter(x=>x>b.left&&x<b.right);
+ boundaries.forEach(x=>{
+   if(domainIntersections(x).length===0){
+     domainBand.appendChild(svgEl('circle',{cx:x,cy:y+.09,r:.105,class:'domain-hole'}))
+   }
  });
  domainClipRect.setAttribute('x',b.left);domainClipRect.setAttribute('y',b.bottom);domainClipRect.setAttribute('width','0');domainClipRect.setAttribute('height',b.top-b.bottom);
  domainSweep.setAttribute('x1',b.left);domainSweep.setAttribute('x2',b.left);domainSweep.setAttribute('y1',b.bottom);domainSweep.setAttribute('y2',b.top);
@@ -1715,7 +1746,7 @@ function markSide(s){answered[s]=true;(s==='left'?leftSide:rightSide).classList.
 function clearTopSelections(){document.querySelectorAll('.chip,.value-chip,.meta-chip,.continuity-btn').forEach(el=>el.classList.remove('active'))}
 function setValueTarget(a){
  dismissIntro(false);beginNavigationInteraction();
- closeSetTool();resetUI();target=null;selected=Number(a);intro.classList.add('hidden');clearTopSelections();
+ closeSetTool();resetUI();controlbar.classList.remove('show','guide-glow');formula.classList.remove('show');chosenSide=null;target=null;selected=Number(a);intro.classList.add('hidden');clearTopSelections();
  stage.classList.add('value-mode');stage.classList.remove('set-mode');
  document.querySelector(`.value-chip[data-value-target="${a}"]`)?.classList.add('active');
  controlbar.classList.remove('show','guide-glow');
