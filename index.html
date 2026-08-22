@@ -159,6 +159,18 @@ iframe{border:0;width:100%;height:100%;display:block}
   }
 }
 
+
+/* v13.2 · familias de recursos */
+.challenge-card .symbol{background:rgba(224,246,248,.88);color:#0d7480}
+.visual-section-label{margin-top:18px!important;color:#72528e!important}
+.visual-grid{grid-template-columns:minmax(0,1fr)!important;max-width:760px}
+.visual-card{
+  background:linear-gradient(135deg,rgba(247,239,255,.96),rgba(235,246,255,.96))!important;
+  border-color:rgba(146,112,183,.34)!important;
+}
+.visual-card .tag{color:#745294!important}
+.visual-card .symbol{background:rgba(237,221,252,.92)!important;color:#69458c!important}
+
 </style>
 </head>
 <body>
@@ -167,7 +179,7 @@ iframe{border:0;width:100%;height:100%;display:block}
     <div class="hero-copy">
       <div class="eyebrow">Proyecto Cálculo · LIM-01</div>
       <h1>Laboratorio interactivo</h1>
-      <p class="lead">Explora límites, observa qué ocurre y pon a prueba tus conclusiones.</p>
+      <p class="lead">Investiga gráficas, compara valores y límites, y decide qué ocurre en cada punto.</p>
     </div>
 
     <div class="mascot-wrap">
@@ -179,38 +191,40 @@ iframe{border:0;width:100%;height:100%;display:block}
     </div>
   </section>
 
-  <div class="section-label">Explorar límites</div>
+  <div class="section-label">Desafíos gráficos</div>
   <section class="grid">
-    <button class="card" data-open="explorador1">
-      <span class="tag">Explorador 1 · primeros límites</span>
-      <div class="symbol">lim</div>
-      <h2>Comportamientos fundamentales</h2>
-      <p>Límites laterales y bilaterales, saltos, asíntotas y comportamiento cuando x se aleja.</p>
+    <button class="card challenge-card" data-open="explorador1">
+      <span class="tag">Desafío gráfico 1</span>
+      <div class="symbol">①</div>
+      <h2>Investiga la gráfica A</h2>
+      <p>Resuelve valores, límites y continuidad; después puedes explorar dominio e imagen.</p>
       <span class="go">→</span>
     </button>
 
-    <button class="card" data-open="explorador2">
-      <span class="tag">Explorador 2 · valores exactos</span>
-      <div class="symbol">√</div>
-      <h2>Lee valores exactos</h2>
-      <p>Consulta coordenadas, trabaja con fracciones y raíces y distingue valores exactos de aproximaciones.</p>
+    <button class="card challenge-card" data-open="explorador2">
+      <span class="tag">Desafío gráfico 2</span>
+      <div class="symbol">②</div>
+      <h2>Investiga la gráfica B</h2>
+      <p>Un nuevo ejemplo con valores exactos, puntos especiales y los mismos desafíos de análisis.</p>
       <span class="go">→</span>
     </button>
 
-
-
-    <button class="card" data-open="explorador3">
-      <span class="tag">Explorador 3 · límite e imagen</span>
-      <div class="symbol">f(a)</div>
-      <h2>Límite e imagen del número</h2>
-      <p>Compara lo que ocurre cerca de un número con el valor que toma la función exactamente allí.</p>
+    <button class="card challenge-card" data-open="explorador3">
+      <span class="tag">Desafío gráfico 3</span>
+      <div class="symbol">③</div>
+      <h2>Investiga la gráfica C</h2>
+      <p>Completa una tercera gráfica y relaciona valor, límite y continuidad en distintos puntos.</p>
       <span class="go">→</span>
     </button>
-    <button class="card" data-open="oscilacion">
-      <span class="tag">Descubrir · oscilación</span>
+  </section>
+
+  <div class="section-label visual-section-label">Exploración visual</div>
+  <section class="grid visual-grid">
+    <button class="card visual-card" data-open="oscilacion">
+      <span class="tag">Recurso de exploración · sin desafío</span>
       <div class="symbol">∿</div>
       <h2>Cuando la gráfica oscila</h2>
-      <p>Acércate a 0 y compara dos comportamientos oscilantes mediante zoom y recorridos simultáneos.</p>
+      <p>Observa mediante zoom y recorridos simultáneos cómo cambian dos comportamientos oscilantes cerca de 0.</p>
       <span class="go">→</span>
     </button>
   </section>

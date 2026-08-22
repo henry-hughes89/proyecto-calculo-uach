@@ -34,7 +34,7 @@ h1{font-size:clamp(1.35rem,4vw,2rem);line-height:1;margin:3px 0 0;letter-spacing
 .chip.global{background:rgba(255,255,255,.88);border-color:#cedcdf}
 .chip.global.active{background:linear-gradient(135deg,#0f8493,#1b9ba8);border-color:transparent;color:#fff}
 .chip.done{background:linear-gradient(135deg,#e6f7ed,#d8f1e3);border-color:#a6d5bb;color:#126a43;box-shadow:0 5px 14px rgba(21,121,77,.12)}
-.chip.done::after{content:'Completado ✓';display:block;font-size:.48rem;line-height:1.05;margin-top:1px;font-weight:900;letter-spacing:.01em}
+.chip.done::after{content:none;display:none}
 .chip.done.active{background:linear-gradient(135deg,#dff5e8,#cdebd9);color:#0f6540;border-color:#8ecaaa}
 .stage{position:relative;flex:1;min-height:0;border-radius:18px;overflow:hidden;border:1px solid #d4e3e6;background:#fbfefe}
 svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
@@ -748,6 +748,157 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
 .range-band-edge{position:absolute;left:8px;bottom:8px;z-index:15;display:none;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;background:rgba(255,246,220,.92);border:1px solid rgba(211,157,47,.38);color:#8a681f;font-size:.48rem;font-weight:850;pointer-events:none}
 .range-band-edge.show{display:flex}.range-band-edge .edge-arrow{font-size:1rem;line-height:1;animation:rangeArrowPulse 1.2s ease-in-out infinite}
 
+
+/* ===== v13: unidad de análisis reusable por punto ===== */
+.mode-toolbar{display:block!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.analysis-dashboard{display:flex;flex-direction:column;gap:8px}
+.analysis-section,.analysis-family{border-radius:19px;border:1px solid rgba(191,213,218,.72);padding:9px;background:rgba(255,255,255,.58)}
+.analysis-section{background:linear-gradient(135deg,rgba(238,250,250,.91),rgba(247,250,255,.86))}
+.analysis-section-title,.analysis-family-title{font-size:.57rem;font-weight:900;letter-spacing:.045em;text-transform:uppercase;color:#607883;margin:0 0 7px 3px}
+.analysis-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.analysis-card{border:1px solid rgba(188,211,216,.78);border-radius:15px;padding:6px;background:rgba(255,255,255,.76);box-shadow:0 4px 12px rgba(21,54,70,.045)}
+.analysis-card-head{display:flex;align-items:center;justify-content:space-between;padding:0 3px 5px;font-size:.62rem;font-weight:900;color:#173044}
+.analysis-row{width:100%;min-height:31px;border-radius:10px;border:1px solid transparent;margin:3px 0;padding:4px 6px;display:grid;grid-template-columns:62px 1fr 18px;align-items:center;text-align:left;cursor:pointer;transition:.16s ease}
+.analysis-kind{font-size:.43rem;font-weight:900;text-transform:uppercase;letter-spacing:.035em;opacity:.72}
+.analysis-math{font-size:.59rem;font-weight:850;text-align:center}
+.row-check{opacity:0;color:#238152;font-size:.67rem;font-weight:950;text-align:right}
+.analysis-row.done .row-check{opacity:1}
+.analysis-row.done{background:rgba(226,248,233,.96)!important;border-color:rgba(109,194,137,.54)!important;color:#226e43!important}
+.analysis-card .value-chip{background:rgba(233,243,255,.88);color:#37678e;border-color:rgba(126,166,202,.28)}
+.analysis-card .limit-chip{background:rgba(221,247,248,.90);color:#0f727c;border-color:rgba(84,180,190,.28)}
+.continuity-btn{background:rgba(247,237,255,.92);color:#6a4e86;border-color:rgba(160,121,198,.28)}
+.continuity-btn.locked{opacity:.38;cursor:not-allowed;filter:saturate(.6)}
+.continuity-btn.ready{animation:contReady 1.7s ease-in-out infinite}
+@keyframes contReady{50%{box-shadow:0 0 0 5px rgba(132,92,170,.11)}}
+.analysis-bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.infinity-family{background:rgba(241,249,250,.78)}
+.extra-family{background:rgba(255,247,226,.83);border-color:rgba(219,181,95,.33)}
+.analysis-family-buttons{display:flex;gap:6px;flex-wrap:wrap}
+.extra-family .range-top{background:rgba(242,229,255,.97)!important;color:#6c4e8b!important;border-color:rgba(151,111,190,.37)!important}
+.continuity-panel{position:absolute;left:50%;top:14px;z-index:32;width:min(88%,390px);transform:translate(-50%,-8px) scale(.98);opacity:0;pointer-events:none;padding:12px;border-radius:18px;border:1px solid rgba(186,207,213,.85);background:rgba(250,253,253,.94);backdrop-filter:blur(14px);box-shadow:0 16px 42px rgba(22,51,67,.18);transition:.18s ease}
+.continuity-panel.show{opacity:1;pointer-events:auto;transform:translate(-50%,0) scale(1)}
+.continuity-title{font-size:.64rem;font-weight:900;color:#173044;text-align:center}
+.continuity-summary{margin-top:7px;padding:7px 9px;border-radius:12px;background:rgba(241,247,249,.88);font-size:.55rem;line-height:1.35;color:#536c77;text-align:center}
+.continuity-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.continuity-choice{border-radius:12px;border:1px solid #c8dadd;padding:9px;font-size:.62rem;font-weight:900;background:#fff;color:#173044;cursor:pointer}
+.continuity-close{display:block;margin:7px auto 0;border:0;background:transparent;color:#66808b;font-size:.48rem;font-weight:800;cursor:pointer}
+.stage.continuity-mode #controlbar,.stage.continuity-mode #answerToggle{opacity:0!important;pointer-events:none!important}
+@media(max-width:760px){.analysis-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:460px){.analysis-bottom-grid{grid-template-columns:1fr}.analysis-row{grid-template-columns:55px 1fr 16px}.analysis-kind{font-size:.40rem}.analysis-math{font-size:.55rem}}
+
+
+/* ===== v13.1 · estabilización visual/cámara ===== */
+
+/* Tarjetas compactas: una cabecera + tres acciones en una sola fila */
+.analysis-section{padding:7px!important}
+.analysis-section-title{margin-bottom:5px!important}
+.analysis-grid{gap:6px!important}
+.analysis-card{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:4px!important;
+  padding:5px!important;
+}
+.analysis-card-head{
+  grid-column:1/-1!important;
+  padding:0 2px 3px!important;
+  font-size:.57rem!important;
+}
+.analysis-row{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:27px!important;
+  margin:0!important;
+  padding:4px 5px!important;
+}
+.analysis-kind{display:none!important}
+.analysis-math{font-size:.53rem!important;text-align:center!important;white-space:nowrap}
+.row-check{position:absolute;right:4px;top:3px;font-size:.58rem!important}
+.analysis-bottom-grid{gap:6px!important}
+.analysis-family{padding:7px 8px!important}
+.analysis-family-title{margin-bottom:5px!important}
+
+/* Mensaje inicial único y compacto */
+.intro{
+  max-width:430px!important;
+  padding:13px 15px 12px!important;
+}
+.intro strong{font-size:.84rem!important}
+.intro p{margin:5px 0 0!important;font-size:.60rem!important;line-height:1.34!important}
+.intro-start-hint{
+  margin-top:8px;
+  padding-top:7px;
+  border-top:1px solid rgba(185,210,216,.60);
+  font-size:.53rem;
+  line-height:1.28;
+  color:#59737e;
+  font-weight:720;
+}
+.intro-start-btn{
+  display:block;
+  margin:9px auto 0;
+  border:0;
+  border-radius:999px;
+  padding:7px 14px;
+  background:#148d9a;
+  color:white;
+  font-size:.58rem;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 7px 18px rgba(20,141,154,.18);
+}
+.point-hint{display:none!important}
+
+/* En PC la gráfica recupera protagonismo */
+@media(min-width:900px){
+  .analysis-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .analysis-dashboard{gap:6px!important}
+}
+@media(max-width:760px){
+  .analysis-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .analysis-math{font-size:.51rem!important}
+}
+
+
+/* ===== v13.2 · progreso, navegación y foco inicial ===== */
+
+/* Los límites pendientes ya no se parecen al verde de logro */
+.analysis-card .limit-chip{
+  background:rgba(255,239,228,.94)!important;
+  color:#91562f!important;
+  border-color:rgba(207,145,100,.34)!important;
+}
+.analysis-card .limit-chip:not(.done):hover{
+  background:rgba(255,232,216,.98)!important;
+}
+
+/* Logro compacto: sólo cambio a verde + check */
+.chip.done::after{content:none!important;display:none!important}
+.analysis-row.done .row-check{opacity:1!important}
+.analysis-row.done{
+  background:rgba(226,248,233,.97)!important;
+  border-color:rgba(109,194,137,.56)!important;
+  color:#226e43!important;
+}
+
+/* Orientación inicial: brillan las tres familias, no la gráfica */
+.analysis-section.nav-attention,
+.analysis-family.nav-attention{
+  animation:navigationPulse 1.45s ease-in-out 4;
+}
+@keyframes navigationPulse{
+  0%,100%{
+    box-shadow:0 0 0 0 rgba(32,151,166,0),0 4px 12px rgba(21,54,70,.04);
+    transform:translateY(0)
+  }
+  50%{
+    box-shadow:0 0 0 4px rgba(32,151,166,.16),0 8px 23px rgba(21,96,110,.14);
+    transform:translateY(-1px)
+  }
+}
+
 </style>
 </head>
 <body>
@@ -755,32 +906,76 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
 <header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Explorador 2 · Valores exactos</h1></header>
 <section class="shell">
   <div class="toolbar mode-toolbar">
-    <div class="family-row family-row-limits">
-      <div class="family-box family-limits">
-        <span class="family-title">Límites</span>
-        <div class="family-buttons">
-          <button class="chip limit-chip" data-target="-2">x → −2</button><button class="chip limit-chip" data-target="1">x → 1</button><button class="chip limit-chip" data-target="3">x → 3</button><button class="chip limit-chip" data-target="5">x → 5</button><button class="chip limit-chip global" data-target="neginf">x → −∞</button><button class="chip limit-chip global" data-target="posinf">x → +∞</button>
-        </div>
+<div class="analysis-dashboard">
+      <section class="analysis-section">
+        <div class="analysis-section-title">Análisis en puntos</div>
+        <div class="analysis-grid">
+        <article class="analysis-card" data-a="-2">
+          <div class="analysis-card-head"><span>x = −2</span><span class="card-status"></span></div>
+          <button class="analysis-row value-chip" data-value-target="-2" type="button">
+            <span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(−2)</span><span class="row-check">✓</span>
+          </button>
+          <button class="analysis-row chip limit-chip" data-target="-2" type="button">
+            <span class="analysis-kind">Límite</span><span class="analysis-math">x → −2</span><span class="row-check">✓</span>
+          </button>
+          <button class="analysis-row continuity-btn locked" data-cont-target="-2" type="button" disabled>
+            <span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span>
+          </button>
+        </article>
+        <article class="analysis-card" data-a="1">
+          <div class="analysis-card-head"><span>x = 1</span><span class="card-status"></span></div>
+          <button class="analysis-row value-chip" data-value-target="1" type="button">
+            <span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(1)</span><span class="row-check">✓</span>
+          </button>
+          <button class="analysis-row chip limit-chip" data-target="1" type="button">
+            <span class="analysis-kind">Límite</span><span class="analysis-math">x → 1</span><span class="row-check">✓</span>
+          </button>
+          <button class="analysis-row continuity-btn locked" data-cont-target="1" type="button" disabled>
+            <span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span>
+          </button>
+        </article>
+        <article class="analysis-card" data-a="3">
+          <div class="analysis-card-head"><span>x = 3</span><span class="card-status"></span></div>
+          <button class="analysis-row value-chip" data-value-target="3" type="button">
+            <span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(3)</span><span class="row-check">✓</span>
+          </button>
+          <button class="analysis-row chip limit-chip" data-target="3" type="button">
+            <span class="analysis-kind">Límite</span><span class="analysis-math">x → 3</span><span class="row-check">✓</span>
+          </button>
+          <button class="analysis-row continuity-btn locked" data-cont-target="3" type="button" disabled>
+            <span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span>
+          </button>
+        </article>
+        <article class="analysis-card" data-a="5">
+          <div class="analysis-card-head"><span>x = 5</span><span class="card-status"></span></div>
+          <button class="analysis-row value-chip" data-value-target="5" type="button">
+            <span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(5)</span><span class="row-check">✓</span>
+          </button>
+          <button class="analysis-row chip limit-chip" data-target="5" type="button">
+            <span class="analysis-kind">Límite</span><span class="analysis-math">x → 5</span><span class="row-check">✓</span>
+          </button>
+          <button class="analysis-row continuity-btn locked" data-cont-target="5" type="button" disabled>
+            <span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span>
+          </button>
+        </article></div>
+      </section>
+      <div class="analysis-bottom-grid">
+        <section class="analysis-family infinity-family">
+          <div class="analysis-family-title">Comportamiento al infinito</div>
+          <div class="analysis-family-buttons">
+            <button class="chip global" data-target="neginf" type="button">x → −∞</button>
+            <button class="chip global" data-target="posinf" type="button">x → +∞</button>
+          </div>
+        </section>
+        <section class="analysis-family extra-family">
+          <div class="analysis-family-title">Más sobre la función</div>
+          <div class="analysis-family-buttons">
+            <button id="domainBtnTop" class="meta-chip domain-top" type="button">Dominio</button>
+            <button id="rangeBtnTop" class="meta-chip range-top" type="button">Imagen</button>
+          </div>
+        </section>
       </div>
-    </div>
-
-    <div class="family-row family-row-secondary">
-      <div class="family-box family-values">
-        <span class="family-title">Valores de la función</span>
-        <div class="family-buttons">
-          <button class="value-chip" data-value-target="-2">f(−2)</button><button class="value-chip" data-value-target="1">f(1)</button><button class="value-chip" data-value-target="3">f(3)</button><button class="value-chip" data-value-target="5">f(5)</button>
-        </div>
-      </div>
-
-      <div class="family-box family-more">
-        <span class="family-title">Más sobre la función</span>
-        <div class="family-buttons">
-          <button id="domainBtnTop" class="meta-chip domain-top" type="button">Dominio</button>
-          <button id="rangeBtnTop" class="meta-chip range-top" type="button">Imagen</button>
-        </div>
-      </div>
-    </div>
-  </div>
+    </div></div>
   <div id="answerpanel" class="answerpanel">
       <div class="answer-top">
         <div class="answer-main">
@@ -877,9 +1072,14 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
       <text id="alabel" class="a-label">x = a</text><text id="hlabel" class="h-label">y = −1</text>
     </svg>
 
-    <div id="intro" class="intro"><strong>¿Qué límite quieres analizar?</strong><p>Trabaja con fracciones, raíces y valores exactos. Toca puntos relevantes para consultar sus coordenadas y distinguir forma decimal exacta de aproximación decimal.</p></div>
+    <div id="intro" class="intro">
+      <strong>¿Qué quieres investigar?</strong>
+      <p>Elige una opción y explora la gráfica.</p>
+      <div class="intro-start-hint">✦ Si necesitas una altura exacta, puedes tocar un punto abierto o cerrado de la gráfica.</div>
+      <button id="introStart" class="intro-start-btn" type="button">Inicio</button>
+    </div>
     <div id="formula" class="formula-pill"></div>
-    <div class="point-hint">✦ ¿Necesitas una altura exacta? Toca un punto abierto o cerrado.</div>
+    <div class="point-hint"></div>
     <div id="coordPop" class="coord-pop">
       <div id="coordKind" class="coord-title"></div>
       <div id="coordExact" class="coord-exact"></div>
@@ -906,6 +1106,16 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
         <button id="setReplay" type="button">↻ Repetir</button>
         <button id="setClose" type="button">Cerrar</button>
       </div>
+    </div>
+
+    <div id="continuityPanel" class="continuity-panel" aria-hidden="true">
+      <div id="continuityTitle" class="continuity-title">¿Es continua la función?</div>
+      <div id="continuitySummary" class="continuity-summary"></div>
+      <div class="continuity-actions">
+        <button id="continuityYes" class="continuity-choice" type="button">Sí</button>
+        <button id="continuityNo" class="continuity-choice" type="button">No</button>
+      </div>
+      <button id="continuityClose" class="continuity-close" type="button">Cerrar</button>
     </div>
 
     <div id="controlbar" class="controlbar">
@@ -943,7 +1153,12 @@ const coordPop=document.getElementById('coordPop'),coordKind=document.getElement
 const clearKey=document.getElementById('clearKey');
 const undefinedRow=document.getElementById('undefinedRow'),undefinedKey=document.getElementById('undefinedKey');
 const domainBtn=document.getElementById('domainBtnTop'),rangeBtn=document.getElementById('rangeBtnTop');
+const continuityBtns=[...document.querySelectorAll('.continuity-btn')];
+const continuityPanel=document.getElementById('continuityPanel'),continuityTitle=document.getElementById('continuityTitle'),continuitySummary=document.getElementById('continuitySummary');
+const continuityYes=document.getElementById('continuityYes'),continuityNo=document.getElementById('continuityNo'),continuityClose=document.getElementById('continuityClose');
+
 const valueChips=[...document.querySelectorAll('.value-chip')];
+const introStart=document.getElementById('introStart');
 const setToolInfo=document.getElementById('setToolInfo'),setToolEyebrow=document.getElementById('setToolEyebrow'),setToolText=document.getElementById('setToolText');
 const setPhase=document.getElementById('setPhase');
 const rangeInfinityLabel={classList:{add(){},remove(){},toggle(){}}},rangeBandEdge={classList:{add(){},remove(){},toggle(){}}};
@@ -954,11 +1169,29 @@ const setHits=document.getElementById('setHits'),setHit1=document.getElementById
 
 
 
-const W=13,H=12;
-let camX=.5,camY=0;
-function setCamera(cx=.5,cy=0){camX=cx;camY=cy;const xmin=cx-W/2,ymin=-cy-H/2;svg.setAttribute('viewBox',`${xmin} ${ymin} ${W} ${H}`);alabel.setAttribute('y',ymin+.55);hlabel.setAttribute('x',xmin+.62);hlabel.setAttribute('y',1.82)}
+const CAMERA_CONFIG={centerX:.5,centerY:0,minSpanX:13,minSpanY:12};
+let VIEW_W=13,VIEW_H=12,camX=CAMERA_CONFIG.centerX,camY=CAMERA_CONFIG.centerY;
+function updateVisibleCameraSize(){
+  const r=svg.getBoundingClientRect();
+  const aspect=(r.width>0&&r.height>0)?r.width/r.height:CAMERA_CONFIG.minSpanX/CAMERA_CONFIG.minSpanY;
+  const baseAspect=CAMERA_CONFIG.minSpanX/CAMERA_CONFIG.minSpanY;
+  if(aspect>=baseAspect){
+    VIEW_H=CAMERA_CONFIG.minSpanY;
+    VIEW_W=VIEW_H*aspect;
+  }else{
+    VIEW_W=CAMERA_CONFIG.minSpanX;
+    VIEW_H=VIEW_W/aspect;
+  }
+}
+function setCamera(cx=CAMERA_CONFIG.centerX,cy=CAMERA_CONFIG.centerY){
+  camX=cx;camY=cy;updateVisibleCameraSize();
+  const xmin=cx-VIEW_W/2,ymin=-cy-VIEW_H/2;
+  svg.setAttribute('viewBox',`${xmin} ${ymin} ${VIEW_W} ${VIEW_H}`);
+  alabel.setAttribute('y',ymin+.55);
+  hlabel.setAttribute('x',xmin+.62);hlabel.setAttribute('y',1.82)
+}
 function smoothCamera(tx,ty,a=.18){setCamera(camX+(tx-camX)*a,camY+(ty-camY)*a)}
-function restoreScene(clearPath=true){const sx=camX,sy=camY,start=performance.now(),dur=430;function frame(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p);setCamera(sx+(.5-sx)*e,sy*(1-e));if(p<1)requestAnimationFrame(frame);else{setCamera(.5,0);if(clearPath){trace.setAttribute('d','');runner.setAttribute('opacity','0')}}}requestAnimationFrame(frame)}
+function restoreScene(clearPath=true){const sx=camX,sy=camY,start=performance.now(),dur=430;function frame(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p);setCamera(sx+(CAMERA_CONFIG.centerX-sx)*e,sy*(1-e));if(p<1)requestAnimationFrame(frame);else{setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);if(clearPath){trace.setAttribute('d','');runner.setAttribute('opacity','0')}}}requestAnimationFrame(frame)}
 function sample(id,fn,x0,x1,steps=900,warp='none'){let d='',pen=false;for(let i=0;i<=steps;i++){const t=i/steps;let q=t;if(warp==='left')q=t*t*t;else if(warp==='right')q=1-Math.pow(1-t,3);else if(warp==='both')q=(1-Math.cos(Math.PI*t))/2;const x=x0+(x1-x0)*q,y=fn(x);if(!Number.isFinite(y)||Math.abs(y)>5000){pen=false;continue}d+=(pen?'L':'M')+x.toFixed(5)+' '+y.toFixed(5)+' ';pen=true}document.getElementById(id).setAttribute('d',d)}
 const SQ=Math.sqrt(2);
 const fns={p1:x=>.5*x+2.5,p2:x=>(x+2)/3-.5,p3:x=>.5+(SQ-.5)*(x-1)/2,p4:x=>-SQ+(x-3)/4,p5:x=>.5+2/(x-5)};
@@ -983,14 +1216,81 @@ const partialProgress={
 };
 const completedTargets=new Set();
 const completedValues=new Set();
+const completedContinuity=new Set();
+let continuityTarget=null;
 let setToolMode=null,setToolRAF=null,setToolRunning=false;
 
 const TOTAL_TARGETS=6;
 let finalShown=false;
+
+
+let navigationAttentionTimer=null;
+function clearNavigationAttention(){
+  clearTimeout(navigationAttentionTimer);
+  document.querySelectorAll('.analysis-section,.analysis-family').forEach(el=>el.classList.remove('nav-attention'))
+}
+function showNavigationAttention(){
+  clearNavigationAttention();
+  document.querySelectorAll('.analysis-section,.analysis-family').forEach(el=>el.classList.add('nav-attention'));
+  navigationAttentionTimer=setTimeout(clearNavigationAttention,6200)
+}
+function dismissIntro(showGuidance=true){
+  const wasVisible=!intro.classList.contains('hidden');
+  intro.classList.add('hidden');
+  if(wasVisible&&showGuidance)showNavigationAttention()
+}
+function beginNavigationInteraction(){
+  clearNavigationAttention()
+}
+introStart.onclick=e=>{e.preventDefault();e.stopPropagation();dismissIntro(true)};
+stage.addEventListener('pointerdown',e=>{
+  if(intro.classList.contains('hidden'))return;
+  if(e.target.closest('#intro'))return;
+  dismissIntro(true)
+});
+
+function finiteEqual(a,b){return a&&b&&a.kind==='finite'&&b.kind==='finite'&&Math.abs(a.value-b.value)<1e-10}
+function isContinuousAt(a){const c=cases[String(a)];return !!c&&finiteEqual(c.bilateral,c.image)}
+function refreshAnalysisCards(){
+  document.querySelectorAll('.analysis-card').forEach(card=>{
+    const a=card.dataset.a;
+    const vb=card.querySelector('.value-chip'),lb=card.querySelector('.limit-chip'),cb=card.querySelector('.continuity-btn');
+    const vd=completedValues.has(a),ld=completedTargets.has(a),cd=completedContinuity.has(a),unlocked=vd&&ld;
+    vb?.classList.toggle('done',vd);lb?.classList.toggle('done',ld);cb?.classList.toggle('done',cd);
+    if(cb){cb.disabled=!unlocked;cb.classList.toggle('locked',!unlocked);cb.classList.toggle('ready',unlocked&&!cd)}
+  })
+}
+function closeContinuity(){continuityTarget=null;continuityPanel.classList.remove('show');continuityPanel.setAttribute('aria-hidden','true');stage.classList.remove('continuity-mode')}
+function openContinuity(a){
+  dismissIntro(false);beginNavigationInteraction();
+  a=String(a);
+  if(!(completedValues.has(a)&&completedTargets.has(a)))return;
+  closeSetTool();closeAnswerPanel(false);coordPop.classList.remove('show');
+  continuityTarget=a;stage.classList.add('continuity-mode');
+  const c=cases[a],n=a.replace('-','−');
+  continuityTitle.innerHTML=`¿Es continua <i>f</i> en x = ${n}?`;
+  continuitySummary.innerHTML=`Ya obtuviste <i>f</i>(${n}) = ${pretty(c.image)} y el límite correspondiente = ${pretty(c.bilateral)}.`;
+  continuityPanel.classList.add('show');continuityPanel.setAttribute('aria-hidden','false')
+}
+function answerContinuity(choice){
+  if(continuityTarget===null)return;
+  const expected=isContinuousAt(continuityTarget),ok=(choice==='yes')===expected;
+  if(!ok){showToast('<strong>Aún no.</strong> Para continuidad, el límite debe existir como número real y coincidir con el valor de la función.',false);return}
+  const a=continuityTarget;
+  completedContinuity.add(a);refreshAnalysisCards();closeContinuity();celebrate('¡Continuidad correcta!',true);
+  showToast(`<strong>Correcto.</strong> La función ${expected?'sí':'no'} es continua en x = ${a.replace('-','−')}.`);
+  checkFinalAchievement()
+}
+continuityBtns.forEach(b=>b.onclick=e=>{e.stopPropagation();openContinuity(b.dataset.contTarget)});
+continuityYes.onclick=e=>{e.stopPropagation();answerContinuity('yes')};
+continuityNo.onclick=e=>{e.stopPropagation();answerContinuity('no')};
+continuityClose.onclick=e=>{e.stopPropagation();closeContinuity()};
+
 function checkFinalAchievement(){
  const requiredLimits=["-2", "1", "3", "5", "neginf", "posinf"];
  const requiredValues=["-2", "1", "3", "5"];
- if(requiredLimits.every(x=>completedTargets.has(x))&&requiredValues.every(x=>completedValues.has(x))){
+ const requiredContinuity=["-2", "1", "3", "5"];
+ if(requiredLimits.every(x=>completedTargets.has(x))&&requiredValues.every(x=>completedValues.has(x))&&requiredContinuity.every(x=>completedContinuity.has(x))){
    finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false')
  }
 }
@@ -1083,14 +1383,38 @@ function animateLinear(duration,onFrame){
     setToolRAF=requestAnimationFrame(frame)
   })
 }
+
+function visibleGraphBounds(){const vb=svg.viewBox.baseVal;return{left:vb.x,right:vb.x+vb.width,bottom:vb.y,top:vb.y+vb.height}}
+function svgEl(name,attrs={}){const el=document.createElementNS('http://www.w3.org/2000/svg',name);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));return el}
+function configureDomainBandResponsive(){
+ const b=visibleGraphBounds();domainBand.innerHTML='';const y=b.bottom+.28;
+ (setDescriptions.domain?.intervals||[]).forEach(it=>{
+   const from=Number.isFinite(it.from)?Math.max(b.left,it.from):b.left,to=Number.isFinite(it.to)?Math.min(b.right,it.to):b.right;
+   if(to>from)domainBand.appendChild(svgEl('rect',{x:from,y,width:to-from,height:.18,rx:.09,class:'domain-band'}))
+ });
+ domainClipRect.setAttribute('x',b.left);domainClipRect.setAttribute('y',b.bottom);domainClipRect.setAttribute('width','0');domainClipRect.setAttribute('height',b.top-b.bottom);
+ domainSweep.setAttribute('x1',b.left);domainSweep.setAttribute('x2',b.left);domainSweep.setAttribute('y1',b.bottom);domainSweep.setAttribute('y2',b.top);
+ return b
+}
+function configureRangeBandResponsive(){
+ const b=visibleGraphBounds();rangeBand.innerHTML='';const x=b.left+.23;
+ (setDescriptions.range?.intervals||[]).forEach(it=>{
+   const from=Number.isFinite(it.from)?Math.max(b.bottom,it.from):b.bottom,to=Number.isFinite(it.to)?Math.min(b.top,it.to):b.top;
+   if(to>from)rangeBand.appendChild(svgEl('rect',{x,y:from,width:.18,height:to-from,rx:.09,class:'range-band'}))
+ });
+ rangeClipRect.setAttribute('x',b.left);rangeClipRect.setAttribute('y',b.bottom);rangeClipRect.setAttribute('width',b.right-b.left);rangeClipRect.setAttribute('height','0');
+ rangeSweep.setAttribute('x1',b.left);rangeSweep.setAttribute('x2',b.right);rangeSweep.setAttribute('y1',b.bottom);rangeSweep.setAttribute('y2',b.bottom);
+ return b
+}
+
 async function domainSweepSegment(x0,x1,duration){
-  await animateLinear(duration,(e)=>{
-    const x=x0+(x1-x0)*e;
-    domainSweep.setAttribute('x1',x);domainSweep.setAttribute('x2',x);
-    domainClipRect.setAttribute('width',Math.max(0,x+6));
-    const ys=domainIntersections(x);
-    if(ys.length){flashHit(x,ys[0])}else hideHits()
-  })
+ const b=visibleGraphBounds();
+ await animateLinear(duration,e=>{
+   const x=x0+(x1-x0)*e;
+   domainSweep.setAttribute('x1',x);domainSweep.setAttribute('x2',x);domainSweep.setAttribute('y1',b.bottom);domainSweep.setAttribute('y2',b.top);
+   domainClipRect.setAttribute('width',Math.max(0,x-b.left));
+   const ys=domainIntersections(x);if(ys.length){flashHit(x,ys[0]);setHit2.style.opacity=0}else hideHits()
+ })
 }
 async function pauseDomainAt(x,kind){
   domainSweep.setAttribute('x1',x);domainSweep.setAttribute('x2',x);
@@ -1110,36 +1434,36 @@ async function pauseDomainAt(x,kind){
   }
 }
 async function runDomainTool(){
- setToolInfo.classList.add('domain-reading');domainBand.style.opacity=1;domainSweep.style.opacity=1;
- const steps=[[-6,-2,'En x = −2 hay círculos abiertos, pero también un punto cerrado. Por eso −2 pertenece al dominio.','success'],
- [-2,1,'En x = 1 también hay un punto cerrado. Por eso 1 pertenece al dominio.','success'],
- [1,3,'En x = 3 no hay ningún punto definido. Por eso 3 queda fuera del dominio.','attention'],
- [3,5,'En x = 5 tampoco hay ningún punto definido. Por eso 5 queda fuera del dominio.','attention'],
- [5,7,'La gráfica continúa para x > 5.','success']];
- setToolPhase('Dominio · inicio');setToolMessage('domain','La vertical recorrerá la gráfica. Si encuentra al menos un punto, ese valor de x pertenece al dominio.');await waitForContinue();
- for(let i=0;i<steps.length;i++){const [x0,x1,msg,style]=steps[i];await domainSweepSegment(x0,x1,3300);setToolPhase(`Dominio · paso ${i+1}`);setToolMessage('domain',msg,style);await waitForContinue()}
- hideHits();setToolPhase('Dominio · conclusión');setToolMessage('domain','El dominio contiene todos los reales excepto 3 y 5.','success');await waitForContinue();
- domainSweep.style.opacity=.32;setToolPhase('');setToolInfo.classList.remove('domain-reading');showSetResult('domain')
+ rangeBand.style.opacity=0;rangeSweep.style.opacity=0;setHit2.style.opacity=0;domainMiss.style.opacity=0;
+ const b=configureDomainBandResponsive();domainBand.style.opacity=1;domainSweep.style.opacity=1;
+ setToolPhase('Dominio · inicio');setToolMessage('domain','La vertical recorrerá todo el ancho visible. Si encuentra al menos un punto, ese valor de <i>x</i> pertenece al dominio.');await waitForContinue();
+ const crit=Object.keys(cases).map(Number).filter(Number.isFinite).sort((a,b)=>a-b).filter(x=>x>b.left&&x<b.right);
+ let cur=b.left,step=1;
+ for(const x of crit){
+   const dur=Math.max(1800,Math.min(5200,1000+Math.abs(x-cur)/(b.right-b.left)*9000));
+   await domainSweepSegment(cur,x,dur);
+   const belongs=domainIntersections(x).length>0;
+   setToolPhase(`Dominio · paso ${step++}`);
+   setToolMessage('domain',belongs?`En <i>x</i> = ${String(x).replace('-','−')} la vertical encuentra al menos un punto. Ese valor sí pertenece al dominio.`:`En <i>x</i> = ${String(x).replace('-','−')} la vertical no encuentra ningún punto. Ese valor queda fuera del dominio.`,belongs?'success':'attention');
+   await waitForContinue();cur=x
+ }
+ if(cur<b.right)await domainSweepSegment(cur,b.right,Math.max(2000,Math.min(4800,1000+(b.right-cur)/(b.right-b.left)*8000)));
+ hideHits();setToolPhase('Dominio · conclusión');setToolMessage('domain','La franja inferior resume los valores de <i>x</i> donde alguna vertical encontró gráfica.','success');await waitForContinue();
+ domainSweep.style.opacity=.32;setToolPhase('');showSetResult('domain')
 }
 
-function visibleRangeBounds(){
- const vb=svg.viewBox.baseVal;
- return {bottom:vb.y,top:vb.y+vb.height}
+async function rangeSweepSegment(y0,y1,duration,showEncounter=true){
+ let lastFlash=0;const b=visibleGraphBounds();
+ await animateLinear(duration,e=>{
+   const y=y0+(y1-y0)*e;
+   rangeSweep.setAttribute('x1',b.left);rangeSweep.setAttribute('x2',b.right);rangeSweep.setAttribute('y1',y);rangeSweep.setAttribute('y2',y);
+   rangeClipRect.setAttribute('height',Math.max(0,y-b.bottom));
+   const hit=nearestRangeIntersection(y);
+   if(hit){if(showEncounter&&performance.now()-lastFlash>360){flashHit(hit.x,hit.y);lastFlash=performance.now()}}else hideHits()
+ })
 }
-function configureRangeBandForVisibleWindow(){
- const {bottom,top}=visibleRangeBounds(),spec=setDescriptions.range,interval=spec.intervals[0];
- const visibleFrom=Math.max(bottom,Number.isFinite(interval.from)?interval.from:bottom);
- const visibleTo=Math.min(top,Number.isFinite(interval.to)?interval.to:top);
- const rect=rangeBand.querySelector('rect');
- rect.setAttribute('y',visibleFrom);
- rect.setAttribute('height',Math.max(.1,visibleTo-visibleFrom));
- rangeClipRect.setAttribute('y',visibleFrom);
- rangeClipRect.setAttribute('height','0');
- rangeSweep.setAttribute('y1',visibleFrom);rangeSweep.setAttribute('y2',visibleFrom);
- rangeInfinityLabel.classList.toggle('show',!!spec.extendsDown);
- rangeBandEdge.classList.toggle('show',!!spec.extendsDown);
- return {bottom,top,visibleFrom,visibleTo}
-}
+function visibleRangeBounds(){const b=visibleGraphBounds();return{bottom:b.bottom,top:b.top}}
+function configureRangeBandForVisibleWindow(){const b=configureRangeBandResponsive();return{bottom:b.bottom,top:b.top,visibleFrom:b.bottom,visibleTo:b.top}}
 
 async function prepareRangeInfinity(){
  setToolPhase('Imagen · paso 1');setToolInfo.classList.add('reading');
@@ -1148,6 +1472,7 @@ async function prepareRangeInfinity(){
  await waitForContinue()
 }
 async function runRangeTool(){
+ const responsiveRange=configureRangeBandResponsive();setHit2.style.opacity=0;
  await prepareRangeInfinity();
  const bounds=visibleRangeBounds();
  const rect=rangeBand.querySelector('rect');rect.setAttribute('y',bounds.bottom);rect.setAttribute('height',Math.max(.1,bounds.top-bounds.bottom));
@@ -1163,6 +1488,7 @@ async function runRangeTool(){
 }
 
 async function beginSetTool(mode){
+  dismissIntro(false);beginNavigationInteraction();
   stage.classList.remove('value-mode');
   stopSetToolAnimation();setToolMode=mode;setToolRunning=true;setToolPhase('');rangeInfinityLabel.classList.remove('show');rangeBandEdge.classList.remove('show');setToolInfo.classList.remove('reading');
   coordPop.classList.remove('show');closeAnswerPanel(false);toast.className='toast';intro.classList.add('hidden');formula.classList.remove('show');controlbar.classList.remove('guide-glow');aline.style.opacity=0;alabel.style.opacity=0;hline.style.opacity=0;hlabel.style.opacity=0;restoreScene(true);
@@ -1183,7 +1509,7 @@ function closeSetTool(){
   setToolInfo.classList.remove('domain-reading');
   stopSetToolAnimation();setToolMode=null;setToolPhase('');rangeInfinityLabel.classList.remove('show');rangeBandEdge.classList.remove('show');setToolInfo.classList.remove('reading');stage.classList.remove('set-mode');domainBtn.classList.remove('active');rangeBtn.classList.remove('active');
   setToolInfo.classList.remove('show','attention','success','gold');setToolInfo.setAttribute('aria-hidden','true');
-  setResult.classList.remove('show');setResult.setAttribute('aria-hidden','true');setCamera(.5,0);resetSetViz(true)
+  setResult.classList.remove('show');setResult.setAttribute('aria-hidden','true');setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);resetSetViz(true)
 }
 domainBtn.onclick=e=>{e.stopPropagation();if(animating||setToolRunning)return;clearTopSelections();domainBtn.classList.add('active');beginSetTool('domain')};
 rangeBtn.onclick=e=>{e.stopPropagation();if(animating||setToolRunning)return;clearTopSelections();rangeBtn.classList.add('active');beginSetTool('range')};
@@ -1226,9 +1552,10 @@ function restorePartialProgress(a){
   rightSide.classList.toggle('done',answered.right);
 }
 
-function resetUI(){if(timer){clearInterval(timer);timer=null}animating=false;trace.setAttribute('d','');runner.setAttribute('opacity','0');answerpanel.classList.remove('show','image-question');undefinedRow.style.display='none';answerToggle.classList.remove('show');coordPop.classList.remove('show');toast.className='toast';toast.textContent='';compareMini.style.display='none';bilateralLabel.style.display='none';answerValue='';renderAnswer();answered={left:false,right:false,bilateral:false,image:false};chosenSide=null;lastAnimation=null;mode='idle';play.textContent='▶';play.classList.remove('replay');play.disabled=true;leftSide.className='sidebtn';rightSide.className='sidebtn';setCamera(.5,0);hline.style.opacity=0;hlabel.style.opacity=0;setCue('')}
+function resetUI(){if(timer){clearInterval(timer);timer=null}animating=false;trace.setAttribute('d','');runner.setAttribute('opacity','0');answerpanel.classList.remove('show','image-question');undefinedRow.style.display='none';answerToggle.classList.remove('show');coordPop.classList.remove('show');toast.className='toast';toast.textContent='';compareMini.style.display='none';bilateralLabel.style.display='none';answerValue='';renderAnswer();answered={left:false,right:false,bilateral:false,image:false};chosenSide=null;lastAnimation=null;mode='idle';play.textContent='▶';play.classList.remove('replay');play.disabled=true;leftSide.className='sidebtn';rightSide.className='sidebtn';setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);hline.style.opacity=0;hlabel.style.opacity=0;setCue('')}
 function moveALine(to){const from=parseFloat(aline.getAttribute('x1'))||to,start=performance.now(),dur=380;aline.style.opacity=1;alabel.style.opacity=1;function step(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p),x=from+(to-from)*e;aline.setAttribute('x1',x);aline.setAttribute('x2',x);alabel.setAttribute('x',x+.12);if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)}
 function setTarget(t){
+  dismissIntro(false);beginNavigationInteraction();
   closeSetTool();stage.classList.remove('value-mode');resetUI();target=t;intro.classList.add('hidden');
   function exactCoord(s){
  s=String(s);
@@ -1287,7 +1614,15 @@ document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.data
   controlbar.classList.add('show','guide-glow');
   if(t==='neginf'||t==='posinf'){
     selected=null;leftSide.style.display='none';rightSide.style.display='none';play.disabled=false;play.classList.add('ready');formula.classList.add('show');formula.innerHTML=`${mathLimit(t==='neginf'?'x → −∞':'x → +∞')} <span class="eq">= ?</span>`;aline.style.opacity=0;alabel.style.opacity=0;
-    if(t==='posinf'){hline.style.opacity=1;hlabel.style.opacity=1}else{hline.style.opacity=0;hlabel.style.opacity=0}
+    const globalSpec=globals[t];
+    if(globalSpec&&globalSpec.horizontal!==undefined){
+      const hy=Number(globalSpec.horizontal);
+      hline.setAttribute('y1',hy);hline.setAttribute('y2',hy);
+      hlabel.textContent=`y = ${pretty(globalSpec)}`;
+      hline.style.opacity=1;hlabel.style.opacity=1
+    }else{
+      hline.style.opacity=0;hlabel.style.opacity=0
+    }
     setCue('Pulsa ▶ para observar la aproximación.',true)
   }else{
     selected=Number(t);leftSide.style.display='';rightSide.style.display='';restorePartialProgress(selected);
@@ -1305,16 +1640,31 @@ document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.data
 function chooseSide(s){if(animating||selected===null)return;controlbar.classList.remove('guide-glow');chosenSide=s;leftSide.classList.toggle('active',s==='left');rightSide.classList.toggle('active',s==='right');play.disabled=false;play.classList.add('ready');play.classList.remove('replay');play.textContent='▶';lastAnimation=null;formula.innerHTML=`${mathLimit(`x → ${String(selected).replace('-','−')}${s==='left'?'⁻':'⁺'}`)} <span class="eq">= ?</span>`;answerpanel.classList.remove('show');setCue('Ahora pulsa ▶ para observar la aproximación.',true)}
 leftSide.onclick=()=>chooseSide('left');rightSide.onclick=()=>chooseSide('right');
 
-function localSequence(a,s,spec){const dir=s==='left'?-1:1,dist=Math.abs(spec.start-a),inf=spec.kind==='posinf'||spec.kind==='neginf',steps=inf?160:90,minDelta=inf?.0025:.028,arr=[];for(let i=0;i<steps;i++){const t=i/(steps-1),e=1-Math.pow(1-t,3.0),delta=dist*(1-e)+minDelta*e;arr.push(a+dir*delta)}return arr}
-function globalSequence(spec){const arr=[],steps=185;for(let i=0;i<steps;i++){const t=i/(steps-1),e=t*t*(3-2*t);arr.push(spec.start+(spec.end-spec.start)*e)}return arr}
-function followVertical(y){if(y>4)smoothCamera(.5,y-3.1,.20);else if(y<-4)smoothCamera(.5,y+3.1,.20)}
-function followGlobal(x,y,p,spec){const dir=Math.sign(spec.end-spec.start)||1;let tx=.5;if(p<.72){if(x>5)tx=x-4.0;if(x<-5)tx=x+4.0}else if(p<.84){const freeze=spec.end-dir*7.1,q=(p-.72)/.12,follow=x-dir*4;tx=follow+(freeze-follow)*q}else{tx=spec.end-dir*7.1}let ty=0;if(y>4.2)ty=y-3.2;if(y<-4.2)ty=y+3.2;smoothCamera(tx,ty,p>.84?.34:.18)}
+function localSequence(a,s,spec){const dir=s==='left'?-1:1,dist=Math.abs(spec.start-a),inf=spec.kind==='posinf'||spec.kind==='neginf',steps=inf?112:68,minDelta=inf?.0025:.028,arr=[];for(let i=0;i<steps;i++){const t=i/(steps-1),e=1-Math.pow(1-t,3.0),delta=dist*(1-e)+minDelta*e;arr.push(a+dir*delta)}return arr}
+function globalSequence(spec){const arr=[],steps=132;for(let i=0;i<steps;i++){const t=i/(steps-1),e=t*t*(3-2*t);arr.push(spec.start+(spec.end-spec.start)*e)}return arr}
+function followVertical(y){const trig=VIEW_H*.34,pad=VIEW_H*.26;if(y>trig)smoothCamera(CAMERA_CONFIG.centerX,y-pad,.20);else if(y<-trig)smoothCamera(CAMERA_CONFIG.centerX,y+pad,.20)}
+function followGlobal(x,y,p,spec){
+ const dir=Math.sign(spec.end-spec.start)||1;
+ const half=VIEW_W/2,edgePad=Math.max(1.2,VIEW_W*.11);
+ let tx=CAMERA_CONFIG.centerX;
+ if(p<.72){
+   if(x>CAMERA_CONFIG.centerX+half*.70)tx=x-dir*(half-edgePad);
+   if(x<CAMERA_CONFIG.centerX-half*.70)tx=x-dir*(half-edgePad);
+ }else if(p<.84){
+   const freeze=spec.end-dir*(half+edgePad),q=(p-.72)/.12,follow=x-dir*(half-edgePad);
+   tx=follow+(freeze-follow)*q
+ }else tx=spec.end-dir*(half+edgePad);
+ let ty=0;
+ const vPad=Math.max(2.6,VIEW_H*.27),vTrig=VIEW_H*.35;
+ if(y>vTrig)ty=y-vPad;if(y<-vTrig)ty=y+vPad;
+ smoothCamera(tx,ty,p>.84?.34:.18)
+}
 function clearAnswerQuadrants(){answerpanel.classList.remove('q-tl','q-tr','q-bl','q-br')}
 function focusPoint(){
  const rx=parseFloat(runner.getAttribute('cx')),ry=parseFloat(runner.getAttribute('cy'));
  if(Number.isFinite(rx)&&Number.isFinite(ry)&&runner.getAttribute('opacity')!=='0')return{x:rx,y:ry};
  if(selected!==null){const sp=mode==='bilateral'?cases[selected].bilateral:(chosenSide?cases[selected][chosenSide]:null);return{x:selected,y:sp&&sp.kind==='finite'?sp.value:0}}
- return{x:target==='neginf'?camX-W/2:camX+W/2,y:globals[target]&&globals[target].kind==='finite'?globals[target].value:0}
+ return{x:target==='neginf'?camX-VIEW_W/2:camX+VIEW_W/2,y:globals[target]&&globals[target].kind==='finite'?globals[target].value:0}
 }
 function placeAnswerPanel(){clearAnswerQuadrants()}
 function openAnswerPanel(){answerValue='';renderAnswer();placeAnswerPanel();answerpanel.classList.add('show');answerpanel.setAttribute('aria-hidden','false');answerToggle.classList.add('show');answerToggle.textContent='Ocultar panel'}
@@ -1330,8 +1680,8 @@ document.addEventListener('pointerdown',e=>{
 
 
 function finishAnimation(kind){if(timer){clearInterval(timer);timer=null}animating=false;play.disabled=false;play.classList.remove('ready');play.classList.add('replay');play.textContent='↻';mode='answer';answerValue='';renderAnswer();answerTitle.innerHTML=`¿Cuánto vale ${promptLimit()}, según lo que observaste?`;openAnswerPanel();setCue('Selecciona tu resultado o pulsa ↻ para repetir la animación.')}
-function runLocal(s){coordPop.classList.remove('show');if(animating)return;controlbar.classList.remove('guide-glow');closeAnswerPanel(false);toast.className='toast';animating=true;lastAnimation={type:'local',side:s};play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';trace.setAttribute('d','');runner.setAttribute('opacity','1');setCamera(.5,0);const spec=cases[selected][s],inf=spec.kind==='posinf'||spec.kind==='neginf',seq=localSequence(selected,s,spec);let i=0,path='';const draw=()=>{if(i>=seq.length){finishAnimation('side');return}const x=seq[i++],y=spec.fn(x);if(!Number.isFinite(y)){finishAnimation('side');return}if(inf)followVertical(y);runner.setAttribute('cx',x);runner.setAttribute('cy',y);path+=(path?'L':'M')+x.toFixed(4)+' '+y.toFixed(4)+' ';trace.setAttribute('d',path);if(inf && i>seq.length*.94)runner.setAttribute('opacity',String(Math.max(0,1-(i/seq.length-.94)/.06)))};draw();timer=setInterval(draw,inf?24:28)}
-function runGlobal(){coordPop.classList.remove('show');if(animating)return;controlbar.classList.remove('guide-glow');closeAnswerPanel(false);toast.className='toast';animating=true;lastAnimation={type:'global'};play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';trace.setAttribute('d','');runner.setAttribute('opacity','1');setCamera(.5,0);const spec=globals[target],seq=globalSequence(spec);let i=0,path='';const draw=()=>{if(i>=seq.length){finishAnimation('side');return}const x=seq[i++],y=spec.fn(x),p=i/seq.length;followGlobal(x,y,p,spec);runner.setAttribute('cx',x);runner.setAttribute('cy',y);path+=(path?'L':'M')+x.toFixed(4)+' '+y.toFixed(4)+' ';trace.setAttribute('d',path)};draw();timer=setInterval(draw,25)}
+function runLocal(s){coordPop.classList.remove('show');if(animating)return;controlbar.classList.remove('guide-glow');closeAnswerPanel(false);toast.className='toast';animating=true;lastAnimation={type:'local',side:s};play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';trace.setAttribute('d','');runner.setAttribute('opacity','1');setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);const spec=cases[selected][s],inf=spec.kind==='posinf'||spec.kind==='neginf',seq=localSequence(selected,s,spec);let i=0,path='';const draw=()=>{if(i>=seq.length){finishAnimation('side');return}const x=seq[i++],y=spec.fn(x);if(!Number.isFinite(y)){finishAnimation('side');return}if(inf)followVertical(y);runner.setAttribute('cx',x);runner.setAttribute('cy',y);path+=(path?'L':'M')+x.toFixed(4)+' '+y.toFixed(4)+' ';trace.setAttribute('d',path);if(inf && i>seq.length*.94)runner.setAttribute('opacity',String(Math.max(0,1-(i/seq.length-.94)/.06)))};draw();timer=setInterval(draw,inf?20:21)}
+function runGlobal(){coordPop.classList.remove('show');if(animating)return;controlbar.classList.remove('guide-glow');closeAnswerPanel(false);toast.className='toast';animating=true;lastAnimation={type:'global'};play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';trace.setAttribute('d','');runner.setAttribute('opacity','1');setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);const spec=globals[target],seq=globalSequence(spec);let i=0,path='';const draw=()=>{if(i>=seq.length){finishAnimation('side');return}const x=seq[i++],y=spec.fn(x),p=i/seq.length;followGlobal(x,y,p,spec);runner.setAttribute('cx',x);runner.setAttribute('cy',y);path+=(path?'L':'M')+x.toFixed(4)+' '+y.toFixed(4)+' ';trace.setAttribute('d',path)};draw();timer=setInterval(draw,20)}
 play.onclick=()=>{coordPop.classList.remove('show');if(play.classList.contains('replay')&&lastAnimation){if(lastAnimation.type==='global')runGlobal();else runLocal(lastAnimation.side);return}if(target==='neginf'||target==='posinf')runGlobal();else if(chosenSide)runLocal(chosenSide)};
 
 
@@ -1362,8 +1712,9 @@ function correct(raw,spec){return classifyAnswer(raw,spec)==='ok'}
 function showToast(text,ok=true){toast.innerHTML=text;toast.className='toast show '+(ok?'ok':'bad')}
 function markSide(s){answered[s]=true;(s==='left'?leftSide:rightSide).classList.add('done');savePartialProgress()}
 
-function clearTopSelections(){document.querySelectorAll('.chip,.value-chip,.meta-chip').forEach(el=>el.classList.remove('active'))}
+function clearTopSelections(){document.querySelectorAll('.chip,.value-chip,.meta-chip,.continuity-btn').forEach(el=>el.classList.remove('active'))}
 function setValueTarget(a){
+ dismissIntro(false);beginNavigationInteraction();
  closeSetTool();resetUI();target=null;selected=Number(a);intro.classList.add('hidden');clearTopSelections();
  stage.classList.add('value-mode');stage.classList.remove('set-mode');
  document.querySelector(`.value-chip[data-value-target="${a}"]`)?.classList.add('active');
@@ -1400,15 +1751,17 @@ check.onclick=()=>{
  if(mode==='image'){
   answered.image=true;savePartialProgress();answerpanel.classList.remove('image-question');undefinedRow.style.display='none';restoreScene(true);celebrate('¡Caso completado!',true);
   const lim=pretty(cases[selected].bilateral),img=pretty(cases[selected].image),n=String(selected).replace('-','−');let msg='';
-  if(cases[selected].image.kind==='undefined')msg=`<strong>¡Completado!</strong> El límite es ${lim}, pero <i>f</i>(${n}) no está definida.`;
-  else if(cases[selected].bilateral.kind==='finite'&&Math.abs(cases[selected].bilateral.value-cases[selected].image.value)<1e-10)msg=`<strong>¡Completado!</strong> Aquí el límite y el valor de la función coinciden: ambos valen ${img}.`;
-  else if(cases[selected].bilateral.kind==='none')msg=`<strong>¡Completado!</strong> El límite bilateral no existe, pero <i>f</i>(${n}) sí está definida y vale ${img}.`;
-  else msg=`<strong>¡Completado!</strong> El límite vale ${lim}, mientras que <i>f</i>(${n}) = ${img}. Son preguntas diferentes.`;
+  if(!completedTargets.has(String(selected))){
+    msg=cases[selected].image.kind==='undefined'?`<strong>Correcto.</strong> <i>f</i>(${n}) no está definida.`:`<strong>Correcto.</strong> <i>f</i>(${n}) = ${img}.`;
+  }else if(cases[selected].image.kind==='undefined')msg=`<strong>Correcto.</strong> El límite es ${lim}, pero <i>f</i>(${n}) no está definida.`;
+  else if(cases[selected].bilateral.kind==='finite'&&Math.abs(cases[selected].bilateral.value-cases[selected].image.value)<1e-10)msg=`<strong>Correcto.</strong> Aquí el límite y el valor de la función coinciden: ambos valen ${img}.`;
+  else if(cases[selected].bilateral.kind==='none'||cases[selected].bilateral.kind==='posinf'||cases[selected].bilateral.kind==='neginf')msg=`<strong>Correcto.</strong> El límite real no existe, mientras que <i>f</i>(${n}) = ${img}.`;
+  else msg=`<strong>Correcto.</strong> El límite vale ${lim}, mientras que <i>f</i>(${n}) = ${img}.`;
   showToast(msg);const chip=document.querySelector(`.value-chip[data-value-target="${selected}"]`);if(chip)chip.classList.add('done');
-  completedValues.add(String(selected));celebrate('¡Valor correcto!',true);checkFinalAchievement();play.disabled=true;
+  completedValues.add(String(selected));refreshAnalysisCards();celebrate('¡Valor correcto!',true);checkFinalAchievement();play.disabled=true;
  }else if(mode==='bilateral'){
   answered.bilateral=true;savePartialProgress();restoreScene(true);celebrate('¡Límite completado!',true);showToast('<strong>¡Completado!</strong> Resolviste correctamente los dos límites laterales y el límite bilateral.');
-  const chip=document.querySelector(`.chip[data-target="${target}"]`);if(chip){chip.classList.add('done');completedTargets.add(target);checkFinalAchievement()}play.disabled=true
+  const chip=document.querySelector(`.chip[data-target="${target}"]`);if(chip){chip.classList.add('done');completedTargets.add(target);refreshAnalysisCards();checkFinalAchievement()}play.disabled=true
  }else if(target==='neginf'||target==='posinf'){
   restoreScene(true);celebrate('¡Caso completado!',true);if(target==='posinf'){hline.style.opacity=0;hlabel.style.opacity=0}
   showToast(spec.horizontal!==undefined?`<strong>¡Completado!</strong> La gráfica se aproxima a la altura exacta <i>y</i> = ${pretty(spec)}; esa recta es una asíntota horizontal.`:'<strong>¡Completado!</strong> Has identificado correctamente el comportamiento cuando <i>x</i> se aleja.');
@@ -1477,7 +1830,16 @@ valueChips.forEach(c=>c.onclick=()=>{
   setValueTarget(c.dataset.valueTarget)
 });
 stage.addEventListener('pointerdown',e=>{if(e.target.closest('.answerpanel,.toast,.controlbar,.chip,.coord-pop,.answer-toggle,.function-tools,.set-result'))return;if(toast.classList.contains('show'))toast.className='toast';coordPop.classList.remove('show')});
-setCamera(.5,0);
+setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);
+
+refreshAnalysisCards();
+
+let cameraResizeTimer=null;
+window.addEventListener('resize',()=>{
+  clearTimeout(cameraResizeTimer);
+  cameraResizeTimer=setTimeout(()=>setCamera(camX,camY),80)
+});
+requestAnimationFrame(()=>setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY));
 </script>
 </body>
 </html>
