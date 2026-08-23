@@ -1101,6 +1101,13 @@ body{
 .set-result-connector.domain{background:#35b6c3;color:#35b6c3}
 .set-result-connector.range{background:#b485d1;color:#b485d1}
 
+
+/* v22 · franjas-resumen en el perímetro matemático real del plano */
+.domain-band,.range-band{opacity:.94}
+.domain-hole,.range-open-marker,.range-closed-marker{
+  vector-effect:non-scaling-stroke;
+}
+
 </style>
 </head>
 <body>
@@ -1344,7 +1351,13 @@ function setCamera(cx=CAMERA_CONFIG.centerX,cy=CAMERA_CONFIG.centerY){
   hlabel.setAttribute('x',xmin+.62);hlabel.setAttribute('y',1.82)
 }
 function smoothCamera(tx,ty,a=.18){setCamera(camX+(tx-camX)*a,camY+(ty-camY)*a)}
-function restoreScene(clearPath=true){const sx=camX,sy=camY,start=performance.now(),dur=430;function frame(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p);setCamera(sx+(CAMERA_CONFIG.centerX-sx)*e,sy*(1-e));if(p<1)requestAnimationFrame(frame);else{setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);if(clearPath){trace.setAttribute('d','');runner.setAttribute('opacity','0')}}}requestAnimationFrame(frame)}
+function restoreScene(clearPath=true){
+  setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);
+  if(clearPath){
+    trace.setAttribute('d','');
+    runner.setAttribute('opacity','0')
+  }
+}
 function sample(id,fn,x0,x1,steps=900,warp='none'){let d='',pen=false;for(let i=0;i<=steps;i++){const t=i/steps;let q=t;if(warp==='left')q=t*t*t;else if(warp==='right')q=1-Math.pow(1-t,3);else if(warp==='both')q=(1-Math.cos(Math.PI*t))/2;const x=x0+(x1-x0)*q,y=fn(x);if(!Number.isFinite(y)||Math.abs(y)>5000){pen=false;continue}d+=(pen?'L':'M')+x.toFixed(5)+' '+y.toFixed(5)+' ';pen=true}document.getElementById(id).setAttribute('d',d)}
 const SQ=Math.sqrt(2),SQ3=Math.sqrt(3);
 const fns={
@@ -1558,22 +1571,30 @@ function animateLinear(duration,onFrame){
   })
 }
 
-function visibleGraphBounds(){const vb=svg.viewBox.baseVal;return{left:vb.x,right:vb.x+vb.width,bottom:vb.y,top:vb.y+vb.height}}
+function visibleGraphBounds(){
+  const vb=svg.viewBox.baseVal;
+  return{
+    left:vb.x,
+    right:vb.x+vb.width,
+    bottom:-(vb.y+vb.height),
+    top:-vb.y
+  }
+}
 function svgEl(name,attrs={}){const el=document.createElementNS('http://www.w3.org/2000/svg',name);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));return el}
 function configureDomainBandResponsive(){
  const b=visibleGraphBounds();domainBand.innerHTML='';
- const y=b.top-.34;
+ const h=.18,y=b.top-h-.035;
  const intervals=setDescriptions.domain?.intervals||[];
  intervals.forEach(it=>{
    const from=Number.isFinite(it.from)?Math.max(b.left,it.from):b.left;
    const to=Number.isFinite(it.to)?Math.min(b.right,it.to):b.right;
-   if(to>from)domainBand.appendChild(svgEl('rect',{x:from,y,width:to-from,height:.20,rx:.10,class:'domain-band'}))
+   if(to>from)domainBand.appendChild(svgEl('rect',{x:from,y,width:to-from,height:h,rx:.09,class:'domain-band'}))
  });
  const boundaries=[...new Set(intervals.flatMap(it=>[it.from,it.to]).filter(Number.isFinite))]
    .filter(x=>x>b.left&&x<b.right);
  boundaries.forEach(x=>{
    if(domainIntersections(x).length===0){
-     domainBand.appendChild(svgEl('circle',{cx:x,cy:y+.10,r:.115,class:'domain-hole'}))
+     domainBand.appendChild(svgEl('circle',{cx:x,cy:y+h/2,r:.105,class:'domain-hole'}))
    }
  });
  domainClipRect.setAttribute('x',b.left);
@@ -1586,23 +1607,27 @@ function configureDomainBandResponsive(){
 }
 function configureRangeBandResponsive(){
  const b=visibleGraphBounds();rangeBand.innerHTML='';
- const x=b.right-.36,desc=setDescriptions.range||{};
+ const w=.18,x=b.right-w-.035,desc=setDescriptions.range||{};
  (desc.intervals||[]).forEach(it=>{
    const from=Number.isFinite(it.from)?Math.max(b.bottom,it.from):b.bottom;
    const to=Number.isFinite(it.to)?Math.min(b.top,it.to):b.top;
-   if(to>from)rangeBand.appendChild(svgEl('rect',{x,y:from,width:.20,height:to-from,rx:.10,class:'range-band'}));
+   if(to>from)rangeBand.appendChild(svgEl('rect',{x,y:from,width:w,height:to-from,rx:.09,class:'range-band'}));
    if(Number.isFinite(it.from)&&it.from>=b.bottom&&it.from<=b.top){
-     rangeBand.appendChild(svgEl('circle',{cx:x+.10,cy:it.from,r:.115,class:it.fromClosed?'range-closed-marker':'range-open-marker'}))
+     rangeBand.appendChild(svgEl('circle',{cx:x+w/2,cy:it.from,r:.105,class:it.fromClosed?'range-closed-marker':'range-open-marker'}))
    }
    if(Number.isFinite(it.to)&&it.to>=b.bottom&&it.to<=b.top){
-     rangeBand.appendChild(svgEl('circle',{cx:x+.10,cy:it.to,r:.115,class:it.toClosed?'range-closed-marker':'range-open-marker'}))
+     rangeBand.appendChild(svgEl('circle',{cx:x+w/2,cy:it.to,r:.105,class:it.toClosed?'range-closed-marker':'range-open-marker'}))
    }
  });
  (desc.points||[]).forEach(y=>{
-   if(y>=b.bottom&&y<=b.top)rangeBand.appendChild(svgEl('circle',{cx:x+.10,cy:y,r:.12,class:'range-closed-marker'}))
+   if(y>=b.bottom&&y<=b.top){
+     rangeBand.appendChild(svgEl('circle',{cx:x+w/2,cy:y,r:.11,class:'range-closed-marker'}))
+   }
  });
- rangeClipRect.setAttribute('x',b.left);rangeClipRect.setAttribute('y',b.bottom);
- rangeClipRect.setAttribute('width',b.right-b.left);rangeClipRect.setAttribute('height','0');
+ rangeClipRect.setAttribute('x',b.left);
+ rangeClipRect.setAttribute('y',b.bottom);
+ rangeClipRect.setAttribute('width',b.right-b.left);
+ rangeClipRect.setAttribute('height','0');
  rangeSweep.setAttribute('x1','-10000');rangeSweep.setAttribute('x2','10000');
  rangeSweep.setAttribute('y1',b.bottom);rangeSweep.setAttribute('y2',b.bottom);
  return b
