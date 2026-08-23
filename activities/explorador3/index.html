@@ -1133,6 +1133,77 @@ button:not(:disabled):active{filter:brightness(.97)}
 @media(prefers-reduced-motion:reduce){.analysis-row.ux-hit,.continuity-btn.ux-hit,.chip.ux-hit,.analysis-card.ux-complete,.stage.ux-graph-pulse #curve .curve,.stage.ux-graph-pulse #curve path,.keypoint.ux-point-pulse,.stage.ux-final,.final-mascot{animation:none!important}.ux-dot{transition:none}}
 @media(max-width:650px){.sound-toggle{width:30px;height:30px;right:7px;top:6px;font-size:13px}.ux-dot{width:6px;height:6px}.analysis-section-title{gap:5px}}
 
+
+/* ==========================================================
+   v25 · orientación, progreso y cierre de exploración
+   ========================================================== */
+
+/* Un solo check: se reserva un carril estable a la derecha. */
+.value-chip.done::after{content:none!important;display:none!important}
+.analysis-row{padding-right:23px!important}
+.row-check{
+  position:absolute!important;
+  right:7px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  font-size:.61rem!important;
+  line-height:1!important;
+  width:12px;
+  text-align:center!important;
+}
+
+/* Tarjeta completa = segundo nivel de progreso, persistente y sobrio. */
+.analysis-card{
+  transition:background .28s ease,border-color .28s ease,box-shadow .28s ease!important;
+}
+.analysis-card.ux-done-state{
+  background:linear-gradient(145deg,rgba(234,250,241,.96),rgba(246,253,248,.93))!important;
+  border-color:rgba(73,171,116,.52)!important;
+  box-shadow:0 5px 16px rgba(43,132,87,.09),inset 0 0 0 1px rgba(255,255,255,.60)!important;
+}
+.analysis-card.ux-done-state .analysis-card-head{color:#23724d!important}
+
+/* Progreso 4/4 más legible. */
+.ux-progress{gap:7px!important}
+.ux-dot{
+  width:9px!important;height:9px!important;
+  border-width:1.6px!important;
+}
+.ux-dot.on{animation:uxDotLand .48s ease-out}
+@keyframes uxDotLand{
+  0%{transform:scale(.72);box-shadow:0 0 0 0 rgba(47,157,114,0)}
+  45%{transform:scale(1.28);box-shadow:0 0 0 5px rgba(47,157,114,.15)}
+  100%{transform:scale(1.08);box-shadow:0 0 0 3px rgba(47,157,114,.12)}
+}
+
+/* Brillo = invitación, nunca estado permanente. */
+.analysis-section.ux-guide-pulse,
+.analysis-family.ux-guide-pulse,
+.analysis-card.ux-idle-pulse{
+  animation:uxGuidePulse .72s ease-out 1!important;
+}
+@keyframes uxGuidePulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(38,190,202,0)}
+  48%{box-shadow:0 0 0 4px rgba(38,190,202,.18),0 8px 24px rgba(26,125,139,.10)}
+}
+
+/* Botones del logro final. */
+.finalactions{display:flex!important;justify-content:center!important;gap:8px!important;flex-wrap:wrap}
+.finalbtn.primary{
+  background:linear-gradient(135deg,#1798a5,#127d8a)!important;
+  color:#fff!important;border-color:rgba(18,125,138,.55)!important;
+  box-shadow:0 7px 17px rgba(18,125,138,.18)
+}
+
+@media(max-width:650px){
+  .ux-dot{width:8px!important;height:8px!important}
+  .row-check{right:5px!important;font-size:.58rem!important}
+  .analysis-row{padding-right:20px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .ux-dot.on,.analysis-section.ux-guide-pulse,.analysis-family.ux-guide-pulse,.analysis-card.ux-idle-pulse{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -1249,9 +1320,9 @@ button:not(:disabled):active{filter:brightness(.97)}
     </svg>
 
     <div id="intro" class="intro">
-      <strong>¿Qué quieres investigar?</strong>
-      <p>Aquí el dominio y la imagen quedan fragmentados: observa intervalos completos sin gráfica.</p>
-      <div class="intro-start-hint">✦ Si necesitas una altura exacta, puedes tocar un punto abierto o cerrado de la gráfica.</div>
+      <strong>Completa la exploración</strong>
+      <p>Analiza cada punto: <i>f</i>(a), su límite y continuidad. Revisa también el comportamiento hacia los infinitos y conoce el dominio y la imagen de la función.</p>
+      <div class="intro-start-hint">✦ Puedes tocar los puntos abiertos o cerrados de la gráfica para ver sus coordenadas.</div>
       <button id="introStart" class="intro-start-btn" type="button">Inicio</button>
     </div>
     <div id="formula" class="formula-pill"></div>
@@ -1312,7 +1383,7 @@ button:not(:disabled):active{filter:brightness(.97)}
         <div class="finalmedal">★</div>
         <h2>¡Laboratorio completado!</h2>
         <p>Completaste la exploración: comparaste límites con valores de la función y observaste que pueden coincidir, ser distintos o incluso que uno de ellos no exista.</p>
-        <div class="finalactions"><button id="exploreAgain" class="finalbtn">Volver a explorar</button></div>
+        <div class="finalactions"><button id="exploreAgain" class="finalbtn primary">Seguir explorando</button><button id="goHome" class="finalbtn">Volver al inicio</button></div>
       </div>
     </div>
   </div>
@@ -1323,7 +1394,7 @@ const svg=document.getElementById('graph'), stage=document.getElementById('stage
 const trace=document.getElementById('trace'),runner=document.getElementById('runner'),aline=document.getElementById('aline'),alabel=document.getElementById('alabel'),hline=document.getElementById('hline'),hlabel=document.getElementById('hlabel');
 const intro=document.getElementById('intro'),formula=document.getElementById('formula'),controlbar=document.getElementById('controlbar'),leftSide=document.getElementById('leftSide'),rightSide=document.getElementById('rightSide'),play=document.getElementById('play'),nextCue=document.getElementById('nextCue'),answerpanel=document.getElementById('answerpanel'),answer=document.getElementById('answer'),check=document.getElementById('check'),toast=document.getElementById('toast'),victory=document.getElementById('victory'),victoryText=document.getElementById('victoryText');
 const compareMini=document.getElementById('compareMini'),leftVal=document.getElementById('leftVal'),rightVal=document.getElementById('rightVal'),bilateralLabel=document.getElementById('bilateralLabel'),answerTitle=document.getElementById('answerTitle');
-const finalwin=document.getElementById('finalwin'),exploreAgain=document.getElementById('exploreAgain');
+const finalwin=document.getElementById('finalwin'),exploreAgain=document.getElementById('exploreAgain'),goHome=document.getElementById('goHome');
 const answerToggle=document.getElementById('answerToggle');
 const coordPop=document.getElementById('coordPop'),coordKind=document.getElementById('coordKind'),coordExact=document.getElementById('coordExact'),coordApproxBtn=document.getElementById('coordApproxBtn'),coordApprox=document.getElementById('coordApprox');
 const clearKey=document.getElementById('clearKey');
@@ -1414,22 +1485,13 @@ let finalShown=false;
 
 
 let navigationAttentionTimer=null;
-function clearNavigationAttention(){
-  clearTimeout(navigationAttentionTimer);
-  document.querySelectorAll('.analysis-section,.analysis-family').forEach(el=>el.classList.remove('nav-attention'))
-}
-function showNavigationAttention(){
-  clearNavigationAttention();
-  document.querySelectorAll('.analysis-section,.analysis-family').forEach(el=>el.classList.add('nav-attention'));
-  navigationAttentionTimer=setTimeout(clearNavigationAttention,6200)
-}
+function clearNavigationAttention(){document.querySelectorAll('.analysis-section,.analysis-family').forEach(el=>el.classList.remove('nav-attention'))}
+function showNavigationAttention(){if(typeof uxGuideSequence==='function')uxGuideSequence()}
+function beginNavigationInteraction(){clearNavigationAttention()}
 function dismissIntro(showGuidance=true){
   const wasVisible=!intro.classList.contains('hidden');
   intro.classList.add('hidden');
   if(wasVisible&&showGuidance)showNavigationAttention()
-}
-function beginNavigationInteraction(){
-  clearNavigationAttention()
 }
 introStart.onclick=e=>{e.preventDefault();e.stopPropagation();dismissIntro(true)};
 stage.addEventListener('pointerdown',e=>{
@@ -1446,6 +1508,7 @@ function refreshAnalysisCards(){
     const vb=card.querySelector('.value-chip'),lb=card.querySelector('.limit-chip'),cb=card.querySelector('.continuity-btn');
     const vd=completedValues.has(a),ld=completedTargets.has(a),cd=completedContinuity.has(a),unlocked=vd&&ld;
     vb?.classList.toggle('done',vd);lb?.classList.toggle('done',ld);cb?.classList.toggle('done',cd);
+    card.classList.toggle('ux-done-state',vd&&ld&&cd);
     if(cb){cb.disabled=!unlocked;cb.classList.toggle('locked',!unlocked);cb.classList.toggle('ready',unlocked&&!cd)}
   })
   if(typeof uxUpdateProgress==='function')uxUpdateProgress();
@@ -1484,10 +1547,11 @@ function checkFinalAchievement(){
  const requiredValues=["-1", "0", "1", "2"];
  const requiredContinuity=["-1", "0", "1", "2"];
  if(requiredLimits.every(x=>completedTargets.has(x))&&requiredValues.every(x=>completedValues.has(x))&&requiredContinuity.every(x=>completedContinuity.has(x))){
-  finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false');if(typeof uxFinal==='function')uxFinal()
+  finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false');if(typeof uxPersistResourceCompletion==='function')uxPersistResourceCompletion();if(typeof uxFinal==='function')uxFinal()
  }
 }
-exploreAgain.onclick=()=>{finalwin.classList.remove('show');finalwin.setAttribute('aria-hidden','true')};
+exploreAgain.onclick=()=>{finalwin.classList.remove('show');finalwin.setAttribute('aria-hidden','true');if(typeof uxScheduleIdleHint==='function')uxScheduleIdleHint()};
+goHome.onclick=()=>{if(typeof uxReturnHome==='function')uxReturnHome()};
 
 
 
@@ -2363,7 +2427,7 @@ function uxUpdateProgress(){
   const cards=[...document.querySelectorAll('.analysis-card')];
   cards.forEach((card,i)=>{
     const a=card.dataset.a,done=completedValues.has(a)&&completedTargets.has(a)&&completedContinuity.has(a);
-    const dot=document.querySelector(`.ux-dot[data-i="${i}"]`); if(dot)dot.classList.toggle('on',done);
+    const dot=document.querySelector(`.ux-dot[data-i="${i}"]`); if(dot)dot.classList.toggle('on',done); card.classList.toggle('ux-done-state',done);
     if(done&&!UX.completedCards.has(a)){UX.completedCards.add(a);uxFlash(card,'ux-complete',780);uxVibrate([18,45,18]);uxTone('card')}
   })
 }
@@ -2389,6 +2453,70 @@ function uxFinal(){
   const fc=document.querySelector('.finalcard');if(fc&&!fc.querySelector('.final-mascot')){const im=document.createElement('img');im.className='final-mascot';im.src='../../assets/mascota-lim01.png';im.alt='Mascota del Proyecto Cálculo';fc.insertBefore(im,fc.firstChild)}
   uxUpdateProgress();
 })();
+
+
+/* ==========================================================
+   v25 · guía contextual + progreso persistente
+   ========================================================== */
+const RESOURCE_ID='explorador3';
+const RESOURCE_STORAGE_KEY='lim01.completed.'+RESOURCE_ID;
+let uxGuideTimers=[];
+let uxIdleTimer=null;
+
+function uxClearGuideTimers(){
+  uxGuideTimers.forEach(clearTimeout);uxGuideTimers=[];
+  document.querySelectorAll('.ux-guide-pulse,.ux-idle-pulse').forEach(el=>el.classList.remove('ux-guide-pulse','ux-idle-pulse'));
+}
+function uxPulseOnce(el,cls='ux-guide-pulse',ms=760){
+  if(!el)return;
+  el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);
+  const t=setTimeout(()=>el.classList.remove(cls),ms);uxGuideTimers.push(t)
+}
+function uxGuideSequence(){
+  uxClearGuideTimers();
+  const els=[document.querySelector('.analysis-section'),document.querySelector('.infinity-family'),document.querySelector('.extra-family')].filter(Boolean);
+  els.forEach((el,i)=>uxGuideTimers.push(setTimeout(()=>uxPulseOnce(el),i*720)));
+  uxScheduleIdleHint();
+}
+function uxPendingHintTarget(){
+  const cards=[...document.querySelectorAll('.analysis-card')];
+  const pending=cards.find(card=>{
+    const a=card.dataset.a;
+    return !(completedValues.has(a)&&completedTargets.has(a)&&completedContinuity.has(a))
+  });
+  if(pending)return pending;
+  if(!completedTargets.has('neginf')||!completedTargets.has('posinf'))return document.querySelector('.infinity-family');
+  return null
+}
+function uxScheduleIdleHint(){
+  clearTimeout(uxIdleTimer);
+  uxIdleTimer=setTimeout(()=>{
+    if(!intro.classList.contains('hidden')||finalwin.classList.contains('show'))return;
+    const target=uxPendingHintTarget();
+    if(target)uxPulseOnce(target,'ux-idle-pulse',850)
+  },9000)
+}
+function uxRegisterActivity(){
+  clearTimeout(uxIdleTimer);
+  document.querySelectorAll('.ux-idle-pulse').forEach(el=>el.classList.remove('ux-idle-pulse'));
+  uxScheduleIdleHint()
+}
+
+document.addEventListener('pointerdown',e=>{
+  if(!e.target.closest?.('#intro'))uxRegisterActivity()
+},{capture:true,passive:true});
+document.addEventListener('keydown',uxRegisterActivity,{capture:true});
+
+function uxPersistResourceCompletion(){
+  try{localStorage.setItem(RESOURCE_STORAGE_KEY,'1')}catch(e){}
+  try{window.parent.postMessage({type:'lim01-resource-complete',resource:RESOURCE_ID},'*')}catch(e){}
+}
+function uxReturnHome(){
+  try{
+    if(window.parent&&window.parent!==window){window.parent.postMessage({type:'lim01-home'},'*');return}
+  }catch(e){}
+  location.href='../../index.html'
+}
 
 </script>
 </body>
