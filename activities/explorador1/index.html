@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>LIM-01 · Caso 1 · Comenzar</title>
+<title>LIM-01 · Caso 1 · Límites finitos</title>
 <style>
 :root{
   --ink:#173044; --muted:#657783; --accent:#128596; --accent2:#f0a84f;
@@ -1008,28 +1008,61 @@ body{
   pointer-events:none!important;
 }
 
+
+.analysis-bottom-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:7px!important}.analysis-family{min-width:0!important;padding:7px 9px!important}.analysis-family-buttons{display:flex!important;flex-wrap:nowrap!important;gap:5px!important}.analysis-family .chip,.analysis-family .meta-chip{min-width:0!important;flex:1 1 0!important;padding-left:7px!important;padding-right:7px!important}.point-hit,.keypoint,#curve path,.curve-path,.graph-path,.a-line,.h-line,#aline,#hline,#rangeSweep,#domainSweep{pointer-events:none!important}.range-open-marker{fill:#fff;stroke:#d3a135;stroke-width:.075}.range-closed-marker{fill:#d3a135;stroke:#fff;stroke-width:.04}@media(max-width:650px){.analysis-bottom-grid{grid-template-columns:1fr 1fr!important}.analysis-family-title{font-size:.47rem!important}.analysis-family .chip,.analysis-family .meta-chip{font-size:.49rem!important;padding:6px 5px!important}}
+
+
+/* v18 common interaction */
+.analysis-bottom-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:7px!important}
+.analysis-family{min-width:0!important;padding:7px 9px!important}
+.analysis-family-buttons{display:flex!important;flex-wrap:nowrap!important;gap:5px!important}
+.analysis-family .chip,.analysis-family .meta-chip{min-width:0!important;flex:1 1 0!important;padding-left:7px!important;padding-right:7px!important}
+.point-hit,.keypoint,#curve path,.a-line,.h-line,#aline,#hline,#rangeSweep,#domainSweep{pointer-events:none!important}
+.range-open-marker{fill:#fff;stroke:#d3a135;stroke-width:.075}
+.range-closed-marker{fill:#d3a135;stroke:#fff;stroke-width:.04}
+@media(max-width:650px){
+ .analysis-bottom-grid{grid-template-columns:1fr 1fr!important}
+ .analysis-family-title{font-size:.47rem!important}
+ .analysis-family .chip,.analysis-family .meta-chip{font-size:.49rem!important;padding:6px 5px!important}
+}
+
+
+/* v19 common explorer layout */
+.analysis-bottom-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:7px!important}
+.analysis-family{min-width:0!important;padding:7px 9px!important}
+.analysis-family-buttons{display:flex!important;flex-wrap:nowrap!important;gap:5px!important}
+.analysis-family .chip,.analysis-family .meta-chip{min-width:0!important;flex:1 1 0!important;padding-left:7px!important;padding-right:7px!important}
+.point-hit,.keypoint,#curve path,.a-line,.h-line,#aline,#hline,#rangeSweep,#domainSweep{pointer-events:none!important}
+.range-open-marker{fill:#fff;stroke:#d3a135;stroke-width:.075}
+.range-closed-marker{fill:#d3a135;stroke:#fff;stroke-width:.04}
+@media(max-width:650px){
+ .analysis-bottom-grid{grid-template-columns:1fr 1fr!important}
+ .analysis-family-title{font-size:.47rem!important}
+ .analysis-family .chip,.analysis-family .meta-chip{font-size:.49rem!important;padding:6px 5px!important}
+}
+
 </style>
 </head>
 <body>
 <main>
-<header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Comenzar</h1></header>
+<header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Caso 1 · Límites finitos</h1></header>
 <section class="shell">
   <div class="toolbar mode-toolbar"><div class="analysis-dashboard">
-<section class="analysis-section"><div class="analysis-section-title">Análisis en puntos</div><div class="analysis-grid"><article class="analysis-card" data-a="-3">
-<div class="analysis-card-head"><span>x = −3</span><span class="card-status"></span></div>
-<button class="analysis-row value-chip" data-value-target="-3" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(−3)</span><span class="row-check">✓</span></button>
-<button class="analysis-row chip limit-chip" data-target="-3" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → −3</span><span class="row-check">✓</span></button>
-<button class="analysis-row continuity-btn locked" data-cont-target="-3" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
-</article><article class="analysis-card" data-a="-2">
+<section class="analysis-section"><div class="analysis-section-title">Análisis en puntos</div><div class="analysis-grid"><article class="analysis-card" data-a="-2">
 <div class="analysis-card-head"><span>x = −2</span><span class="card-status"></span></div>
 <button class="analysis-row value-chip" data-value-target="-2" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(−2)</span><span class="row-check">✓</span></button>
 <button class="analysis-row chip limit-chip" data-target="-2" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → −2</span><span class="row-check">✓</span></button>
 <button class="analysis-row continuity-btn locked" data-cont-target="-2" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
-</article><article class="analysis-card" data-a="1">
-<div class="analysis-card-head"><span>x = 1</span><span class="card-status"></span></div>
-<button class="analysis-row value-chip" data-value-target="1" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(1)</span><span class="row-check">✓</span></button>
-<button class="analysis-row chip limit-chip" data-target="1" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 1</span><span class="row-check">✓</span></button>
-<button class="analysis-row continuity-btn locked" data-cont-target="1" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
+</article><article class="analysis-card" data-a="0">
+<div class="analysis-card-head"><span>x = 0</span><span class="card-status"></span></div>
+<button class="analysis-row value-chip" data-value-target="0" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(0)</span><span class="row-check">✓</span></button>
+<button class="analysis-row chip limit-chip" data-target="0" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 0</span><span class="row-check">✓</span></button>
+<button class="analysis-row continuity-btn locked" data-cont-target="0" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
+</article><article class="analysis-card" data-a="2">
+<div class="analysis-card-head"><span>x = 2</span><span class="card-status"></span></div>
+<button class="analysis-row value-chip" data-value-target="2" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(2)</span><span class="row-check">✓</span></button>
+<button class="analysis-row chip limit-chip" data-target="2" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 2</span><span class="row-check">✓</span></button>
+<button class="analysis-row continuity-btn locked" data-cont-target="2" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
 </article><article class="analysis-card" data-a="4">
 <div class="analysis-card-head"><span>x = 4</span><span class="card-status"></span></div>
 <button class="analysis-row value-chip" data-value-target="4" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(4)</span><span class="row-check">✓</span></button>
@@ -1084,22 +1117,22 @@ body{
         <line x1="-10000" x2="10000" y1="0" y2="0" class="axis"></line><line x1="0" x2="0" y1="-10000" y2="10000" class="axis"></line>
         <path id="p1" class="curve"></path><path id="p2" class="curve"></path><path id="p3" class="curve"></path><path id="p4" class="curve"></path><path id="p5" class="curve"></path>
         <g id="keypoints">
-<circle class="closed-dot keypoint" cx="-3" cy="0" r=".14"></circle>
-<circle class="point-hit" cx="-3" cy="0" r=".36" data-x="-3" data-y="0" data-approx="" data-kind="Punto definido"></circle>
-<circle class="open-dot keypoint" cx="-2" cy="1" r=".14"></circle>
-<circle class="point-hit" cx="-2" cy="1" r=".36" data-x="-2" data-y="1" data-approx="" data-kind="Círculo abierto"></circle>
-<circle class="closed-dot keypoint" cx="-2" cy="3" r=".14"></circle>
-<circle class="point-hit" cx="-2" cy="3" r=".36" data-x="-2" data-y="3" data-approx="" data-kind="Punto definido"></circle>
-<circle class="open-dot keypoint" cx="1" cy="1" r=".14"></circle>
-<circle class="point-hit" cx="1" cy="1" r=".36" data-x="1" data-y="1" data-approx="" data-kind="Círculo abierto"></circle>
-<circle class="open-dot keypoint" cx="1" cy="3" r=".14"></circle>
-<circle class="point-hit" cx="1" cy="3" r=".36" data-x="1" data-y="3" data-approx="" data-kind="Círculo abierto"></circle>
-<circle class="closed-dot keypoint" cx="1" cy="2" r=".14"></circle>
-<circle class="point-hit" cx="1" cy="2" r=".36" data-x="1" data-y="2" data-approx="" data-kind="Punto definido"></circle>
-<circle class="open-dot keypoint" cx="4" cy="0" r=".14"></circle>
-<circle class="point-hit" cx="4" cy="0" r=".36" data-x="4" data-y="0" data-approx="" data-kind="Círculo abierto"></circle>
-<circle class="open-dot keypoint" cx="4" cy="2" r=".14"></circle>
-<circle class="point-hit" cx="4" cy="2" r=".36" data-x="4" data-y="2" data-approx="" data-kind="Círculo abierto"></circle>
+<circle class="open-dot keypoint" cx="-2" cy="2" r=".14"></circle>
+<circle class="point-hit" cx="-2" cy="2" r=".44" data-x="-2" data-y="2" data-approx="" data-kind="Círculo abierto"></circle>
+<circle class="closed-dot keypoint" cx="-2" cy="4" r=".14"></circle>
+<circle class="point-hit" cx="-2" cy="4" r=".44" data-x="-2" data-y="4" data-approx="" data-kind="Punto definido"></circle>
+<circle class="closed-dot keypoint" cx="0" cy="1" r=".14"></circle>
+<circle class="point-hit" cx="0" cy="1" r=".44" data-x="0" data-y="1" data-approx="" data-kind="Punto definido"></circle>
+<circle class="open-dot keypoint" cx="0" cy="3" r=".14"></circle>
+<circle class="point-hit" cx="0" cy="3" r=".44" data-x="0" data-y="3" data-approx="" data-kind="Círculo abierto"></circle>
+<circle class="open-dot keypoint" cx="2" cy="1" r=".14"></circle>
+<circle class="point-hit" cx="2" cy="1" r=".44" data-x="2" data-y="1" data-approx="" data-kind="Círculo abierto"></circle>
+<circle class="closed-dot keypoint" cx="2" cy="3" r=".14"></circle>
+<circle class="point-hit" cx="2" cy="3" r=".44" data-x="2" data-y="3" data-approx="" data-kind="Punto definido"></circle>
+<circle class="open-dot keypoint" cx="2" cy="4" r=".14"></circle>
+<circle class="point-hit" cx="2" cy="4" r=".44" data-x="2" data-y="4" data-approx="" data-kind="Círculo abierto"></circle>
+<circle class="closed-dot keypoint" cx="4" cy="3" r=".14"></circle>
+<circle class="point-hit" cx="4" cy="3" r=".44" data-x="4" data-y="3" data-approx="" data-kind="Punto definido"></circle>
 </g>
         <line id="aline" class="a-line" x1="-2" x2="-2" y1="-10000" y2="10000"></line>
         <line id="hline" class="h-line" x1="-10000" x2="10000" y1="-1" y2="-1"></line>
@@ -1139,7 +1172,7 @@ body{
 
     <div id="intro" class="intro">
       <strong>¿Qué quieres investigar?</strong>
-      <p>Empieza con una gráfica de lectura directa y valores principalmente enteros.</p>
+      <p>Explora una parábola, valores exactos y la diferencia entre límite, valor y continuidad.</p>
       <div class="intro-start-hint">✦ Si necesitas una altura exacta, puedes tocar un punto abierto o cerrado de la gráfica.</div>
       <button id="introStart" class="intro-start-btn" type="button">Inicio</button>
     </div>
@@ -1233,7 +1266,8 @@ const setHits=document.getElementById('setHits'),setHit1=document.getElementById
 
 
 
-const CAMERA_CONFIG={centerX:.5,centerY:0,minSpanX:13,minSpanY:12};
+const VIEW_PROFILE={"initial":{"centerX":1.5,"centerY":3.3,"minSpanX":16,"minSpanY":10},"tails":{"left":"up","right":"horizontal","rightLevel":3}};
+const CAMERA_CONFIG=VIEW_PROFILE.initial;
 let VIEW_W=13,VIEW_H=12,camX=CAMERA_CONFIG.centerX,camY=CAMERA_CONFIG.centerY;
 function updateVisibleCameraSize(){
   const r=svg.getBoundingClientRect();
@@ -1257,28 +1291,38 @@ function setCamera(cx=CAMERA_CONFIG.centerX,cy=CAMERA_CONFIG.centerY){
 function smoothCamera(tx,ty,a=.18){setCamera(camX+(tx-camX)*a,camY+(ty-camY)*a)}
 function restoreScene(clearPath=true){const sx=camX,sy=camY,start=performance.now(),dur=430;function frame(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p);setCamera(sx+(CAMERA_CONFIG.centerX-sx)*e,sy*(1-e));if(p<1)requestAnimationFrame(frame);else{setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);if(clearPath){trace.setAttribute('d','');runner.setAttribute('opacity','0')}}}requestAnimationFrame(frame)}
 function sample(id,fn,x0,x1,steps=900,warp='none'){let d='',pen=false;for(let i=0;i<=steps;i++){const t=i/steps;let q=t;if(warp==='left')q=t*t*t;else if(warp==='right')q=1-Math.pow(1-t,3);else if(warp==='both')q=(1-Math.cos(Math.PI*t))/2;const x=x0+(x1-x0)*q,y=fn(x);if(!Number.isFinite(y)||Math.abs(y)>5000){pen=false;continue}d+=(pen?'L':'M')+x.toFixed(5)+' '+y.toFixed(5)+' ';pen=true}document.getElementById(id).setAttribute('d',d)}
-const SQ=Math.sqrt(2);
-const fns={p1:x=>x+3,p2:x=>1,p3:x=>-x+4,p4:x=>2};
-sample('p1',fns.p1,-40,-2.001,1200,'right');
-sample('p2',fns.p2,-1.999,.999,600,'both');
-sample('p3',fns.p3,1.001,3.999,900,'both');
-sample('p4',fns.p4,4.001,40,900,'left');
-const cases={
- '-3':{left:{kind:'finite',value:0,exact:'0',fn:fns.p1,start:-4.4},right:{kind:'finite',value:0,exact:'0',fn:fns.p1,start:-2.4},bilateral:{kind:'finite',value:0,exact:'0'},image:{kind:'finite',value:0,exact:'0'}},
- '-2':{left:{kind:'finite',value:1,exact:'1',fn:fns.p1,start:-4},right:{kind:'finite',value:1,exact:'1',fn:fns.p2,start:-.7},bilateral:{kind:'finite',value:1,exact:'1'},image:{kind:'finite',value:3,exact:'3'}},
- '1':{left:{kind:'finite',value:1,exact:'1',fn:fns.p2,start:-.4},right:{kind:'finite',value:3,exact:'3',fn:fns.p3,start:2.2},bilateral:{kind:'none'},image:{kind:'finite',value:2,exact:'2'}},
- '4':{left:{kind:'finite',value:0,exact:'0',fn:fns.p3,start:2.7},right:{kind:'finite',value:2,exact:'2',fn:fns.p4,start:5.2},bilateral:{kind:'none'},image:{kind:'undefined'}}
+const SQ=Math.sqrt(2),SQ3=Math.sqrt(3);
+const fns={
+ p1:x=>-x,
+ p2:x=>1-x/2,
+ p3:x=>3-x,
+ p4:x=>5-x/2,
+ p5:x=>3+(x-4)*Math.exp(-(x-4))
 };
-const globals={neginf:{kind:'neginf',fn:fns.p1,start:-4,end:-28,label:'−∞'},posinf:{kind:'finite',value:2,exact:'2',fn:fns.p4,start:5.2,end:32,label:'+∞',horizontal:2}};
+sample('p1',fns.p1,-30,-2.001,1000,'right');
+sample('p2',fns.p2,-1.999,-.001,360,'both');
+sample('p3',fns.p3,.001,1.999,360,'both');
+sample('p4',fns.p4,2.001,3.999,360,'both');
+sample('p5',fns.p5,4.001,30,900,'left');
+const cases={
+ '-2':{left:{kind:'finite',value:2,exact:'2',fn:fns.p1,start:-3.3},right:{kind:'finite',value:2,exact:'2',fn:fns.p2,start:-1.2},bilateral:{kind:'finite',value:2,exact:'2'},image:{kind:'finite',value:4,exact:'4'}},
+ '0':{left:{kind:'finite',value:1,exact:'1',fn:fns.p2,start:-.8},right:{kind:'finite',value:3,exact:'3',fn:fns.p3,start:.8},bilateral:{kind:'none'},image:{kind:'finite',value:1,exact:'1'}},
+ '2':{left:{kind:'finite',value:1,exact:'1',fn:fns.p3,start:1.2},right:{kind:'finite',value:4,exact:'4',fn:fns.p4,start:2.8},bilateral:{kind:'none'},image:{kind:'finite',value:3,exact:'3'}},
+ '4':{left:{kind:'finite',value:3,exact:'3',fn:fns.p4,start:3.2},right:{kind:'finite',value:3,exact:'3',fn:fns.p5,start:5.0},bilateral:{kind:'finite',value:3,exact:'3'},image:{kind:'finite',value:3,exact:'3'}}
+};
+const globals={
+ neginf:{kind:'posinf',fn:fns.p1,start:-4,end:-24,label:'−∞'},
+ posinf:{kind:'finite',value:3,exact:'3',fn:fns.p5,start:5,end:26,label:'+∞',horizontal:3}
+};
 const setDescriptions={
- domain:{intervals:[{from:-Infinity,to:4},{from:4,to:Infinity}],extendsLeft:true,extendsRight:true,result:'ℝ ∖ {4}',summary:'La función está definida para todo número real excepto x = 4.'},
- range:{intervals:[{from:-Infinity,to:3,toClosed:true}],points:[],extendsDown:true,extendsUp:false,result:'(−∞, 3]',summary:'La función alcanza todas las alturas menores o iguales que 3.',checkpoints:[{y:3,belongs:true,witness:[-2,3],message:'En <i>y</i> = 3 hay un círculo abierto en un tramo, pero también está el <strong>punto cerrado (−2, 3)</strong>. Por eso 3 sí pertenece a la imagen.'}]}
+ domain:{intervals:[{from:-Infinity,to:Infinity}],extendsLeft:true,extendsRight:true,result:'ℝ',summary:'Para cada número real existe al menos un punto de la gráfica: el dominio es todo ℝ.'},
+ range:{intervals:[{from:1,to:Infinity,fromClosed:true}],points:[],extendsDown:false,extendsUp:true,result:'[1,+∞)',summary:'La menor altura alcanzada es 1; hacia la izquierda aparecen alturas arbitrariamente grandes.',checkpoints:[{y:1,belongs:true,witness:[0,1],message:'La altura mínima <i>y</i> = 1 aparece en el punto cerrado <strong>(0,1)</strong>.'}]}
 };
 let target=null,selected=null,chosenSide=null,answered={left:false,right:false,bilateral:false,image:false},mode='idle',answerValue='',timer=null,animating=false,lastAnimation=null;
 const partialProgress={
- '-3':{left:false,right:false,bilateral:false,image:false},
  '-2':{left:false,right:false,bilateral:false,image:false},
- '1':{left:false,right:false,bilateral:false,image:false},
+ '0':{left:false,right:false,bilateral:false,image:false},
+ '2':{left:false,right:false,bilateral:false,image:false},
  '4':{left:false,right:false,bilateral:false,image:false}
 };
 const completedTargets=new Set();
@@ -1357,9 +1401,9 @@ continuityNo.onclick=e=>{e.stopPropagation();answerContinuity('no')};
 continuityClose.onclick=e=>{e.stopPropagation();closeContinuity()};
 
 function checkFinalAchievement(){
- const requiredLimits=["-3", "-2", "1", "4", "neginf", "posinf"];
- const requiredValues=["-3", "-2", "1", "4"];
- const requiredContinuity=["-3", "-2", "1", "4"];
+ const requiredLimits=["-2", "0", "2", "4", "neginf", "posinf"];
+ const requiredValues=["-2", "0", "2", "4"];
+ const requiredContinuity=["-2", "0", "2", "4"];
  if(requiredLimits.every(x=>completedTargets.has(x))&&requiredValues.every(x=>completedValues.has(x))&&requiredContinuity.every(x=>completedContinuity.has(x))){
   finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false')
  }
@@ -1423,22 +1467,23 @@ function flashHit(x,y,secondary=false){
 }
 function hideHits(){setHits.style.opacity=0}
 function domainIntersections(x){
- const ys=[],e=.04;
+ const e=.04,ys=[];
  if(x<-2-e)ys.push(fns.p1(x));
- else if(Math.abs(x+2)<=e)ys.push(3);
- else if(x>-2+e&&x<1-e)ys.push(fns.p2(x));
- else if(Math.abs(x-1)<=e)ys.push(2);
- else if(x>1+e&&x<4-e)ys.push(fns.p3(x));
- else if(Math.abs(x-4)<=e){}
- else if(x>4+e)ys.push(fns.p4(x));
+ else if(Math.abs(x+2)<=e)ys.push(4);
+ else if(x>-2+e&&x<0-e)ys.push(fns.p2(x));
+ else if(Math.abs(x)<=e)ys.push(1);
+ else if(x>0+e&&x<2-e)ys.push(fns.p3(x));
+ else if(Math.abs(x-2)<=e)ys.push(3);
+ else if(x>2+e&&x<4-e)ys.push(fns.p4(x));
+ else if(Math.abs(x-4)<=e)ys.push(3);
+ else if(x>4+e)ys.push(fns.p5(x));
  return ys
 }
 function nearestRangeIntersection(y){
- for(const [x,yy] of [[-2,3],[1,2],[-3,0]])if(Math.abs(yy-y)<.06)return{x,y:yy};
- const pieces=[[fns.p1,-30,-2.001,700],[fns.p2,-1.999,.999,180],[fns.p3,1.001,3.999,260],[fns.p4,4.001,30,300]];
- let best=null,bestErr=Infinity;
- for(const [fn,a,b,n] of pieces)for(let i=0;i<=n;i++){const x=a+(b-a)*i/n,yy=fn(x),err=Math.abs(yy-y);if(err<bestErr){bestErr=err;best={x,y:yy}}}
- return bestErr<.075?best:null
+ if(y<1)return null;
+ if(y>=2)return{x:-y,y};
+ if(y>=1&&y<2)return{x:2*(1-y),y};
+ return null
 }
 function animateLinear(duration,onFrame){
   return new Promise(resolve=>{
@@ -1562,14 +1607,9 @@ async function prepareRangeInfinity(){
 async function runRangeTool(){
  const b=configureRangeBandResponsive(),desc=setDescriptions.range||{};
  setHit2.style.opacity=0;rangeBand.style.opacity=1;rangeSweep.style.opacity=1;setToolInfo.classList.add('reading');
-
  setToolPhase('Imagen · inicio');
- const startText=desc.extendsDown
-   ?'El barrido comienza en el borde inferior visible. La franja toca ese margen porque la imagen continúa hacia alturas cada vez menores.'
-   :'El barrido comienza desde el borde inferior visible. Sólo se incorporarán las alturas donde la horizontal encuentre algún punto.';
- setToolMessage('range',startText,'gold');
+ setToolMessage('range',desc.startMessage||'El barrido horizontal recorre las alturas e incorpora aquellas donde encuentra algún punto de la gráfica.','gold');
  await waitForContinue();
-
  let end=b.top;
  if(!desc.extendsUp){
    const finiteEnds=(desc.intervals||[]).flatMap(it=>[it.from,it.to]).filter(Number.isFinite);
@@ -1582,7 +1622,7 @@ async function runRangeTool(){
  for(const cp of cps){
    if(cp.y>cur){
      const frac=Math.abs(cp.y-cur)/Math.max(.1,Math.abs(end-b.bottom));
-     await rangeSweepSegment(cur,cp.y,Math.max(1800,Math.min(4300,1500+frac*5200)),false)
+     await rangeSweepSegment(cur,cp.y,Math.max(1700,Math.min(4200,1400+frac*5000)),false)
    }
    rangeSweep.setAttribute('y1',cp.y);rangeSweep.setAttribute('y2',cp.y);
    hideHits();
@@ -1593,7 +1633,7 @@ async function runRangeTool(){
  }
  if(end>cur){
    const frac=Math.abs(end-cur)/Math.max(.1,Math.abs(end-b.bottom));
-   await rangeSweepSegment(cur,end,Math.max(1800,Math.min(4700,1600+frac*5600)))
+   await rangeSweepSegment(cur,end,Math.max(1700,Math.min(4500,1500+frac*5400)))
  }
  hideHits();rangeSweep.setAttribute('y1',end);rangeSweep.setAttribute('y2',end);
  setToolPhase('Imagen · conclusión');
@@ -2023,26 +2063,81 @@ document.addEventListener('click',function(e){
 });
 
 
-/* v16.5 robust coordinate tap */
-document.querySelectorAll('.point-hit').forEach(pt=>{
- pt.addEventListener('pointerup',e=>{
-   e.preventDefault();e.stopImmediatePropagation();
-   if(typeof openCoordPop==='function')openCoordPop(pt,e);
- },true);
-});
 
 
-/* v16.5 final coordinate click arbitration */
-document.addEventListener('click',function(e){
- const hit=e.target.closest?.('.point-hit');
- if(!hit)return;
- const cx=e.clientX,cy=e.clientY;
- setTimeout(()=>{
-   if(typeof openCoordPop==='function'){
-     openCoordPop(hit,{clientX:cx,clientY:cy,preventDefault(){},stopPropagation(){}});
+
+
+
+
+
+
+/* v19 · inspector por cercanía al punto notable */
+(function(){
+ const zone=document.getElementById('stage');
+ const pop=document.getElementById('coordPop');
+ const kindEl=document.getElementById('coordKind');
+ const exactEl=document.getElementById('coordExact');
+ const approxBtn=document.getElementById('coordApproxBtn');
+ const approxEl=document.getElementById('coordApprox');
+ if(!zone||!pop||!kindEl||!exactEl)return;
+
+ function nearest(clientX,clientY){
+   let best=null,dmin=Infinity;
+   document.querySelectorAll('.point-hit').forEach(pt=>{
+     try{
+       const svg=pt.ownerSVGElement,p=svg.createSVGPoint();
+       p.x=parseFloat(pt.getAttribute('cx'));p.y=parseFloat(pt.getAttribute('cy'));
+       const ctm=pt.getScreenCTM();if(!ctm)return;
+       const q=p.matrixTransform(ctm);
+       const d=Math.hypot(q.x-clientX,q.y-clientY);
+       if(d<dmin){dmin=d;best=pt}
+     }catch(_){}
+   });
+   return dmin<=46?best:null
+ }
+ function showPoint(pt,clientX,clientY){
+   const x=pt.dataset.x||'',y=pt.dataset.y||'',kind=pt.dataset.kind||'Punto';
+   const ap=pt.dataset.approx||'',mode=pt.dataset.decimalMode||'';
+   kindEl.textContent=kind; exactEl.textContent=`(${x}, ${y})`;
+   approxEl?.classList.remove('show');
+   if(approxBtn){
+     approxBtn.style.display=ap?'inline-block':'none';
+     if(ap){
+       const [ax,ay]=ap.split(';');
+       approxBtn.dataset.decimalMode=mode;
+       approxBtn.textContent=mode==='exact'?'= Ver forma decimal':'≈ Ver aproximación decimal';
+       if(approxEl)approxEl.textContent=(mode==='exact'?'= ':'≈ ')+`(${ax}, ${ay})`;
+     }
    }
- },0);
-},true);
+   const r=zone.getBoundingClientRect();
+   let lx=clientX-r.left+8,ly=clientY-r.top-10;
+   lx=Math.min(Math.max(8,lx),Math.max(8,r.width-250));
+   ly=Math.min(Math.max(8,ly),Math.max(8,r.height-112));
+   pop.style.left=lx+'px';pop.style.top=ly+'px';pop.classList.add('show')
+ }
+ if(approxBtn){
+   approxBtn.addEventListener('click',e=>{
+     e.preventDefault();e.stopPropagation();
+     approxEl?.classList.toggle('show');
+     const showing=approxEl?.classList.contains('show');
+     const mode=approxBtn.dataset.decimalMode||'approx';
+     approxBtn.textContent=mode==='exact'
+       ?(showing?'= Ocultar forma decimal':'= Ver forma decimal')
+       :(showing?'≈ Ocultar aproximación decimal':'≈ Ver aproximación decimal')
+   })
+ }
+ function pick(e){
+   if(e.target?.closest?.('#intro,.analysis-dashboard,.controlbar,.coord-pop,.answer-panel,.answerpanel,.continuity-feedback,.set-tool-info,.set-result,.toolbar,button'))return;
+   const t=e.changedTouches?.[0]||e.touches?.[0]||e;
+   if(!Number.isFinite(t.clientX)||!Number.isFinite(t.clientY))return;
+   const pt=nearest(t.clientX,t.clientY);if(!pt)return;
+   e.preventDefault?.();e.stopPropagation?.();e.stopImmediatePropagation?.();
+   showPoint(pt,t.clientX,t.clientY)
+ }
+ zone.addEventListener('pointerup',pick,true);
+ zone.addEventListener('click',pick,true);
+ zone.addEventListener('touchend',pick,{capture:true,passive:false})
+})();
 </script>
 </body>
 </html>

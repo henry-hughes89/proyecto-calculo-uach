@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>LIM-01 · Caso 3 · Integrar ideas</title>
+<title>LIM-01 · Caso 3 · Tres asíntotas verticales</title>
 <style>
 :root{
   --ink:#173044; --muted:#657783; --accent:#128596; --accent2:#f0a84f;
@@ -1008,42 +1008,72 @@ body{
   pointer-events:none!important;
 }
 
+
+.analysis-bottom-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:7px!important}.analysis-family{min-width:0!important;padding:7px 9px!important}.analysis-family-buttons{display:flex!important;flex-wrap:nowrap!important;gap:5px!important}.analysis-family .chip,.analysis-family .meta-chip{min-width:0!important;flex:1 1 0!important;padding-left:7px!important;padding-right:7px!important}.point-hit,.keypoint,#curve path,.curve-path,.graph-path,.a-line,.h-line,#aline,#hline,#rangeSweep,#domainSweep{pointer-events:none!important}.range-open-marker{fill:#fff;stroke:#d3a135;stroke-width:.075}.range-closed-marker{fill:#d3a135;stroke:#fff;stroke-width:.04}@media(max-width:650px){.analysis-bottom-grid{grid-template-columns:1fr 1fr!important}.analysis-family-title{font-size:.47rem!important}.analysis-family .chip,.analysis-family .meta-chip{font-size:.49rem!important;padding:6px 5px!important}}
+
+
+/* v18 common interaction */
+.analysis-bottom-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:7px!important}
+.analysis-family{min-width:0!important;padding:7px 9px!important}
+.analysis-family-buttons{display:flex!important;flex-wrap:nowrap!important;gap:5px!important}
+.analysis-family .chip,.analysis-family .meta-chip{min-width:0!important;flex:1 1 0!important;padding-left:7px!important;padding-right:7px!important}
+.point-hit,.keypoint,#curve path,.a-line,.h-line,#aline,#hline,#rangeSweep,#domainSweep{pointer-events:none!important}
+.range-open-marker{fill:#fff;stroke:#d3a135;stroke-width:.075}
+.range-closed-marker{fill:#d3a135;stroke:#fff;stroke-width:.04}
+@media(max-width:650px){
+ .analysis-bottom-grid{grid-template-columns:1fr 1fr!important}
+ .analysis-family-title{font-size:.47rem!important}
+ .analysis-family .chip,.analysis-family .meta-chip{font-size:.49rem!important;padding:6px 5px!important}
+}
+
+
+/* v19 common explorer layout */
+.analysis-bottom-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:7px!important}
+.analysis-family{min-width:0!important;padding:7px 9px!important}
+.analysis-family-buttons{display:flex!important;flex-wrap:nowrap!important;gap:5px!important}
+.analysis-family .chip,.analysis-family .meta-chip{min-width:0!important;flex:1 1 0!important;padding-left:7px!important;padding-right:7px!important}
+.point-hit,.keypoint,#curve path,.a-line,.h-line,#aline,#hline,#rangeSweep,#domainSweep{pointer-events:none!important}
+.range-open-marker{fill:#fff;stroke:#d3a135;stroke-width:.075}
+.range-closed-marker{fill:#d3a135;stroke:#fff;stroke-width:.04}
+@media(max-width:650px){
+ .analysis-bottom-grid{grid-template-columns:1fr 1fr!important}
+ .analysis-family-title{font-size:.47rem!important}
+ .analysis-family .chip,.analysis-family .meta-chip{font-size:.49rem!important;padding:6px 5px!important}
+}
+
 </style>
 </head>
 <body>
 <main>
-<header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Integrar ideas</h1></header>
+<header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Caso 3 · Tres asíntotas verticales</h1></header>
 <section class="shell">
-  <div class="toolbar mode-toolbar">
-      <div class="analysis-dashboard">
-       <section class="analysis-section"><div class="analysis-section-title">Análisis en puntos</div><div class="analysis-grid"><article class="analysis-card" data-a="-2">
-          <div class="analysis-card-head"><span>x = −2</span><span class="card-status"></span></div>
-          <button class="analysis-row value-chip" data-value-target="-2" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(−2)</span><span class="row-check">✓</span></button>
-          <button class="analysis-row chip limit-chip" data-target="-2" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → −2</span><span class="row-check">✓</span></button>
-          <button class="analysis-row continuity-btn locked" data-cont-target="-2" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
-        </article><article class="analysis-card" data-a="0">
-          <div class="analysis-card-head"><span>x = 0</span><span class="card-status"></span></div>
-          <button class="analysis-row value-chip" data-value-target="0" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(0)</span><span class="row-check">✓</span></button>
-          <button class="analysis-row chip limit-chip" data-target="0" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 0</span><span class="row-check">✓</span></button>
-          <button class="analysis-row continuity-btn locked" data-cont-target="0" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
-        </article><article class="analysis-card" data-a="2">
-          <div class="analysis-card-head"><span>x = 2</span><span class="card-status"></span></div>
-          <button class="analysis-row value-chip" data-value-target="2" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(2)</span><span class="row-check">✓</span></button>
-          <button class="analysis-row chip limit-chip" data-target="2" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 2</span><span class="row-check">✓</span></button>
-          <button class="analysis-row continuity-btn locked" data-cont-target="2" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
-        </article><article class="analysis-card" data-a="4">
-          <div class="analysis-card-head"><span>x = 4</span><span class="card-status"></span></div>
-          <button class="analysis-row value-chip" data-value-target="4" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(4)</span><span class="row-check">✓</span></button>
-          <button class="analysis-row chip limit-chip" data-target="4" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 4</span><span class="row-check">✓</span></button>
-          <button class="analysis-row continuity-btn locked" data-cont-target="4" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
-        </article></div></section>
-       <div class="analysis-bottom-grid">
-        <section class="analysis-family infinity-family"><div class="analysis-family-title">Comportamiento al infinito</div><div class="analysis-family-buttons"><button class="chip global" data-target="neginf" type="button">x → −∞</button><button class="chip global" data-target="posinf" type="button">x → +∞</button></div></section>
-        <section class="analysis-family extra-family"><div class="analysis-family-title">Más sobre la función</div><div class="analysis-family-buttons"><button id="domainBtnTop" class="meta-chip domain-top" type="button">Dominio</button><button id="rangeBtnTop" class="meta-chip range-top" type="button">Imagen</button></div></section>
-       </div>
-      </div>
-    </div>
-    <div id="continuityFeedback" class="continuity-feedback" aria-hidden="true"></div>
+  <div class="toolbar mode-toolbar"><div class="analysis-dashboard">
+<section class="analysis-section"><div class="analysis-section-title">Análisis en puntos</div><div class="analysis-grid"><article class="analysis-card" data-a="-1">
+<div class="analysis-card-head"><span>x = −1</span><span class="card-status"></span></div>
+<button class="analysis-row value-chip" data-value-target="-1" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(−1)</span><span class="row-check">✓</span></button>
+<button class="analysis-row chip limit-chip" data-target="-1" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → −1</span><span class="row-check">✓</span></button>
+<button class="analysis-row continuity-btn locked" data-cont-target="-1" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
+</article><article class="analysis-card" data-a="0">
+<div class="analysis-card-head"><span>x = 0</span><span class="card-status"></span></div>
+<button class="analysis-row value-chip" data-value-target="0" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(0)</span><span class="row-check">✓</span></button>
+<button class="analysis-row chip limit-chip" data-target="0" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 0</span><span class="row-check">✓</span></button>
+<button class="analysis-row continuity-btn locked" data-cont-target="0" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
+</article><article class="analysis-card" data-a="1">
+<div class="analysis-card-head"><span>x = 1</span><span class="card-status"></span></div>
+<button class="analysis-row value-chip" data-value-target="1" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(1)</span><span class="row-check">✓</span></button>
+<button class="analysis-row chip limit-chip" data-target="1" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 1</span><span class="row-check">✓</span></button>
+<button class="analysis-row continuity-btn locked" data-cont-target="1" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
+</article><article class="analysis-card" data-a="2">
+<div class="analysis-card-head"><span>x = 2</span><span class="card-status"></span></div>
+<button class="analysis-row value-chip" data-value-target="2" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(2)</span><span class="row-check">✓</span></button>
+<button class="analysis-row chip limit-chip" data-target="2" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 2</span><span class="row-check">✓</span></button>
+<button class="analysis-row continuity-btn locked" data-cont-target="2" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
+</article></div></section>
+<div class="analysis-bottom-grid">
+<section class="analysis-family infinity-family"><div class="analysis-family-title">Comportamiento al infinito</div><div class="analysis-family-buttons"><button class="chip global" data-target="neginf" type="button">x → −∞</button><button class="chip global" data-target="posinf" type="button">x → +∞</button></div></section>
+<section class="analysis-family extra-family"><div class="analysis-family-title">Más sobre la función</div><div class="analysis-family-buttons"><button id="domainBtnTop" class="meta-chip domain-top" type="button">Dominio</button><button id="rangeBtnTop" class="meta-chip range-top" type="button">Imagen</button></div></section>
+</div></div></div>
+<div id="continuityFeedback" class="continuity-feedback" aria-hidden="true"></div>
 <div id="answerpanel" class="answerpanel">
       <div class="answer-top">
         <div class="answer-main">
@@ -1087,20 +1117,8 @@ body{
         <line x1="-10000" x2="10000" y1="0" y2="0" class="axis"></line><line x1="0" x2="0" y1="-10000" y2="10000" class="axis"></line>
         <path id="p1" class="curve"></path><path id="p2" class="curve"></path><path id="p3" class="curve"></path><path id="p4" class="curve"></path><path id="p5" class="curve"></path>
         <g id="keypoints">
-<circle class="closed-dot keypoint" cx="-2" cy="1" r=".14"></circle>
-<circle class="point-hit" cx="-2" cy="1" r=".36" data-x="-2" data-y="1" data-approx="" data-kind="Punto definido"></circle>
-<circle class="open-dot keypoint" cx="-2" cy="1.5" r=".14"></circle>
-<circle class="point-hit" cx="-2" cy="1.5" r=".36" data-x="-2" data-y="3/2" data-approx="-2;1.5" data-kind="Círculo abierto" data-decimal-mode="exact"></circle>
-<circle class="closed-dot keypoint" cx="0" cy="1.5" r=".14"></circle>
-<circle class="point-hit" cx="0" cy="1.5" r=".36" data-x="0" data-y="3/2" data-approx="0;1.5" data-kind="Punto definido" data-decimal-mode="exact"></circle>
-<circle class="open-dot keypoint" cx="2" cy="2.5" r=".14"></circle>
-<circle class="point-hit" cx="2" cy="2.5" r=".36" data-x="2" data-y="5/2" data-approx="2;2.5" data-kind="Círculo abierto" data-decimal-mode="exact"></circle>
-<circle class="open-dot keypoint" cx="2" cy="1.4142135623730951" r=".14"></circle>
-<circle class="point-hit" cx="2" cy="1.4142135623730951" r=".36" data-x="2" data-y="√2" data-approx="2;1.4142" data-kind="Círculo abierto" data-decimal-mode="approx"></circle>
-<circle class="closed-dot keypoint" cx="2" cy="3" r=".14"></circle>
-<circle class="point-hit" cx="2" cy="3" r=".36" data-x="2" data-y="3" data-approx="" data-kind="Punto definido"></circle>
-<circle class="open-dot keypoint" cx="4" cy="2.080880229039762" r=".14"></circle>
-<circle class="point-hit" cx="4" cy="2.080880229039762" r=".36" data-x="4" data-y="√2+2/3" data-approx="4;2.0809" data-kind="Círculo abierto" data-decimal-mode="approx"></circle>
+<circle class="closed-dot keypoint" cx="0" cy="0" r=".14"></circle>
+<circle class="point-hit" cx="0" cy="0" r=".44" data-x="0" data-y="0" data-approx="" data-kind="Punto definido"></circle>
 </g>
         <line id="aline" class="a-line" x1="-2" x2="-2" y1="-10000" y2="10000"></line>
         <line id="hline" class="h-line" x1="-10000" x2="10000" y1="-1" y2="-1"></line>
@@ -1140,7 +1158,7 @@ body{
 
     <div id="intro" class="intro">
       <strong>¿Qué quieres investigar?</strong>
-      <p>Combina discontinuidades, continuidad, valores exactos y comportamientos infinitos.</p>
+      <p>Aquí el dominio y la imagen quedan fragmentados: observa intervalos completos sin gráfica.</p>
       <div class="intro-start-hint">✦ Si necesitas una altura exacta, puedes tocar un punto abierto o cerrado de la gráfica.</div>
       <button id="introStart" class="intro-start-btn" type="button">Inicio</button>
     </div>
@@ -1234,7 +1252,8 @@ const setHits=document.getElementById('setHits'),setHit1=document.getElementById
 
 
 
-const CAMERA_CONFIG={centerX:.5,centerY:0,minSpanX:13,minSpanY:12};
+const VIEW_PROFILE={"initial":{"centerX":0.5,"centerY":0.2,"minSpanX":14,"minSpanY":14},"tails":{"left":"horizontal","leftLevel":2,"right":"horizontal","rightLevel":2}};
+const CAMERA_CONFIG=VIEW_PROFILE.initial;
 let VIEW_W=13,VIEW_H=12,camX=CAMERA_CONFIG.centerX,camY=CAMERA_CONFIG.centerY;
 function updateVisibleCameraSize(){
   const r=svg.getBoundingClientRect();
@@ -1258,59 +1277,32 @@ function setCamera(cx=CAMERA_CONFIG.centerX,cy=CAMERA_CONFIG.centerY){
 function smoothCamera(tx,ty,a=.18){setCamera(camX+(tx-camX)*a,camY+(ty-camY)*a)}
 function restoreScene(clearPath=true){const sx=camX,sy=camY,start=performance.now(),dur=430;function frame(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p);setCamera(sx+(CAMERA_CONFIG.centerX-sx)*e,sy*(1-e));if(p<1)requestAnimationFrame(frame);else{setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);if(clearPath){trace.setAttribute('d','');runner.setAttribute('opacity','0')}}}requestAnimationFrame(frame)}
 function sample(id,fn,x0,x1,steps=900,warp='none'){let d='',pen=false;for(let i=0;i<=steps;i++){const t=i/steps;let q=t;if(warp==='left')q=t*t*t;else if(warp==='right')q=1-Math.pow(1-t,3);else if(warp==='both')q=(1-Math.cos(Math.PI*t))/2;const x=x0+(x1-x0)*q,y=fn(x);if(!Number.isFinite(y)||Math.abs(y)>5000){pen=false;continue}d+=(pen?'L':'M')+x.toFixed(5)+' '+y.toFixed(5)+' ';pen=true}document.getElementById(id).setAttribute('d',d)}
-const SQ=Math.sqrt(2);
-const fns={
-  p1:x=>.5*x+2,                /* x<-2 */
-  p2:x=>1.5,                   /* -2<x<0 */
-  p3:x=>1.5+.5*x,              /* 0<x<2 */
-  p4:x=>SQ+(x-2)/3,            /* 2<x<4 */
-  p5:x=>-2+1/(x-4)             /* x>4 */
-};
-sample('p1',fns.p1,-35,-2.001,1000,'right');
-sample('p2',fns.p2,-1.999,-.001,350,'both');
-sample('p3',fns.p3,.001,1.999,420,'both');
-sample('p4',fns.p4,2.001,3.999,450,'both');
-sample('p5',fns.p5,4.0006,40,2600,'left');
+const SQ=Math.sqrt(2),SQ3=Math.sqrt(3);
+const fns={p:x=>(2*x/(x-2))*Math.abs((x*x)/(x*x-1))};
+sample('p1',fns.p,-30,-1.0006,1900,'right');
+sample('p2',fns.p,-.9994,.9994,2100,'both');
+sample('p3',fns.p,1.0006,1.9994,1500,'both');
+sample('p4',fns.p,2.0006,30,1900,'left');
 const cases={
- '-2':{
-   left:{kind:'finite',value:1,exact:'1',fn:fns.p1,start:-4.3},
-   right:{kind:'finite',value:1.5,exact:'3/2',fn:fns.p2,start:-.7},
-   bilateral:{kind:'none'},
-   image:{kind:'finite',value:1,exact:'1'}
- },
- '0':{
-   left:{kind:'finite',value:1.5,exact:'3/2',fn:fns.p2,start:-1.2},
-   right:{kind:'finite',value:1.5,exact:'3/2',fn:fns.p3,start:1.0},
-   bilateral:{kind:'finite',value:1.5,exact:'3/2'},
-   image:{kind:'finite',value:1.5,exact:'3/2'}
- },
- '2':{
-   left:{kind:'finite',value:2.5,exact:'5/2',fn:fns.p3,start:1.0},
-   right:{kind:'finite',value:SQ,exact:'√2',fn:fns.p4,start:3.0},
-   bilateral:{kind:'none'},
-   image:{kind:'finite',value:3,exact:'3'}
- },
- '4':{
-   left:{kind:'finite',value:SQ+2/3,exact:'√2+2/3',fn:fns.p4,start:3.1},
-   right:{kind:'posinf',fn:fns.p5,start:4.7},
-   bilateral:{kind:'none'},
-   image:{kind:'undefined'}
- }
+ '-1':{left:{kind:'posinf',fn:fns.p,start:-1.65},right:{kind:'posinf',fn:fns.p,start:-.35},bilateral:{kind:'none'},image:{kind:'undefined'}},
+ '0':{left:{kind:'finite',value:0,exact:'0',fn:fns.p,start:-.6},right:{kind:'finite',value:0,exact:'0',fn:fns.p,start:.6},bilateral:{kind:'finite',value:0,exact:'0'},image:{kind:'finite',value:0,exact:'0'}},
+ '1':{left:{kind:'neginf',fn:fns.p,start:.35},right:{kind:'neginf',fn:fns.p,start:1.65},bilateral:{kind:'none'},image:{kind:'undefined'}},
+ '2':{left:{kind:'neginf',fn:fns.p,start:1.35},right:{kind:'posinf',fn:fns.p,start:2.65},bilateral:{kind:'none'},image:{kind:'undefined'}}
 };
 const globals={
- neginf:{kind:'neginf',fn:fns.p1,start:-4,end:-32,label:'−∞'},
- posinf:{kind:'finite',value:-2,exact:'−2',fn:fns.p5,start:5.1,end:38,label:'+∞',horizontal:-2}
+ neginf:{kind:'finite',value:2,exact:'2',fn:fns.p,start:-3.2,end:-28,label:'−∞',horizontal:2},
+ posinf:{kind:'finite',value:2,exact:'2',fn:fns.p,start:3.2,end:28,label:'+∞',horizontal:2}
 };
 const setDescriptions={
- domain:{intervals:[{from:-Infinity,to:4},{from:4,to:Infinity}],extendsLeft:true,extendsRight:true,result:'ℝ ∖ {4}',summary:'La función está definida para todo número real excepto x = 4.'},
- range:{intervals:[{from:-Infinity,to:Infinity}],points:[],extendsDown:true,extendsUp:true,result:'ℝ',summary:'La función alcanza todas las alturas reales.',checkpoints:[]}
+ domain:{intervals:[{from:-Infinity,to:-1},{from:-1,to:1},{from:1,to:2},{from:2,to:Infinity}],extendsLeft:true,extendsRight:true,result:'ℝ ∖ {−1,1,2}',summary:'Las tres asíntotas verticales corresponden exactamente a los tres valores ausentes del dominio.'},
+ range:{intervals:[{from:-Infinity,to:Infinity}],points:[],extendsDown:true,extendsUp:true,result:'ℝ',summary:'En el tramo (−1,1) la función recorre desde +∞ hasta −∞ y alcanza todas las alturas reales.',checkpoints:[]}
 };
 let target=null,selected=null,chosenSide=null,answered={left:false,right:false,bilateral:false,image:false},mode='idle',answerValue='',timer=null,animating=false,lastAnimation=null;
 const partialProgress={
- '-2':{left:false,right:false,bilateral:false,image:false},
+ '-1':{left:false,right:false,bilateral:false,image:false},
  '0':{left:false,right:false,bilateral:false,image:false},
- '2':{left:false,right:false,bilateral:false,image:false},
- '4':{left:false,right:false,bilateral:false,image:false}
+ '1':{left:false,right:false,bilateral:false,image:false},
+ '2':{left:false,right:false,bilateral:false,image:false}
 };
 const completedTargets=new Set();
 const completedValues=new Set();
@@ -1388,11 +1380,11 @@ continuityNo.onclick=e=>{e.stopPropagation();answerContinuity('no')};
 continuityClose.onclick=e=>{e.stopPropagation();closeContinuity()};
 
 function checkFinalAchievement(){
- const requiredLimits=["-2", "0", "2", "4", "neginf", "posinf"];
- const requiredValues=["-2", "0", "2", "4"];
- const requiredContinuity=["-2", "0", "2", "4"];
+ const requiredLimits=["-1", "0", "1", "2", "neginf", "posinf"];
+ const requiredValues=["-1", "0", "1", "2"];
+ const requiredContinuity=["-1", "0", "1", "2"];
  if(requiredLimits.every(x=>completedTargets.has(x))&&requiredValues.every(x=>completedValues.has(x))&&requiredContinuity.every(x=>completedContinuity.has(x))){
-   finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false')
+  finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false')
  }
 }
 exploreAgain.onclick=()=>{finalwin.classList.remove('show');finalwin.setAttribute('aria-hidden','true')};
@@ -1454,23 +1446,17 @@ function flashHit(x,y,secondary=false){
 }
 function hideHits(){setHits.style.opacity=0}
 function domainIntersections(x){
- const ys=[],e=.04;
- if(x<-2-e)ys.push(fns.p1(x));
- else if(Math.abs(x+2)<=e)ys.push(1);
- else if(x>-2+e&&x<0-e)ys.push(fns.p2(x));
- else if(Math.abs(x)<=e)ys.push(1.5);
- else if(x>0+e&&x<2-e)ys.push(fns.p3(x));
- else if(Math.abs(x-2)<=e)ys.push(3);
- else if(x>2+e&&x<4-e)ys.push(fns.p4(x));
- else if(Math.abs(x-4)<=e){}
- else if(x>4+e)ys.push(fns.p5(x));
- return ys
+ const e=.04;
+ if(Math.abs(x+1)<=e||Math.abs(x-1)<=e||Math.abs(x-2)<=e)return[];
+ return[fns.p(x)]
 }
 function nearestRangeIntersection(y){
- const pieces=[[fns.p1,-30,-2.001,700],[fns.p2,-1.999,-.001,160],[fns.p3,.001,1.999,220],[fns.p4,2.001,3.999,260],[fns.p5,4.001,35,900]];
  let best=null,bestErr=Infinity;
- for(const [fn,a,b,n] of pieces)for(let i=0;i<=n;i++){const x=a+(b-a)*i/n,yy=fn(x),err=Math.abs(yy-y);if(err<bestErr){bestErr=err;best={x,y:yy}}}
- return bestErr<.075?best:null
+ for(let i=0;i<=1800;i++){
+   const x=-.999+1.998*i/1800,yy=fns.p(x),err=Math.abs(yy-y);
+   if(Number.isFinite(yy)&&err<bestErr){bestErr=err;best={x,y:yy}}
+ }
+ return bestErr<.08?best:null
 }
 function animateLinear(duration,onFrame){
   return new Promise(resolve=>{
@@ -1600,14 +1586,9 @@ async function prepareRangeInfinity(){
 async function runRangeTool(){
  const b=configureRangeBandResponsive(),desc=setDescriptions.range||{};
  setHit2.style.opacity=0;rangeBand.style.opacity=1;rangeSweep.style.opacity=1;setToolInfo.classList.add('reading');
-
  setToolPhase('Imagen · inicio');
- const startText=desc.extendsDown
-   ?'El barrido comienza en el borde inferior visible. La franja toca ese margen porque la imagen continúa hacia alturas cada vez menores.'
-   :'El barrido comienza desde el borde inferior visible. Sólo se incorporarán las alturas donde la horizontal encuentre algún punto.';
- setToolMessage('range',startText,'gold');
+ setToolMessage('range',desc.startMessage||'El barrido horizontal recorre las alturas e incorpora aquellas donde encuentra algún punto de la gráfica.','gold');
  await waitForContinue();
-
  let end=b.top;
  if(!desc.extendsUp){
    const finiteEnds=(desc.intervals||[]).flatMap(it=>[it.from,it.to]).filter(Number.isFinite);
@@ -1620,7 +1601,7 @@ async function runRangeTool(){
  for(const cp of cps){
    if(cp.y>cur){
      const frac=Math.abs(cp.y-cur)/Math.max(.1,Math.abs(end-b.bottom));
-     await rangeSweepSegment(cur,cp.y,Math.max(1800,Math.min(4300,1500+frac*5200)),false)
+     await rangeSweepSegment(cur,cp.y,Math.max(1700,Math.min(4200,1400+frac*5000)),false)
    }
    rangeSweep.setAttribute('y1',cp.y);rangeSweep.setAttribute('y2',cp.y);
    hideHits();
@@ -1631,7 +1612,7 @@ async function runRangeTool(){
  }
  if(end>cur){
    const frac=Math.abs(end-cur)/Math.max(.1,Math.abs(end-b.bottom));
-   await rangeSweepSegment(cur,end,Math.max(1800,Math.min(4700,1600+frac*5600)))
+   await rangeSweepSegment(cur,end,Math.max(1700,Math.min(4500,1500+frac*5400)))
  }
  hideHits();rangeSweep.setAttribute('y1',end);rangeSweep.setAttribute('y2',end);
  setToolPhase('Imagen · conclusión');
@@ -2061,26 +2042,81 @@ document.addEventListener('click',function(e){
 });
 
 
-/* v16.5 robust coordinate tap */
-document.querySelectorAll('.point-hit').forEach(pt=>{
- pt.addEventListener('pointerup',e=>{
-   e.preventDefault();e.stopImmediatePropagation();
-   if(typeof openCoordPop==='function')openCoordPop(pt,e);
- },true);
-});
 
 
-/* v16.5 final coordinate click arbitration */
-document.addEventListener('click',function(e){
- const hit=e.target.closest?.('.point-hit');
- if(!hit)return;
- const cx=e.clientX,cy=e.clientY;
- setTimeout(()=>{
-   if(typeof openCoordPop==='function'){
-     openCoordPop(hit,{clientX:cx,clientY:cy,preventDefault(){},stopPropagation(){}});
+
+
+
+
+
+
+/* v19 · inspector por cercanía al punto notable */
+(function(){
+ const zone=document.getElementById('stage');
+ const pop=document.getElementById('coordPop');
+ const kindEl=document.getElementById('coordKind');
+ const exactEl=document.getElementById('coordExact');
+ const approxBtn=document.getElementById('coordApproxBtn');
+ const approxEl=document.getElementById('coordApprox');
+ if(!zone||!pop||!kindEl||!exactEl)return;
+
+ function nearest(clientX,clientY){
+   let best=null,dmin=Infinity;
+   document.querySelectorAll('.point-hit').forEach(pt=>{
+     try{
+       const svg=pt.ownerSVGElement,p=svg.createSVGPoint();
+       p.x=parseFloat(pt.getAttribute('cx'));p.y=parseFloat(pt.getAttribute('cy'));
+       const ctm=pt.getScreenCTM();if(!ctm)return;
+       const q=p.matrixTransform(ctm);
+       const d=Math.hypot(q.x-clientX,q.y-clientY);
+       if(d<dmin){dmin=d;best=pt}
+     }catch(_){}
+   });
+   return dmin<=46?best:null
+ }
+ function showPoint(pt,clientX,clientY){
+   const x=pt.dataset.x||'',y=pt.dataset.y||'',kind=pt.dataset.kind||'Punto';
+   const ap=pt.dataset.approx||'',mode=pt.dataset.decimalMode||'';
+   kindEl.textContent=kind; exactEl.textContent=`(${x}, ${y})`;
+   approxEl?.classList.remove('show');
+   if(approxBtn){
+     approxBtn.style.display=ap?'inline-block':'none';
+     if(ap){
+       const [ax,ay]=ap.split(';');
+       approxBtn.dataset.decimalMode=mode;
+       approxBtn.textContent=mode==='exact'?'= Ver forma decimal':'≈ Ver aproximación decimal';
+       if(approxEl)approxEl.textContent=(mode==='exact'?'= ':'≈ ')+`(${ax}, ${ay})`;
+     }
    }
- },0);
-},true);
+   const r=zone.getBoundingClientRect();
+   let lx=clientX-r.left+8,ly=clientY-r.top-10;
+   lx=Math.min(Math.max(8,lx),Math.max(8,r.width-250));
+   ly=Math.min(Math.max(8,ly),Math.max(8,r.height-112));
+   pop.style.left=lx+'px';pop.style.top=ly+'px';pop.classList.add('show')
+ }
+ if(approxBtn){
+   approxBtn.addEventListener('click',e=>{
+     e.preventDefault();e.stopPropagation();
+     approxEl?.classList.toggle('show');
+     const showing=approxEl?.classList.contains('show');
+     const mode=approxBtn.dataset.decimalMode||'approx';
+     approxBtn.textContent=mode==='exact'
+       ?(showing?'= Ocultar forma decimal':'= Ver forma decimal')
+       :(showing?'≈ Ocultar aproximación decimal':'≈ Ver aproximación decimal')
+   })
+ }
+ function pick(e){
+   if(e.target?.closest?.('#intro,.analysis-dashboard,.controlbar,.coord-pop,.answer-panel,.answerpanel,.continuity-feedback,.set-tool-info,.set-result,.toolbar,button'))return;
+   const t=e.changedTouches?.[0]||e.touches?.[0]||e;
+   if(!Number.isFinite(t.clientX)||!Number.isFinite(t.clientY))return;
+   const pt=nearest(t.clientX,t.clientY);if(!pt)return;
+   e.preventDefault?.();e.stopPropagation?.();e.stopImmediatePropagation?.();
+   showPoint(pt,t.clientX,t.clientY)
+ }
+ zone.addEventListener('pointerup',pick,true);
+ zone.addEventListener('click',pick,true);
+ zone.addEventListener('touchend',pick,{capture:true,passive:false})
+})();
 </script>
 </body>
 </html>
