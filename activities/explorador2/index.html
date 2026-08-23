@@ -920,37 +920,58 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
   .set-tool-info{bottom:92px!important;width:min(94%,560px)!important}
 }
 
+
+/* v16.4 · compact analysis families in one row */
+.analysis-bottom-grid{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:7px!important;
+}
+.analysis-family{min-width:0!important;padding:7px 9px!important}
+.analysis-family-buttons{display:flex!important;flex-wrap:nowrap!important;gap:5px!important}
+.analysis-family .chip,.analysis-family .meta-chip{
+  min-width:0!important;flex:1 1 0!important;padding-left:7px!important;padding-right:7px!important
+}
+.range-open-marker{fill:#fff;stroke:#d3a135;stroke-width:.075}
+.range-closed-marker{fill:#d3a135;stroke:#fff;stroke-width:.04}
+@media(max-width:650px){
+ .analysis-bottom-grid{grid-template-columns:1fr 1fr!important}
+ .analysis-family-title{font-size:.47rem!important}
+ .analysis-family .chip,.analysis-family .meta-chip{font-size:.49rem!important;padding:6px 5px!important}
+}
+
 </style>
 </head>
 <body>
 <main>
 <header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Nuevos comportamientos</h1></header>
 <section class="shell">
-  <div class="toolbar mode-toolbar">
-      <div class="analysis-dashboard">
-       <section class="analysis-section"><div class="analysis-section-title">Análisis en puntos</div><div class="analysis-grid"><article class="analysis-card" data-a="-1">
-          <div class="analysis-card-head"><span>x = −1</span><span class="card-status"></span></div>
-          <button class="analysis-row value-chip" data-value-target="-1" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(−1)</span><span class="row-check">✓</span></button>
-          <button class="analysis-row chip limit-chip" data-target="-1" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → −1</span><span class="row-check">✓</span></button>
-          <button class="analysis-row continuity-btn locked" data-cont-target="-1" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
-        </article><article class="analysis-card" data-a="2">
-          <div class="analysis-card-head"><span>x = 2</span><span class="card-status"></span></div>
-          <button class="analysis-row value-chip" data-value-target="2" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(2)</span><span class="row-check">✓</span></button>
-          <button class="analysis-row chip limit-chip" data-target="2" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 2</span><span class="row-check">✓</span></button>
-          <button class="analysis-row continuity-btn locked" data-cont-target="2" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
-        </article><article class="analysis-card" data-a="5">
-          <div class="analysis-card-head"><span>x = 5</span><span class="card-status"></span></div>
-          <button class="analysis-row value-chip" data-value-target="5" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(5)</span><span class="row-check">✓</span></button>
-          <button class="analysis-row chip limit-chip" data-target="5" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 5</span><span class="row-check">✓</span></button>
-          <button class="analysis-row continuity-btn locked" data-cont-target="5" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
-        </article></div></section>
-       <div class="analysis-bottom-grid">
-        <section class="analysis-family infinity-family"><div class="analysis-family-title">Comportamiento al infinito</div><div class="analysis-family-buttons"><button class="chip global" data-target="neginf" type="button">x → −∞</button><button class="chip global" data-target="posinf" type="button">x → +∞</button></div></section>
-        <section class="analysis-family extra-family"><div class="analysis-family-title">Más sobre la función</div><div class="analysis-family-buttons"><button id="domainBtnTop" class="meta-chip domain-top" type="button">Dominio</button><button id="rangeBtnTop" class="meta-chip range-top" type="button">Imagen</button></div></section>
-       </div>
-      </div>
-    </div>
-    <div id="answerpanel" class="answerpanel">
+  <div class="toolbar mode-toolbar"><div class="analysis-dashboard">
+<section class="analysis-section"><div class="analysis-section-title">Análisis en puntos</div><div class="analysis-grid"><article class="analysis-card" data-a="-1">
+<div class="analysis-card-head"><span>x = −1</span><span class="card-status"></span></div>
+<button class="analysis-row value-chip" data-value-target="-1" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(−1)</span><span class="row-check">✓</span></button>
+<button class="analysis-row chip limit-chip" data-target="-1" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → −1</span><span class="row-check">✓</span></button>
+<button class="analysis-row continuity-btn locked" data-cont-target="-1" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
+</article><article class="analysis-card" data-a="0">
+<div class="analysis-card-head"><span>x = 0</span><span class="card-status"></span></div>
+<button class="analysis-row value-chip" data-value-target="0" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(0)</span><span class="row-check">✓</span></button>
+<button class="analysis-row chip limit-chip" data-target="0" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 0</span><span class="row-check">✓</span></button>
+<button class="analysis-row continuity-btn locked" data-cont-target="0" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
+</article><article class="analysis-card" data-a="2">
+<div class="analysis-card-head"><span>x = 2</span><span class="card-status"></span></div>
+<button class="analysis-row value-chip" data-value-target="2" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(2)</span><span class="row-check">✓</span></button>
+<button class="analysis-row chip limit-chip" data-target="2" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 2</span><span class="row-check">✓</span></button>
+<button class="analysis-row continuity-btn locked" data-cont-target="2" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
+</article><article class="analysis-card" data-a="5">
+<div class="analysis-card-head"><span>x = 5</span><span class="card-status"></span></div>
+<button class="analysis-row value-chip" data-value-target="5" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(5)</span><span class="row-check">✓</span></button>
+<button class="analysis-row chip limit-chip" data-target="5" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 5</span><span class="row-check">✓</span></button>
+<button class="analysis-row continuity-btn locked" data-cont-target="5" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button>
+</article></div></section>
+<div class="analysis-bottom-grid">
+<section class="analysis-family infinity-family"><div class="analysis-family-title">Comportamiento al infinito</div><div class="analysis-family-buttons"><button class="chip global" data-target="neginf" type="button">x → −∞</button><button class="chip global" data-target="posinf" type="button">x → +∞</button></div></section>
+<section class="analysis-family extra-family"><div class="analysis-family-title">Más sobre la función</div><div class="analysis-family-buttons"><button id="domainBtnTop" class="meta-chip domain-top" type="button">Dominio</button><button id="rangeBtnTop" class="meta-chip range-top" type="button">Imagen</button></div></section>
+</div></div></div>
+<div id="answerpanel" class="answerpanel">
       <div class="answer-top">
         <div class="answer-main">
           <div id="answerTitle" class="answer-title">Selecciona tu resultado</div>
@@ -999,6 +1020,8 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
 <circle class="point-hit" cx="-1" cy="1.4142135623730951" r=".36" data-x="-1" data-y="√2" data-approx="-1;1.4142" data-kind="Círculo abierto" data-decimal-mode="approx"></circle>
 <circle class="closed-dot keypoint" cx="-1" cy="1.5" r=".14"></circle>
 <circle class="point-hit" cx="-1" cy="1.5" r=".36" data-x="-1" data-y="3/2" data-approx="-1;1.5" data-kind="Punto definido" data-decimal-mode="exact"></circle>
+<circle class="closed-dot keypoint" cx="0" cy="1.4142135623730951" r=".14"></circle>
+<circle class="point-hit" cx="0" cy="1.4142135623730951" r=".36" data-x="0" data-y="√2" data-approx="0;1.4142" data-kind="Punto definido" data-decimal-mode="approx"></circle>
 <circle class="open-dot keypoint" cx="2" cy="1.4142135623730951" r=".14"></circle>
 <circle class="point-hit" cx="2" cy="1.4142135623730951" r=".36" data-x="2" data-y="√2" data-approx="2;1.4142" data-kind="Círculo abierto" data-decimal-mode="approx"></circle>
 <circle class="open-dot keypoint" cx="5" cy="1.3333333333333333" r=".14"></circle>
@@ -1174,6 +1197,7 @@ sample('p2',fns.p2,-.999,1.999,500,'both');
 sample('p3',fns.p3,2.0006,4.999,2600,'both');
 sample('p4',fns.p4,5.0006,45,2600,'left');
 const cases={
+ '0':{left:{kind:'finite',value:SQ,exact:'√2',fn:fns.p2,start:-.8},right:{kind:'finite',value:SQ,exact:'√2',fn:fns.p2,start:.8},bilateral:{kind:'finite',value:SQ,exact:'√2'},image:{kind:'finite',value:SQ,exact:'√2'}},
  '-1':{
    left:{kind:'finite',value:2,exact:'2',fn:fns.p1,start:-3.5},
    right:{kind:'finite',value:SQ,exact:'√2',fn:fns.p2,start:.4},
@@ -1198,12 +1222,13 @@ const globals={
  posinf:{kind:'finite',value:-1,exact:'−1',fn:fns.p4,start:6.2,end:38,label:'+∞',horizontal:-1}
 };
 const setDescriptions={
- domain:{intervals:[{from:-Infinity,to:2},{from:2,to:5},{from:5,to:Infinity}],extendsLeft:true,extendsRight:true},
- range:{intervals:[{from:-Infinity,to:Infinity}],extendsDown:true,extendsUp:true}
+ domain:{intervals:[{from:-Infinity,to:2},{from:2,to:Infinity}],extendsLeft:true,extendsRight:true,result:'ℝ ∖ {2}',summary:'La función está definida para todo número real excepto x = 2.'},
+ range:{intervals:[{from:-Infinity,to:Infinity}],points:[],extendsDown:true,extendsUp:true,result:'ℝ',summary:'La función alcanza todas las alturas reales.',checkpoints:[]}
 };
 let target=null,selected=null,chosenSide=null,answered={left:false,right:false,bilateral:false,image:false},mode='idle',answerValue='',timer=null,animating=false,lastAnimation=null;
 const partialProgress={
  '-1':{left:false,right:false,bilateral:false,image:false},
+ '0':{left:false,right:false,bilateral:false,image:false},
  '2':{left:false,right:false,bilateral:false,image:false},
  '5':{left:false,right:false,bilateral:false,image:false}
 };
@@ -1280,11 +1305,11 @@ continuityNo.onclick=e=>{e.stopPropagation();answerContinuity('no')};
 continuityClose.onclick=e=>{e.stopPropagation();closeContinuity()};
 
 function checkFinalAchievement(){
- const requiredLimits=["-1", "2", "5", "neginf", "posinf"];
- const requiredValues=["-1", "2", "5"];
- const requiredContinuity=["-1", "2", "5"];
+ const requiredLimits=["-1", "0", "2", "5", "neginf", "posinf"];
+ const requiredValues=["-1", "0", "2", "5"];
+ const requiredContinuity=["-1", "0", "2", "5"];
  if(requiredLimits.every(x=>completedTargets.has(x))&&requiredValues.every(x=>completedValues.has(x))&&requiredContinuity.every(x=>completedContinuity.has(x))){
-   finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false')
+  finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false')
  }
 }
 exploreAgain.onclick=()=>{finalwin.classList.remove('show');finalwin.setAttribute('aria-hidden','true')};
@@ -1333,11 +1358,10 @@ function setToolPhase(text=''){
   setPhase.classList.toggle('show',!!text);
 }
 function showSetResult(mode){
-  setResultTitle.textContent=mode==='domain'?'Dominio de la función':'Imagen de la función';
-  setResultMath.innerHTML=mode==='domain'
-    ?'<span>Dom(<i>f</i>) = ℝ ∖ {3, 5}</span>'
-    :'<span>Im(<i>f</i>) = ℝ</span>';
-  setResult.classList.add('show');setResult.setAttribute('aria-hidden','false')
+ const desc=mode==='domain'?setDescriptions.domain:setDescriptions.range;
+ setResultTitle.textContent=mode==='domain'?'Dominio de la función':'Imagen de la función';
+ setResultMath.innerHTML=`<span>${mode==='domain'?'Dom':'Im'}(<i>f</i>) = ${desc.result}</span>`;
+ setResult.classList.add('show');setResult.setAttribute('aria-hidden','false')
 }
 function flashHit(x,y,secondary=false){
   const hit=secondary?setHit2:setHit1;
@@ -1398,10 +1422,20 @@ function configureDomainBandResponsive(){
  return b
 }
 function configureRangeBandResponsive(){
- const b=visibleGraphBounds();rangeBand.innerHTML='';const x=b.left+.23;
- (setDescriptions.range?.intervals||[]).forEach(it=>{
-   const from=Number.isFinite(it.from)?Math.max(b.bottom,it.from):b.bottom,to=Number.isFinite(it.to)?Math.min(b.top,it.to):b.top;
-   if(to>from)rangeBand.appendChild(svgEl('rect',{x,y:from,width:.18,height:to-from,rx:.09,class:'range-band'}))
+ const b=visibleGraphBounds();rangeBand.innerHTML='';const x=b.left+.23,desc=setDescriptions.range||{};
+ (desc.intervals||[]).forEach(it=>{
+   const from=Number.isFinite(it.from)?Math.max(b.bottom,it.from):b.bottom;
+   const to=Number.isFinite(it.to)?Math.min(b.top,it.to):b.top;
+   if(to>from)rangeBand.appendChild(svgEl('rect',{x,y:from,width:.18,height:to-from,rx:.09,class:'range-band'}));
+   if(Number.isFinite(it.from)&&it.from>=b.bottom&&it.from<=b.top){
+     rangeBand.appendChild(svgEl('circle',{cx:x+.09,cy:it.from,r:.105,class:it.fromClosed?'range-closed-marker':'range-open-marker'}))
+   }
+   if(Number.isFinite(it.to)&&it.to>=b.bottom&&it.to<=b.top){
+     rangeBand.appendChild(svgEl('circle',{cx:x+.09,cy:it.to,r:.105,class:it.toClosed?'range-closed-marker':'range-open-marker'}))
+   }
+ });
+ (desc.points||[]).forEach(y=>{
+   if(y>=b.bottom&&y<=b.top)rangeBand.appendChild(svgEl('circle',{cx:x+.09,cy:y,r:.115,class:'range-closed-marker'}))
  });
  rangeClipRect.setAttribute('x',b.left);rangeClipRect.setAttribute('y',b.bottom);rangeClipRect.setAttribute('width',b.right-b.left);rangeClipRect.setAttribute('height','0');
  rangeSweep.setAttribute('x1',b.left);rangeSweep.setAttribute('x2',b.right);rangeSweep.setAttribute('y1',b.bottom);rangeSweep.setAttribute('y2',b.bottom);
@@ -1449,7 +1483,7 @@ async function runDomainTool(){
    await waitForContinue();cur=x
  }
  if(cur<b.right)await domainSweepSegment(cur,b.right,Math.max(2000,Math.min(4800,1000+(b.right-cur)/(b.right-b.left)*8000)));
- hideHits();setToolPhase('Dominio · conclusión');setToolMessage('domain','La franja inferior resume los valores de <i>x</i> donde alguna vertical encontró gráfica.','success');await waitForContinue();
+ hideHits();setToolPhase('Dominio · conclusión');setToolMessage('domain',setDescriptions.domain.summary||'La franja inferior resume los valores de <i>x</i> donde alguna vertical encontró gráfica.','success');await waitForContinue();
  domainSweep.style.opacity=.32;setToolPhase('');showSetResult('domain')
 }
 
@@ -1473,18 +1507,45 @@ async function prepareRangeInfinity(){
  await waitForContinue()
 }
 async function runRangeTool(){
- const responsiveRange=configureRangeBandResponsive();setHit2.style.opacity=0;
- await prepareRangeInfinity();
- const bounds=visibleRangeBounds();
- const rect=rangeBand.querySelector('rect');rect.setAttribute('y',bounds.bottom);rect.setAttribute('height',Math.max(.1,bounds.top-bounds.bottom));
- rangeClipRect.setAttribute('y',bounds.bottom);rangeClipRect.setAttribute('height','0');
- rangeSweep.setAttribute('y1',bounds.bottom);rangeSweep.setAttribute('y2',bounds.bottom);
- setToolPhase('Imagen · paso 2');setToolMessage('range','La horizontal subirá. Cada altura donde encuentre algún punto se incorpora a la imagen.');await waitForContinue();
- const mid=(bounds.bottom+bounds.top)/2;
- await rangeSweepSegment(bounds.bottom,mid,8200);
- setToolPhase('Imagen · paso 3');setToolMessage('range','Hasta aquí, todas las horizontales han encontrado gráfica. Continuemos hacia arriba.','success');await waitForContinue();
- await rangeSweepSegment(mid,bounds.top,8200);
- setToolPhase('Imagen · conclusión');setToolMessage('range','La gráfica alcanza todas las alturas reales. Por eso la imagen es todo ℝ.','success');await waitForContinue();
+ const b=configureRangeBandResponsive(),desc=setDescriptions.range||{};
+ setHit2.style.opacity=0;rangeBand.style.opacity=1;rangeSweep.style.opacity=1;setToolInfo.classList.add('reading');
+
+ setToolPhase('Imagen · inicio');
+ const startText=desc.extendsDown
+   ?'El barrido comienza en el borde inferior visible. La franja toca ese margen porque la imagen continúa hacia alturas cada vez menores.'
+   :'El barrido comienza desde el borde inferior visible. Sólo se incorporarán las alturas donde la horizontal encuentre algún punto.';
+ setToolMessage('range',startText,'gold');
+ await waitForContinue();
+
+ let end=b.top;
+ if(!desc.extendsUp){
+   const finiteEnds=(desc.intervals||[]).flatMap(it=>[it.from,it.to]).filter(Number.isFinite);
+   const finitePts=(desc.points||[]).filter(Number.isFinite);
+   const candidates=[...finiteEnds,...finitePts].filter(y=>y>=b.bottom&&y<=b.top);
+   if(candidates.length)end=Math.max(...candidates)
+ }
+ const cps=(desc.checkpoints||[]).filter(cp=>cp.y>=b.bottom&&cp.y<=end).sort((u,v)=>u.y-v.y);
+ let cur=b.bottom,step=1;
+ for(const cp of cps){
+   if(cp.y>cur){
+     const frac=Math.abs(cp.y-cur)/Math.max(.1,Math.abs(end-b.bottom));
+     await rangeSweepSegment(cur,cp.y,Math.max(1800,Math.min(4300,1500+frac*5200)),false)
+   }
+   rangeSweep.setAttribute('y1',cp.y);rangeSweep.setAttribute('y2',cp.y);
+   hideHits();
+   if(cp.witness){flashHit(cp.witness[0],cp.witness[1])}
+   setToolPhase(`Imagen · paso ${step++}`);
+   setToolMessage('range',cp.message,cp.belongs?'success':'attention');
+   await waitForContinue();cur=cp.y
+ }
+ if(end>cur){
+   const frac=Math.abs(end-cur)/Math.max(.1,Math.abs(end-b.bottom));
+   await rangeSweepSegment(cur,end,Math.max(1800,Math.min(4700,1600+frac*5600)))
+ }
+ hideHits();rangeSweep.setAttribute('y1',end);rangeSweep.setAttribute('y2',end);
+ setToolPhase('Imagen · conclusión');
+ setToolMessage('range',desc.summary||'La franja lateral resume las alturas alcanzadas por la gráfica.','success');
+ await waitForContinue();
  rangeSweep.style.opacity=.32;setToolPhase('');setToolInfo.classList.remove('reading');showSetResult('range')
 }
 

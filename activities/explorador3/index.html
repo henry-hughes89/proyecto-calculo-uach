@@ -920,6 +920,25 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
   .set-tool-info{bottom:92px!important;width:min(94%,560px)!important}
 }
 
+
+/* v16.4 · compact analysis families in one row */
+.analysis-bottom-grid{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:7px!important;
+}
+.analysis-family{min-width:0!important;padding:7px 9px!important}
+.analysis-family-buttons{display:flex!important;flex-wrap:nowrap!important;gap:5px!important}
+.analysis-family .chip,.analysis-family .meta-chip{
+  min-width:0!important;flex:1 1 0!important;padding-left:7px!important;padding-right:7px!important
+}
+.range-open-marker{fill:#fff;stroke:#d3a135;stroke-width:.075}
+.range-closed-marker{fill:#d3a135;stroke:#fff;stroke-width:.04}
+@media(max-width:650px){
+ .analysis-bottom-grid{grid-template-columns:1fr 1fr!important}
+ .analysis-family-title{font-size:.47rem!important}
+ .analysis-family .chip,.analysis-family .meta-chip{font-size:.49rem!important;padding:6px 5px!important}
+}
+
 </style>
 </head>
 <body>
@@ -1213,8 +1232,8 @@ const globals={
  posinf:{kind:'finite',value:-2,exact:'−2',fn:fns.p5,start:5.1,end:38,label:'+∞',horizontal:-2}
 };
 const setDescriptions={
- domain:{intervals:[{from:-Infinity,to:4},{from:4,to:Infinity}],extendsLeft:true,extendsRight:true},
- range:{intervals:[{from:-Infinity,to:Infinity}],extendsDown:true,extendsUp:true}
+ domain:{intervals:[{from:-Infinity,to:4},{from:4,to:Infinity}],extendsLeft:true,extendsRight:true,result:'ℝ ∖ {4}',summary:'La función está definida para todo número real excepto x = 4.'},
+ range:{intervals:[{from:-Infinity,to:Infinity}],points:[],extendsDown:true,extendsUp:true,result:'ℝ',summary:'La función alcanza todas las alturas reales.',checkpoints:[]}
 };
 let target=null,selected=null,chosenSide=null,answered={left:false,right:false,bilateral:false,image:false},mode='idle',answerValue='',timer=null,animating=false,lastAnimation=null;
 const partialProgress={
@@ -1349,11 +1368,10 @@ function setToolPhase(text=''){
   setPhase.classList.toggle('show',!!text);
 }
 function showSetResult(mode){
-  setResultTitle.textContent=mode==='domain'?'Dominio de la función':'Imagen de la función';
-  setResultMath.innerHTML=mode==='domain'
-    ?'<span>Dom(<i>f</i>) = (−∞, 2) ∪ (2, +∞)</span>'
-    :'<span>Im(<i>f</i>) = (−∞, 3)</span>';
-  setResult.classList.add('show');setResult.setAttribute('aria-hidden','false')
+ const desc=mode==='domain'?setDescriptions.domain:setDescriptions.range;
+ setResultTitle.textContent=mode==='domain'?'Dominio de la función':'Imagen de la función';
+ setResultMath.innerHTML=`<span>${mode==='domain'?'Dom':'Im'}(<i>f</i>) = ${desc.result}</span>`;
+ setResult.classList.add('show');setResult.setAttribute('aria-hidden','false')
 }
 function flashHit(x,y,secondary=false){
   const hit=secondary?setHit2:setHit1;
@@ -1416,10 +1434,20 @@ function configureDomainBandResponsive(){
  return b
 }
 function configureRangeBandResponsive(){
- const b=visibleGraphBounds();rangeBand.innerHTML='';const x=b.left+.23;
- (setDescriptions.range?.intervals||[]).forEach(it=>{
-   const from=Number.isFinite(it.from)?Math.max(b.bottom,it.from):b.bottom,to=Number.isFinite(it.to)?Math.min(b.top,it.to):b.top;
-   if(to>from)rangeBand.appendChild(svgEl('rect',{x,y:from,width:.18,height:to-from,rx:.09,class:'range-band'}))
+ const b=visibleGraphBounds();rangeBand.innerHTML='';const x=b.left+.23,desc=setDescriptions.range||{};
+ (desc.intervals||[]).forEach(it=>{
+   const from=Number.isFinite(it.from)?Math.max(b.bottom,it.from):b.bottom;
+   const to=Number.isFinite(it.to)?Math.min(b.top,it.to):b.top;
+   if(to>from)rangeBand.appendChild(svgEl('rect',{x,y:from,width:.18,height:to-from,rx:.09,class:'range-band'}));
+   if(Number.isFinite(it.from)&&it.from>=b.bottom&&it.from<=b.top){
+     rangeBand.appendChild(svgEl('circle',{cx:x+.09,cy:it.from,r:.105,class:it.fromClosed?'range-closed-marker':'range-open-marker'}))
+   }
+   if(Number.isFinite(it.to)&&it.to>=b.bottom&&it.to<=b.top){
+     rangeBand.appendChild(svgEl('circle',{cx:x+.09,cy:it.to,r:.105,class:it.toClosed?'range-closed-marker':'range-open-marker'}))
+   }
+ });
+ (desc.points||[]).forEach(y=>{
+   if(y>=b.bottom&&y<=b.top)rangeBand.appendChild(svgEl('circle',{cx:x+.09,cy:y,r:.115,class:'range-closed-marker'}))
  });
  rangeClipRect.setAttribute('x',b.left);rangeClipRect.setAttribute('y',b.bottom);rangeClipRect.setAttribute('width',b.right-b.left);rangeClipRect.setAttribute('height','0');
  rangeSweep.setAttribute('x1',b.left);rangeSweep.setAttribute('x2',b.right);rangeSweep.setAttribute('y1',b.bottom);rangeSweep.setAttribute('y2',b.bottom);
@@ -1467,7 +1495,7 @@ async function runDomainTool(){
    await waitForContinue();cur=x
  }
  if(cur<b.right)await domainSweepSegment(cur,b.right,Math.max(2000,Math.min(4800,1000+(b.right-cur)/(b.right-b.left)*8000)));
- hideHits();setToolPhase('Dominio · conclusión');setToolMessage('domain','La franja inferior resume los valores de <i>x</i> donde alguna vertical encontró gráfica.','success');await waitForContinue();
+ hideHits();setToolPhase('Dominio · conclusión');setToolMessage('domain',setDescriptions.domain.summary||'La franja inferior resume los valores de <i>x</i> donde alguna vertical encontró gráfica.','success');await waitForContinue();
  domainSweep.style.opacity=.32;setToolPhase('');showSetResult('domain')
 }
 
@@ -1497,48 +1525,46 @@ async function prepareRangeInfinity(){
 }
 
 async function runRangeTool(){
- const responsiveRange=configureRangeBandResponsive();setHit2.style.opacity=0;
- await prepareRangeInfinity();
- const bounds=configureRangeBandForVisibleWindow();
+ const b=configureRangeBandResponsive(),desc=setDescriptions.range||{};
+ setHit2.style.opacity=0;rangeBand.style.opacity=1;rangeSweep.style.opacity=1;setToolInfo.classList.add('reading');
 
- setToolPhase('Imagen · paso 2');
- setToolMessage('range','<strong>Barrido horizontal de abajo hacia arriba.</strong><br>Cada horizontal que encuentre al menos un punto agrega esa altura a la imagen.');
+ setToolPhase('Imagen · inicio');
+ const startText=desc.extendsDown
+   ?'El barrido comienza en el borde inferior visible. La franja toca ese margen porque la imagen continúa hacia alturas cada vez menores.'
+   :'El barrido comienza desde el borde inferior visible. Sólo se incorporarán las alturas donde la horizontal encuentre algún punto.';
+ setToolMessage('range',startText,'gold');
  await waitForContinue();
 
- await rangeSweepSegment(bounds.visibleFrom,-2.15,7600);
- setToolPhase('Imagen · paso 3');
- setToolMessage('range','Estas alturas sí aparecen en la gráfica. La franja crece porque cada horizontal encuentra algún punto.','success');
- await waitForContinue();
-
- await rangeSweepSegment(-2.15,0,4700);
- setToolPhase('Imagen · paso 4');
- setToolMessage('range','Seguimos encontrando puntos: estas alturas también pertenecen a la imagen.','success');
- await waitForContinue();
-
- await rangeSweepSegment(0,1.55,4200);
- setToolPhase('Imagen · paso 5');
- setToolMessage('range','La horizontal sigue encontrando gráfica. Continuamos incorporando alturas.','success');
- await waitForContinue();
-
- await rangeSweepSegment(1.55,2.80,3700);
- setToolPhase('Imagen · paso 6');
- setToolMessage('range','Nos acercamos a la altura 3. Observa qué ocurre exactamente allí.','gold');
- await waitForContinue();
-
- await rangeSweepSegment(2.80,2.96,1700);
- await rangeSweepSegment(2.96,3,1500,false);
- rangeSweep.setAttribute('y1',3);rangeSweep.setAttribute('y2',3);hideHits();
-
- setToolPhase('Imagen · paso 7');
- setToolMessage('range','En <i>y</i> = 3 sólo hay un <strong>círculo abierto</strong>: ningún punto tiene exactamente esa altura. Por eso 3 no pertenece a la imagen.','attention');
- await waitForContinue();
-
+ let end=b.top;
+ if(!desc.extendsUp){
+   const finiteEnds=(desc.intervals||[]).flatMap(it=>[it.from,it.to]).filter(Number.isFinite);
+   const finitePts=(desc.points||[]).filter(Number.isFinite);
+   const candidates=[...finiteEnds,...finitePts].filter(y=>y>=b.bottom&&y<=b.top);
+   if(candidates.length)end=Math.max(...candidates)
+ }
+ const cps=(desc.checkpoints||[]).filter(cp=>cp.y>=b.bottom&&cp.y<=end).sort((u,v)=>u.y-v.y);
+ let cur=b.bottom,step=1;
+ for(const cp of cps){
+   if(cp.y>cur){
+     const frac=Math.abs(cp.y-cur)/Math.max(.1,Math.abs(end-b.bottom));
+     await rangeSweepSegment(cur,cp.y,Math.max(1800,Math.min(4300,1500+frac*5200)),false)
+   }
+   rangeSweep.setAttribute('y1',cp.y);rangeSweep.setAttribute('y2',cp.y);
+   hideHits();
+   if(cp.witness){flashHit(cp.witness[0],cp.witness[1])}
+   setToolPhase(`Imagen · paso ${step++}`);
+   setToolMessage('range',cp.message,cp.belongs?'success':'attention');
+   await waitForContinue();cur=cp.y
+ }
+ if(end>cur){
+   const frac=Math.abs(end-cur)/Math.max(.1,Math.abs(end-b.bottom));
+   await rangeSweepSegment(cur,end,Math.max(1800,Math.min(4700,1600+frac*5600)))
+ }
+ hideHits();rangeSweep.setAttribute('y1',end);rangeSweep.setAttribute('y2',end);
  setToolPhase('Imagen · conclusión');
- setToolMessage('range','Conclusión: la función alcanza todas las alturas menores que 3, pero no alcanza la altura 3.','success');
+ setToolMessage('range',desc.summary||'La franja lateral resume las alturas alcanzadas por la gráfica.','success');
  await waitForContinue();
-
- rangeSweep.style.opacity=.32;rangeInfinityLabel.classList.remove('show');rangeBandEdge.classList.remove('show');
- setToolPhase('');setToolInfo.classList.remove('reading');showSetResult('range')
+ rangeSweep.style.opacity=.32;setToolPhase('');setToolInfo.classList.remove('reading');showSetResult('range')
 }
 
 async function beginSetTool(mode){
