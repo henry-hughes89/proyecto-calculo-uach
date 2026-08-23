@@ -1041,6 +1041,28 @@ body{
  .analysis-family .chip,.analysis-family .meta-chip{font-size:.49rem!important;padding:6px 5px!important}
 }
 
+
+/* v20 refinamientos */
+.victory.show{animation:v20VictoryFade .72s ease-out!important}
+@keyframes v20VictoryFade{0%{opacity:0}18%,72%{opacity:1}100%{opacity:0}}
+.stage.winflash{animation:none!important}
+.set-result.domain-result{
+  background:linear-gradient(145deg,rgba(224,249,249,.96),rgba(239,252,252,.94))!important;
+  border-color:rgba(67,181,193,.55)!important
+}
+.set-result.range-result{
+  background:linear-gradient(145deg,rgba(245,232,255,.96),rgba(252,246,255,.94))!important;
+  border-color:rgba(162,111,203,.48)!important
+}
+.set-result::before{
+  content:"";position:absolute;top:-22px;right:34px;width:2px;height:22px;
+  background:currentColor;opacity:.28;border-radius:2px
+}
+.set-result.domain-result{color:#128596}
+.set-result.range-result{color:#8b55ad}
+.set-result-title,.set-result-math,.set-result-actions{color:initial}
+#setReplay{font-weight:900!important}
+
 </style>
 </head>
 <body>
@@ -1284,9 +1306,9 @@ sample('p2',fns.p,-.9994,.9994,2100,'both');
 sample('p3',fns.p,1.0006,1.9994,1500,'both');
 sample('p4',fns.p,2.0006,30,1900,'left');
 const cases={
- '-1':{left:{kind:'posinf',fn:fns.p,start:-1.65},right:{kind:'posinf',fn:fns.p,start:-.35},bilateral:{kind:'none'},image:{kind:'undefined'}},
+ '-1':{left:{kind:'posinf',fn:fns.p,start:-1.65},right:{kind:'posinf',fn:fns.p,start:-.35},bilateral:{kind:'posinf'},image:{kind:'undefined'}},
  '0':{left:{kind:'finite',value:0,exact:'0',fn:fns.p,start:-.6},right:{kind:'finite',value:0,exact:'0',fn:fns.p,start:.6},bilateral:{kind:'finite',value:0,exact:'0'},image:{kind:'finite',value:0,exact:'0'}},
- '1':{left:{kind:'neginf',fn:fns.p,start:.35},right:{kind:'neginf',fn:fns.p,start:1.65},bilateral:{kind:'none'},image:{kind:'undefined'}},
+ '1':{left:{kind:'neginf',fn:fns.p,start:.35},right:{kind:'neginf',fn:fns.p,start:1.65},bilateral:{kind:'neginf'},image:{kind:'undefined'}},
  '2':{left:{kind:'neginf',fn:fns.p,start:1.35},right:{kind:'posinf',fn:fns.p,start:2.65},bilateral:{kind:'none'},image:{kind:'undefined'}}
 };
 const globals={
@@ -1434,8 +1456,12 @@ function setToolPhase(text=''){
 }
 function showSetResult(mode){
  const desc=mode==='domain'?setDescriptions.domain:setDescriptions.range;
+ setToolMode=mode;
+ setResult.classList.remove('domain-result','range-result');
+ setResult.classList.add(mode==='domain'?'domain-result':'range-result');
  setResultTitle.textContent=mode==='domain'?'Dominio de la función':'Imagen de la función';
  setResultMath.innerHTML=`<span>${mode==='domain'?'Dom':'Im'}(<i>f</i>) = ${desc.result}</span>`;
+ setReplay.textContent='Ver animación';
  setResult.classList.add('show');setResult.setAttribute('aria-hidden','false')
 }
 function flashHit(x,y,secondary=false){
@@ -1515,9 +1541,11 @@ function configureRangeBandResponsive(){
 
 async function domainSweepSegment(x0,x1,duration){
  const b=visibleGraphBounds();
+ domainSweep.setAttribute('y1',b.bottom-.6);domainSweep.setAttribute('y2',b.top+.6);
  await animateLinear(duration,e=>{
    const x=x0+(x1-x0)*e;
-   domainSweep.setAttribute('x1',x);domainSweep.setAttribute('x2',x);domainSweep.setAttribute('y1',b.bottom);domainSweep.setAttribute('y2',b.top);
+   domainSweep.setAttribute('x1',x);domainSweep.setAttribute('x2',x);
+   domainSweep.setAttribute('y1',b.bottom-.6);domainSweep.setAttribute('y2',b.top+.6);
    domainClipRect.setAttribute('width',Math.max(0,x-b.left));
    const ys=domainIntersections(x);if(ys.length){flashHit(x,ys[0]);setHit2.style.opacity=0}else hideHits()
  })
@@ -1560,9 +1588,11 @@ async function runDomainTool(){
 
 async function rangeSweepSegment(y0,y1,duration,showEncounter=true){
  let lastFlash=0;const b=visibleGraphBounds();
+ rangeSweep.setAttribute('x1',b.left-.6);rangeSweep.setAttribute('x2',b.right+.6);
  await animateLinear(duration,e=>{
    const y=y0+(y1-y0)*e;
-   rangeSweep.setAttribute('x1',b.left);rangeSweep.setAttribute('x2',b.right);rangeSweep.setAttribute('y1',y);rangeSweep.setAttribute('y2',y);
+   rangeSweep.setAttribute('x1',b.left-.6);rangeSweep.setAttribute('x2',b.right+.6);
+   rangeSweep.setAttribute('y1',y);rangeSweep.setAttribute('y2',y);
    rangeClipRect.setAttribute('height',Math.max(0,y-b.bottom));
    const hit=nearestRangeIntersection(y);
    if(hit){if(showEncounter&&performance.now()-lastFlash>360){flashHit(hit.x,hit.y);lastFlash=performance.now()}}else hideHits()
@@ -1621,6 +1651,16 @@ async function runRangeTool(){
  rangeSweep.style.opacity=.32;setToolPhase('');setToolInfo.classList.remove('reading');showSetResult('range')
 }
 
+
+function showSetOverview(mode){
+ dismissIntro(false);beginNavigationInteraction();
+ closeSetTool();
+ setToolMode=mode;
+ clearTopSelections();
+ (mode==='domain'?domainBtn:rangeBtn).classList.add('active');
+ showSetResult(mode);
+}
+
 async function beginSetTool(mode){
   dismissIntro(false);beginNavigationInteraction();
   stage.classList.remove('value-mode');
@@ -1645,8 +1685,8 @@ function closeSetTool(){
   setToolInfo.classList.remove('show','attention','success','gold');setToolInfo.setAttribute('aria-hidden','true');
   setResult.classList.remove('show');setResult.setAttribute('aria-hidden','true');setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);resetSetViz(true)
 }
-domainBtn.onclick=e=>{e.stopPropagation();if(animating||setToolRunning)return;clearTopSelections();domainBtn.classList.add('active');beginSetTool('domain')};
-rangeBtn.onclick=e=>{e.stopPropagation();if(animating||setToolRunning)return;clearTopSelections();rangeBtn.classList.add('active');beginSetTool('range')};
+domainBtn.onclick=e=>{e.stopPropagation();if(animating)return;showSetOverview('domain')};
+rangeBtn.onclick=e=>{e.stopPropagation();if(animating)return;showSetOverview('range')};
 setReplay.onclick=e=>{e.stopPropagation();if(setToolMode&&!setToolRunning)beginSetTool(setToolMode)};
 setClose.onclick=e=>{e.stopPropagation();closeSetTool()};
 
@@ -1776,7 +1816,12 @@ leftSide.onclick=()=>chooseSide('left');rightSide.onclick=()=>chooseSide('right'
 
 function localSequence(a,s,spec){const dir=s==='left'?-1:1,dist=Math.abs(spec.start-a),inf=spec.kind==='posinf'||spec.kind==='neginf',steps=inf?112:68,minDelta=inf?.0025:.028,arr=[];for(let i=0;i<steps;i++){const t=i/(steps-1),e=1-Math.pow(1-t,3.0),delta=dist*(1-e)+minDelta*e;arr.push(a+dir*delta)}return arr}
 function globalSequence(spec){const arr=[],steps=132;for(let i=0;i<steps;i++){const t=i/(steps-1),e=t*t*(3-2*t);arr.push(spec.start+(spec.end-spec.start)*e)}return arr}
-function followVertical(y){const trig=VIEW_H*.34,pad=VIEW_H*.26;if(y>trig)smoothCamera(CAMERA_CONFIG.centerX,y-pad,.20);else if(y<-trig)smoothCamera(CAMERA_CONFIG.centerX,y+pad,.20)}
+function followVertical(y){
+ const trig=VIEW_H*.34,pad=VIEW_H*.26;
+ const safeY=Math.max(-260,Math.min(260,y));
+ if(safeY>trig)smoothCamera(CAMERA_CONFIG.centerX,safeY-pad,.20);
+ else if(safeY<-trig)smoothCamera(CAMERA_CONFIG.centerX,safeY+pad,.20)
+}
 function followGlobal(x,y,p,spec){
  const dir=Math.sign(spec.end-spec.start)||1;
  const half=VIEW_W/2,edgePad=Math.max(1.2,VIEW_W*.11);
@@ -2117,6 +2162,12 @@ document.addEventListener('click',function(e){
  zone.addEventListener('click',pick,true);
  zone.addEventListener('touchend',pick,{capture:true,passive:false})
 })();
+
+
+document.addEventListener('pointerdown',e=>{
+ const actionable=e.target.closest?.('.value-chip,.limit-chip,.continuity-btn,.chip.global');
+ if(actionable && setToolMode) closeSetTool();
+},true);
 </script>
 </body>
 </html>
