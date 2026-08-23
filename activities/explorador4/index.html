@@ -2329,6 +2329,15 @@ document.addEventListener('pointerdown',e=>{
  const actionable=e.target.closest?.('.value-chip,.limit-chip,.continuity-btn,.chip.global');
  if(actionable && setToolMode){closeSetTool();hideSetConnector();}
 },true);
+
+
+/* v23 · resultado Dom/Im como popover: clic afuera lo cierra */
+document.addEventListener('pointerdown',e=>{
+  if(!setResult.classList.contains('show'))return;
+  if(setResult.contains(e.target))return;
+  if(e.target.closest?.('#domainBtnTop,#rangeBtnTop'))return;
+  closeSetTool();
+},true);
 </script>
 </body>
 </html>

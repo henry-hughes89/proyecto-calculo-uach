@@ -1320,7 +1320,7 @@ const setHits=document.getElementById('setHits'),setHit1=document.getElementById
 
 
 
-const VIEW_PROFILE={"initial":{"centerX":0.5,"centerY":0.2,"minSpanX":14,"minSpanY":14},"tails":{"left":"horizontal","leftLevel":2,"right":"horizontal","rightLevel":2}};
+const VIEW_PROFILE={"initial":{"centerX":0.5,"centerY":0.2,"minSpanX":10,"minSpanY":13},"tails":{"left":"horizontal","leftLevel":2,"right":"horizontal","rightLevel":2}};
 const CAMERA_CONFIG=VIEW_PROFILE.initial;
 let VIEW_W=13,VIEW_H=12,camX=CAMERA_CONFIG.centerX,camY=CAMERA_CONFIG.centerY;
 function updateVisibleCameraSize(){
@@ -1352,7 +1352,7 @@ function restoreScene(clearPath=true){
 }
 function sample(id,fn,x0,x1,steps=900,warp='none'){let d='',pen=false;for(let i=0;i<=steps;i++){const t=i/steps;let q=t;if(warp==='left')q=t*t*t;else if(warp==='right')q=1-Math.pow(1-t,3);else if(warp==='both')q=(1-Math.cos(Math.PI*t))/2;const x=x0+(x1-x0)*q,y=fn(x);if(!Number.isFinite(y)||Math.abs(y)>5000){pen=false;continue}d+=(pen?'L':'M')+x.toFixed(5)+' '+y.toFixed(5)+' ';pen=true}document.getElementById(id).setAttribute('d',d)}
 const SQ=Math.sqrt(2),SQ3=Math.sqrt(3);
-const fns={p:x=>(2*x/(x-2))*Math.abs((x*x)/(x*x-1))};
+const fns={p:x=>(2*x/(x-2))*Math.abs((x*x-2.25)/(x*x-1))};
 sample('p1',fns.p,-30,-1.0006,1900,'right');
 sample('p2',fns.p,-.9994,.9994,2100,'both');
 sample('p3',fns.p,1.0006,1.9994,1500,'both');
@@ -2300,6 +2300,15 @@ document.addEventListener('click',function(e){
 document.addEventListener('pointerdown',e=>{
  const actionable=e.target.closest?.('.value-chip,.limit-chip,.continuity-btn,.chip.global');
  if(actionable && setToolMode){closeSetTool();hideSetConnector();}
+},true);
+
+
+/* v23 · resultado Dom/Im como popover: clic afuera lo cierra */
+document.addEventListener('pointerdown',e=>{
+  if(!setResult.classList.contains('show'))return;
+  if(setResult.contains(e.target))return;
+  if(e.target.closest?.('#domainBtnTop,#rangeBtnTop'))return;
+  closeSetTool();
 },true);
 </script>
 </body>
