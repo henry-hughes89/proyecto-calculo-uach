@@ -1063,6 +1063,44 @@ body{
 .set-result-title,.set-result-math,.set-result-actions{color:initial}
 #setReplay{font-weight:900!important}
 
+
+/* ==========================================================
+   v21 · limpieza de estados y geometría de barridos
+   ========================================================== */
+
+/* La franja-resumen de Dominio se construye junto al borde superior;
+   la de Imagen, junto al borde derecho. Así no compiten con el
+   mensaje pedagógico inferior. */
+.set-tool-info{
+  bottom:76px!important;
+}
+
+/* Sin rebotes ni desplazamientos de celebración. */
+.victory,
+.victory.show{
+  animation:none!important;
+  transform:none!important;
+}
+.stage.winflash{
+  animation:none!important;
+}
+
+/* Conector visual entre el botón Dominio/Imagen y su resultado. */
+.set-result-connector{
+  position:fixed;
+  display:none;
+  height:3px;
+  border-radius:999px;
+  transform-origin:0 50%;
+  pointer-events:none;
+  z-index:17;
+  opacity:.72;
+  box-shadow:0 0 8px currentColor;
+}
+.set-result-connector.show{display:block}
+.set-result-connector.domain{background:#35b6c3;color:#35b6c3}
+.set-result-connector.range{background:#b485d1;color:#b485d1}
+
 </style>
 </head>
 <body>
@@ -1221,6 +1259,7 @@ body{
       <div class="range-infinity-caption">alturas cada vez menores</div>
     </div>
 
+    <div id="setResultConnector" class="set-result-connector"></div>
     <div id="setResult" class="set-result" aria-hidden="true">
       <div id="setResultTitle" class="set-result-title"></div>
       <div id="setResultMath" class="set-result-math"></div>
@@ -1353,7 +1392,7 @@ const completedTargets=new Set();
 const completedValues=new Set();
 const completedContinuity=new Set();
 let continuityTarget=null;
-let setToolMode=null,setToolRAF=null,setToolRunning=false;
+let setToolMode=null,setToolRAF=null,setToolRunning=false,setToolRAFResolve=null;
 
 const TOTAL_TARGETS=6;
 let finalShown=false;
@@ -1453,6 +1492,7 @@ setContinue.onclick=e=>{
 };
 function stopSetToolAnimation(){
   if(setToolRAF){cancelAnimationFrame(setToolRAF);setToolRAF=null}
+  if(setToolRAFResolve){const r=setToolRAFResolve;setToolRAFResolve=null;r()}
   setToolRunning=false
 }
 function resetSetViz(hideAll=true){
@@ -1485,7 +1525,8 @@ function showSetResult(mode){
  setResultTitle.textContent=mode==='domain'?'Dominio de la función':'Imagen de la función';
  setResultMath.innerHTML=`<span>${mode==='domain'?'Dom':'Im'}(<i>f</i>) = ${desc.result}</span>`;
  setReplay.textContent='Ver animación';
- setResult.classList.add('show');setResult.setAttribute('aria-hidden','false')
+ setResult.classList.add('show');setResult.setAttribute('aria-hidden','false');
+ requestAnimationFrame(()=>updateSetConnector(mode))
 }
 function flashHit(x,y,secondary=false){
   const hit=secondary?setHit2:setHit1;
@@ -1514,11 +1555,14 @@ function nearestRangeIntersection(y){
 }
 function animateLinear(duration,onFrame){
   return new Promise(resolve=>{
+    setToolRAFResolve=resolve;
     const start=performance.now();
+    function finish(){const r=setToolRAFResolve;setToolRAFResolve=null;setToolRAF=null;if(r)r()}
     function frame(now){
+      if(!setToolRunning){finish();return}
       const p=Math.min(1,(now-start)/duration),e=p*p*(3-2*p);
       onFrame(e,p);
-      if(p<1)setToolRAF=requestAnimationFrame(frame);else{setToolRAF=null;resolve()}
+      if(p<1)setToolRAF=requestAnimationFrame(frame);else finish()
     }
     setToolRAF=requestAnimationFrame(frame)
   })
@@ -1527,55 +1571,64 @@ function animateLinear(duration,onFrame){
 function visibleGraphBounds(){const vb=svg.viewBox.baseVal;return{left:vb.x,right:vb.x+vb.width,bottom:vb.y,top:vb.y+vb.height}}
 function svgEl(name,attrs={}){const el=document.createElementNS('http://www.w3.org/2000/svg',name);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));return el}
 function configureDomainBandResponsive(){
- const b=visibleGraphBounds();domainBand.innerHTML='';const y=b.bottom+.28;
+ const b=visibleGraphBounds();domainBand.innerHTML='';
+ const y=b.top-.34;
  const intervals=setDescriptions.domain?.intervals||[];
  intervals.forEach(it=>{
-   const from=Number.isFinite(it.from)?Math.max(b.left,it.from):b.left,to=Number.isFinite(it.to)?Math.min(b.right,it.to):b.right;
-   if(to>from)domainBand.appendChild(svgEl('rect',{x:from,y,width:to-from,height:.18,rx:.09,class:'domain-band'}))
+   const from=Number.isFinite(it.from)?Math.max(b.left,it.from):b.left;
+   const to=Number.isFinite(it.to)?Math.min(b.right,it.to):b.right;
+   if(to>from)domainBand.appendChild(svgEl('rect',{x:from,y,width:to-from,height:.20,rx:.10,class:'domain-band'}))
  });
- /* Los huecos de la recta-resumen se deducen de la función, no se codifican
-    para una gráfica concreta. Esto sirve también para futuras funciones creadas. */
  const boundaries=[...new Set(intervals.flatMap(it=>[it.from,it.to]).filter(Number.isFinite))]
    .filter(x=>x>b.left&&x<b.right);
  boundaries.forEach(x=>{
    if(domainIntersections(x).length===0){
-     domainBand.appendChild(svgEl('circle',{cx:x,cy:y+.09,r:.105,class:'domain-hole'}))
+     domainBand.appendChild(svgEl('circle',{cx:x,cy:y+.10,r:.115,class:'domain-hole'}))
    }
  });
- domainClipRect.setAttribute('x',b.left);domainClipRect.setAttribute('y',b.bottom);domainClipRect.setAttribute('width','0');domainClipRect.setAttribute('height',b.top-b.bottom);
- domainSweep.setAttribute('x1',b.left);domainSweep.setAttribute('x2',b.left);domainSweep.setAttribute('y1',b.bottom);domainSweep.setAttribute('y2',b.top);
+ domainClipRect.setAttribute('x',b.left);
+ domainClipRect.setAttribute('y',b.bottom);
+ domainClipRect.setAttribute('width','0');
+ domainClipRect.setAttribute('height',b.top-b.bottom);
+ domainSweep.setAttribute('x1',b.left);domainSweep.setAttribute('x2',b.left);
+ domainSweep.setAttribute('y1','-10000');domainSweep.setAttribute('y2','10000');
  return b
 }
 function configureRangeBandResponsive(){
- const b=visibleGraphBounds();rangeBand.innerHTML='';const x=b.left+.23,desc=setDescriptions.range||{};
+ const b=visibleGraphBounds();rangeBand.innerHTML='';
+ const x=b.right-.36,desc=setDescriptions.range||{};
  (desc.intervals||[]).forEach(it=>{
    const from=Number.isFinite(it.from)?Math.max(b.bottom,it.from):b.bottom;
    const to=Number.isFinite(it.to)?Math.min(b.top,it.to):b.top;
-   if(to>from)rangeBand.appendChild(svgEl('rect',{x,y:from,width:.18,height:to-from,rx:.09,class:'range-band'}));
+   if(to>from)rangeBand.appendChild(svgEl('rect',{x,y:from,width:.20,height:to-from,rx:.10,class:'range-band'}));
    if(Number.isFinite(it.from)&&it.from>=b.bottom&&it.from<=b.top){
-     rangeBand.appendChild(svgEl('circle',{cx:x+.09,cy:it.from,r:.105,class:it.fromClosed?'range-closed-marker':'range-open-marker'}))
+     rangeBand.appendChild(svgEl('circle',{cx:x+.10,cy:it.from,r:.115,class:it.fromClosed?'range-closed-marker':'range-open-marker'}))
    }
    if(Number.isFinite(it.to)&&it.to>=b.bottom&&it.to<=b.top){
-     rangeBand.appendChild(svgEl('circle',{cx:x+.09,cy:it.to,r:.105,class:it.toClosed?'range-closed-marker':'range-open-marker'}))
+     rangeBand.appendChild(svgEl('circle',{cx:x+.10,cy:it.to,r:.115,class:it.toClosed?'range-closed-marker':'range-open-marker'}))
    }
  });
  (desc.points||[]).forEach(y=>{
-   if(y>=b.bottom&&y<=b.top)rangeBand.appendChild(svgEl('circle',{cx:x+.09,cy:y,r:.115,class:'range-closed-marker'}))
+   if(y>=b.bottom&&y<=b.top)rangeBand.appendChild(svgEl('circle',{cx:x+.10,cy:y,r:.12,class:'range-closed-marker'}))
  });
- rangeClipRect.setAttribute('x',b.left);rangeClipRect.setAttribute('y',b.bottom);rangeClipRect.setAttribute('width',b.right-b.left);rangeClipRect.setAttribute('height','0');
- rangeSweep.setAttribute('x1',b.left);rangeSweep.setAttribute('x2',b.right);rangeSweep.setAttribute('y1',b.bottom);rangeSweep.setAttribute('y2',b.bottom);
+ rangeClipRect.setAttribute('x',b.left);rangeClipRect.setAttribute('y',b.bottom);
+ rangeClipRect.setAttribute('width',b.right-b.left);rangeClipRect.setAttribute('height','0');
+ rangeSweep.setAttribute('x1','-10000');rangeSweep.setAttribute('x2','10000');
+ rangeSweep.setAttribute('y1',b.bottom);rangeSweep.setAttribute('y2',b.bottom);
  return b
 }
 
 async function domainSweepSegment(x0,x1,duration){
- const b=visibleGraphBounds();
- domainSweep.setAttribute('y1',b.bottom-.6);domainSweep.setAttribute('y2',b.top+.6);
  await animateLinear(duration,e=>{
+   const b=visibleGraphBounds();
    const x=x0+(x1-x0)*e;
    domainSweep.setAttribute('x1',x);domainSweep.setAttribute('x2',x);
-   domainSweep.setAttribute('y1',b.bottom-.6);domainSweep.setAttribute('y2',b.top+.6);
+   domainSweep.setAttribute('y1','-10000');domainSweep.setAttribute('y2','10000');
+   domainClipRect.setAttribute('x',b.left);domainClipRect.setAttribute('y',b.bottom);
+   domainClipRect.setAttribute('height',b.top-b.bottom);
    domainClipRect.setAttribute('width',Math.max(0,x-b.left));
-   const ys=domainIntersections(x);if(ys.length){flashHit(x,ys[0]);setHit2.style.opacity=0}else hideHits()
+   const ys=domainIntersections(x);
+   if(ys.length){flashHit(x,ys[0]);setHit2.style.opacity=0}else hideHits()
  })
 }
 async function pauseDomainAt(x,kind){
@@ -1598,32 +1651,36 @@ async function pauseDomainAt(x,kind){
 async function runDomainTool(){
  rangeBand.style.opacity=0;rangeSweep.style.opacity=0;setHit2.style.opacity=0;domainMiss.style.opacity=0;
  const b=configureDomainBandResponsive();domainBand.style.opacity=1;domainSweep.style.opacity=1;
- setToolPhase('Dominio · inicio');setToolMessage('domain','La vertical recorrerá todo el ancho visible. Si encuentra al menos un punto, ese valor de <i>x</i> pertenece al dominio.');await waitForContinue();
+ setToolPhase('Dominio · inicio');setToolMessage('domain','La vertical recorrerá todo el ancho visible. Si encuentra al menos un punto, ese valor de <i>x</i> pertenece al dominio.');await waitForContinue();if(!setToolRunning)return;
  const crit=Object.keys(cases).map(Number).filter(Number.isFinite).sort((a,b)=>a-b).filter(x=>x>b.left&&x<b.right);
  let cur=b.left,step=1;
  for(const x of crit){
    const dur=Math.max(1800,Math.min(5200,1000+Math.abs(x-cur)/(b.right-b.left)*9000));
-   await domainSweepSegment(cur,x,dur);
+   await domainSweepSegment(cur,x,dur);if(!setToolRunning)return;
    const belongs=domainIntersections(x).length>0;
    setToolPhase(`Dominio · paso ${step++}`);
    setToolMessage('domain',belongs?`En <i>x</i> = ${String(x).replace('-','−')} la vertical encuentra al menos un punto. Ese valor sí pertenece al dominio.`:`En <i>x</i> = ${String(x).replace('-','−')} la vertical no encuentra ningún punto. Ese valor queda fuera del dominio.`,belongs?'success':'attention');
-   await waitForContinue();cur=x
+   await waitForContinue();if(!setToolRunning)return;cur=x
  }
  if(cur<b.right)await domainSweepSegment(cur,b.right,Math.max(2000,Math.min(4800,1000+(b.right-cur)/(b.right-b.left)*8000)));
- hideHits();setToolPhase('Dominio · conclusión');setToolMessage('domain',setDescriptions.domain.summary||'La franja inferior resume los valores de <i>x</i> donde alguna vertical encontró gráfica.','success');await waitForContinue();
+ if(!setToolRunning)return;hideHits();setToolPhase('Dominio · conclusión');setToolMessage('domain',setDescriptions.domain.summary||'La franja inferior resume los valores de <i>x</i> donde alguna vertical encontró gráfica.','success');await waitForContinue();if(!setToolRunning)return;
  domainSweep.style.opacity=.32;setToolPhase('');showSetResult('domain')
 }
 
 async function rangeSweepSegment(y0,y1,duration,showEncounter=true){
- let lastFlash=0;const b=visibleGraphBounds();
- rangeSweep.setAttribute('x1',b.left-.6);rangeSweep.setAttribute('x2',b.right+.6);
+ let lastFlash=0;
  await animateLinear(duration,e=>{
+   const b=visibleGraphBounds();
    const y=y0+(y1-y0)*e;
-   rangeSweep.setAttribute('x1',b.left-.6);rangeSweep.setAttribute('x2',b.right+.6);
+   rangeSweep.setAttribute('x1','-10000');rangeSweep.setAttribute('x2','10000');
    rangeSweep.setAttribute('y1',y);rangeSweep.setAttribute('y2',y);
+   rangeClipRect.setAttribute('x',b.left);rangeClipRect.setAttribute('y',b.bottom);
+   rangeClipRect.setAttribute('width',b.right-b.left);
    rangeClipRect.setAttribute('height',Math.max(0,y-b.bottom));
    const hit=nearestRangeIntersection(y);
-   if(hit){if(showEncounter&&performance.now()-lastFlash>360){flashHit(hit.x,hit.y);lastFlash=performance.now()}}else hideHits()
+   if(hit){
+     if(showEncounter&&performance.now()-lastFlash>360){flashHit(hit.x,hit.y);lastFlash=performance.now()}
+   }else hideHits()
  })
 }
 
@@ -1646,7 +1703,7 @@ async function runRangeTool(){
  setHit2.style.opacity=0;rangeBand.style.opacity=1;rangeSweep.style.opacity=1;setToolInfo.classList.add('reading');
  setToolPhase('Imagen · inicio');
  setToolMessage('range',desc.startMessage||'El barrido horizontal recorre las alturas e incorpora aquellas donde encuentra algún punto de la gráfica.','gold');
- await waitForContinue();
+ await waitForContinue();if(!setToolRunning)return;
  let end=b.top;
  if(!desc.extendsUp){
    const finiteEnds=(desc.intervals||[]).flatMap(it=>[it.from,it.to]).filter(Number.isFinite);
@@ -1659,38 +1716,88 @@ async function runRangeTool(){
  for(const cp of cps){
    if(cp.y>cur){
      const frac=Math.abs(cp.y-cur)/Math.max(.1,Math.abs(end-b.bottom));
-     await rangeSweepSegment(cur,cp.y,Math.max(1700,Math.min(4200,1400+frac*5000)),false)
+     await rangeSweepSegment(cur,cp.y,Math.max(1700,Math.min(4200,1400+frac*5000)),false);if(!setToolRunning)return
    }
    rangeSweep.setAttribute('y1',cp.y);rangeSweep.setAttribute('y2',cp.y);
    hideHits();
    if(cp.witness){flashHit(cp.witness[0],cp.witness[1])}
    setToolPhase(`Imagen · paso ${step++}`);
    setToolMessage('range',cp.message,cp.belongs?'success':'attention');
-   await waitForContinue();cur=cp.y
+   await waitForContinue();if(!setToolRunning)return;cur=cp.y
  }
  if(end>cur){
    const frac=Math.abs(end-cur)/Math.max(.1,Math.abs(end-b.bottom));
-   await rangeSweepSegment(cur,end,Math.max(1700,Math.min(4500,1500+frac*5400)))
+   await rangeSweepSegment(cur,end,Math.max(1700,Math.min(4500,1500+frac*5400)));if(!setToolRunning)return
  }
  hideHits();rangeSweep.setAttribute('y1',end);rangeSweep.setAttribute('y2',end);
  setToolPhase('Imagen · conclusión');
  setToolMessage('range',desc.summary||'La franja lateral resume las alturas alcanzadas por la gráfica.','success');
- await waitForContinue();
+ await waitForContinue();if(!setToolRunning)return;
  rangeSweep.style.opacity=.32;setToolPhase('');setToolInfo.classList.remove('reading');showSetResult('range')
 }
 
 
+
+const setResultConnector=document.getElementById('setResultConnector');
+
+function clearLimitUIForSetTool(){
+  savePartialProgress();
+  closeAnswerPanel(false);
+  closeContinuity();
+  coordPop.classList.remove('show');
+  toast.className='toast';
+  formula.classList.remove('show');
+  controlbar.classList.remove('show','guide-glow');
+  play.disabled=true;play.classList.remove('ready','replay');play.textContent='▶';
+  leftSide.classList.remove('active');rightSide.classList.remove('active');
+  aline.style.opacity=0;alabel.style.opacity=0;hline.style.opacity=0;hlabel.style.opacity=0;
+  chosenSide=null;selected=null;target=null;
+}
+
+function hideSetConnector(){
+  setResultConnector.classList.remove('show','domain','range');
+}
+function updateSetConnector(mode){
+  const btn=mode==='domain'?domainBtn:rangeBtn;
+  if(!btn||!setResult.classList.contains('show')){hideSetConnector();return}
+  const a=btn.getBoundingClientRect(),b=setResult.getBoundingClientRect();
+  const ac={x:a.left+a.width/2,y:a.top+a.height/2};
+  const bc={x:b.left+b.width/2,y:b.top+b.height/2};
+  let dx=bc.x-ac.x,dy=bc.y-ac.y;
+  const len=Math.hypot(dx,dy)||1,ux=dx/len,uy=dy/len;
+  const ta=Math.min(
+    Math.abs(ux)>1e-6?(a.width/2)/Math.abs(ux):1e9,
+    Math.abs(uy)>1e-6?(a.height/2)/Math.abs(uy):1e9
+  );
+  const tb=Math.min(
+    Math.abs(ux)>1e-6?(b.width/2)/Math.abs(ux):1e9,
+    Math.abs(uy)>1e-6?(b.height/2)/Math.abs(uy):1e9
+  );
+  const x1=ac.x+ux*ta,y1=ac.y+uy*ta;
+  const x2=bc.x-ux*tb,y2=bc.y-uy*tb;
+  const L=Math.hypot(x2-x1,y2-y1),ang=Math.atan2(y2-y1,x2-x1)*180/Math.PI;
+  setResultConnector.style.left=x1+'px';setResultConnector.style.top=(y1-1.5)+'px';
+  setResultConnector.style.width=Math.max(0,L)+'px';
+  setResultConnector.style.transform=`rotate(${ang}deg)`;
+  setResultConnector.classList.remove('domain','range');
+  setResultConnector.classList.add('show',mode==='domain'?'domain':'range');
+}
+window.addEventListener('resize',()=>{if(setToolMode&&setResult.classList.contains('show'))updateSetConnector(setToolMode)});
+
 function showSetOverview(mode){
  dismissIntro(false);beginNavigationInteraction();
  closeSetTool();
+ clearLimitUIForSetTool();
  setToolMode=mode;
  clearTopSelections();
  (mode==='domain'?domainBtn:rangeBtn).classList.add('active');
  showSetResult(mode);
+ requestAnimationFrame(()=>updateSetConnector(mode))
 }
 
 async function beginSetTool(mode){
   dismissIntro(false);beginNavigationInteraction();
+  clearLimitUIForSetTool();hideSetConnector();
   stage.classList.remove('value-mode');
   stopSetToolAnimation();setToolMode=mode;setToolRunning=true;setToolPhase('');rangeInfinityLabel.classList.remove('show');rangeBandEdge.classList.remove('show');setToolInfo.classList.remove('reading');
   coordPop.classList.remove('show');closeAnswerPanel(false);toast.className='toast';intro.classList.add('hidden');formula.classList.remove('show');controlbar.classList.remove('guide-glow');aline.style.opacity=0;alabel.style.opacity=0;hline.style.opacity=0;hlabel.style.opacity=0;restoreScene(true);
@@ -1706,6 +1813,7 @@ async function beginSetTool(mode){
   }finally{setToolRunning=false}
 }
 function closeSetTool(){
+  hideSetConnector();
   if(continueResolver){const r=continueResolver;continueResolver=null;r()}
   setToolActions.classList.remove('show');setContinue.disabled=false;
   setToolInfo.classList.remove('domain-reading');
@@ -1736,9 +1844,9 @@ function promptLimit(){
 }
 function setCue(text,em=false){nextCue.innerHTML=em?`<strong>${text}</strong>`:text}
 function celebrate(text='¡Correcto!',big=false){
-  victoryText.textContent=text; victory.classList.remove('show'); void victory.offsetWidth; victory.classList.add('show');
-  stage.classList.remove('winflash'); void stage.offsetWidth; stage.classList.add('winflash');
-  if(navigator.vibrate){try{navigator.vibrate(big?[35,45,35]:25)}catch(e){}}
+  victory.classList.remove('show');
+  stage.classList.remove('winflash');
+  if(navigator.vibrate){try{navigator.vibrate(big?18:10)}catch(e){}}
 }
 function pretty(spec){if(spec.kind==='finite')return spec.exact||String(spec.value).replace('-', '−');if(spec.kind==='posinf')return '+∞';if(spec.kind==='neginf')return '−∞';if(spec.kind==='undefined')return 'No está definida';return 'No existe'}
 function renderAnswer(){answer.textContent=answerValue||'Tu resultado';answer.classList.toggle('empty',!answerValue);updateNoExistKey()}
@@ -2194,7 +2302,7 @@ document.addEventListener('click',function(e){
 
 document.addEventListener('pointerdown',e=>{
  const actionable=e.target.closest?.('.value-chip,.limit-chip,.continuity-btn,.chip.global');
- if(actionable && setToolMode) closeSetTool();
+ if(actionable && setToolMode){closeSetTool();hideSetConnector();}
 },true);
 </script>
 </body>
