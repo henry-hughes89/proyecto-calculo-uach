@@ -939,13 +939,83 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
  .analysis-family .chip,.analysis-family .meta-chip{font-size:.49rem!important;padding:6px 5px!important}
 }
 
+
+/* v16.5 · visual continuity with dark homepage */
+body{
+  background:
+    radial-gradient(circle at 80% 3%,rgba(32,196,207,.10),transparent 26%),
+    linear-gradient(155deg,#06131b 0%,#09212a 54%,#07151e 100%)!important;
+}
+.page-shell,.app,.explorer-shell{
+  background:transparent!important;
+}
+.stage-wrap,.graph-wrap{
+  box-shadow:0 18px 42px rgba(0,0,0,.18)!important;
+}
+
+/* Coordinates must remain easy to tap on touch screens. */
+.point-hit{
+  pointer-events:all!important;
+  cursor:pointer!important;
+  fill:transparent!important;
+  stroke:transparent!important;
+}
+
+/* Feedback after answering continuity. */
+.continuity-feedback{
+  position:fixed;
+  z-index:2500;
+  left:50%;
+  top:18%;
+  transform:translateX(-50%) translateY(-8px);
+  width:min(88vw,520px);
+  padding:14px 16px;
+  border-radius:18px;
+  background:rgba(245,252,250,.96);
+  border:1px solid rgba(72,177,145,.42);
+  color:#173a3d;
+  box-shadow:0 18px 48px rgba(0,0,0,.24);
+  opacity:0;
+  pointer-events:none;
+  transition:.18s ease;
+  font-size:.86rem;
+  line-height:1.35;
+}
+.continuity-feedback.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+  pointer-events:auto;
+}
+.continuity-feedback strong{color:#117c68}
+.continuity-feedback.bad{
+  border-color:rgba(208,125,88,.42);
+  background:rgba(255,248,244,.97);
+}
+.continuity-feedback.bad strong{color:#a44f2d}
+
+
+/* Ensure the invisible hit circle owns taps, not the decorative point/curve. */
+.keypoint,#curve path,.curve-path,.graph-path{
+  pointer-events:none!important;
+}
+.point-hit{
+  pointer-events:all!important;
+}
+
+
+/* Guide/asymptote overlays must never block point inspection. */
+.a-line,.h-line,#aline,#hline,#rangeSweep,#domainSweep{
+  pointer-events:none!important;
+}
+
 </style>
 </head>
 <body>
 <main>
 <header><div class="eyebrow">Proyecto Cálculo · LIM-01</div><h1>Desafío final</h1></header>
 <section class="shell">
-  <div class="toolbar mode-toolbar"><div class="analysis-dashboard"><section class="analysis-section"><div class="analysis-section-title">Análisis en puntos</div><div class="analysis-grid"><article class="analysis-card" data-a="-3"><div class="analysis-card-head"><span>x = −3</span><span class="card-status"></span></div><button class="analysis-row value-chip" data-value-target="-3" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(−3)</span><span class="row-check">✓</span></button><button class="analysis-row chip limit-chip" data-target="-3" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → −3</span><span class="row-check">✓</span></button><button class="analysis-row continuity-btn locked" data-cont-target="-3" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button></article><article class="analysis-card" data-a="0"><div class="analysis-card-head"><span>x = 0</span><span class="card-status"></span></div><button class="analysis-row value-chip" data-value-target="0" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(0)</span><span class="row-check">✓</span></button><button class="analysis-row chip limit-chip" data-target="0" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 0</span><span class="row-check">✓</span></button><button class="analysis-row continuity-btn locked" data-cont-target="0" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button></article><article class="analysis-card" data-a="2"><div class="analysis-card-head"><span>x = 2</span><span class="card-status"></span></div><button class="analysis-row value-chip" data-value-target="2" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(2)</span><span class="row-check">✓</span></button><button class="analysis-row chip limit-chip" data-target="2" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 2</span><span class="row-check">✓</span></button><button class="analysis-row continuity-btn locked" data-cont-target="2" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button></article><article class="analysis-card" data-a="5"><div class="analysis-card-head"><span>x = 5</span><span class="card-status"></span></div><button class="analysis-row value-chip" data-value-target="5" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(5)</span><span class="row-check">✓</span></button><button class="analysis-row chip limit-chip" data-target="5" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 5</span><span class="row-check">✓</span></button><button class="analysis-row continuity-btn locked" data-cont-target="5" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button></article></div></section><div class="analysis-bottom-grid"><section class="analysis-family infinity-family"><div class="analysis-family-title">Comportamiento al infinito</div><div class="analysis-family-buttons"><button class="chip global" data-target="neginf" type="button">x → −∞</button><button class="chip global" data-target="posinf" type="button">x → +∞</button></div></section><section class="analysis-family extra-family"><div class="analysis-family-title">Más sobre la función</div><div class="analysis-family-buttons"><button id="domainBtnTop" class="meta-chip domain-top" type="button">Dominio</button><button id="rangeBtnTop" class="meta-chip range-top" type="button">Imagen</button></div></section></div></div></div><div id="answerpanel" class="answerpanel">
+  <div class="toolbar mode-toolbar"><div class="analysis-dashboard"><section class="analysis-section"><div class="analysis-section-title">Análisis en puntos</div><div class="analysis-grid"><article class="analysis-card" data-a="-3"><div class="analysis-card-head"><span>x = −3</span><span class="card-status"></span></div><button class="analysis-row value-chip" data-value-target="-3" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(−3)</span><span class="row-check">✓</span></button><button class="analysis-row chip limit-chip" data-target="-3" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → −3</span><span class="row-check">✓</span></button><button class="analysis-row continuity-btn locked" data-cont-target="-3" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button></article><article class="analysis-card" data-a="0"><div class="analysis-card-head"><span>x = 0</span><span class="card-status"></span></div><button class="analysis-row value-chip" data-value-target="0" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(0)</span><span class="row-check">✓</span></button><button class="analysis-row chip limit-chip" data-target="0" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 0</span><span class="row-check">✓</span></button><button class="analysis-row continuity-btn locked" data-cont-target="0" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button></article><article class="analysis-card" data-a="2"><div class="analysis-card-head"><span>x = 2</span><span class="card-status"></span></div><button class="analysis-row value-chip" data-value-target="2" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(2)</span><span class="row-check">✓</span></button><button class="analysis-row chip limit-chip" data-target="2" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 2</span><span class="row-check">✓</span></button><button class="analysis-row continuity-btn locked" data-cont-target="2" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button></article><article class="analysis-card" data-a="5"><div class="analysis-card-head"><span>x = 5</span><span class="card-status"></span></div><button class="analysis-row value-chip" data-value-target="5" type="button"><span class="analysis-kind">Valor</span><span class="analysis-math"><i>f</i>(5)</span><span class="row-check">✓</span></button><button class="analysis-row chip limit-chip" data-target="5" type="button"><span class="analysis-kind">Límite</span><span class="analysis-math">x → 5</span><span class="row-check">✓</span></button><button class="analysis-row continuity-btn locked" data-cont-target="5" type="button" disabled><span class="analysis-kind">Continuidad</span><span class="analysis-math">¿Continua?</span><span class="row-check">✓</span></button></article></div></section><div class="analysis-bottom-grid"><section class="analysis-family infinity-family"><div class="analysis-family-title">Comportamiento al infinito</div><div class="analysis-family-buttons"><button class="chip global" data-target="neginf" type="button">x → −∞</button><button class="chip global" data-target="posinf" type="button">x → +∞</button></div></section><section class="analysis-family extra-family"><div class="analysis-family-title">Más sobre la función</div><div class="analysis-family-buttons"><button id="domainBtnTop" class="meta-chip domain-top" type="button">Dominio</button><button id="rangeBtnTop" class="meta-chip range-top" type="button">Imagen</button></div></section></div></div></div><div id="continuityFeedback" class="continuity-feedback" aria-hidden="true"></div>
+<div id="answerpanel" class="answerpanel">
       <div class="answer-top">
         <div class="answer-main">
           <div id="answerTitle" class="answer-title">Selecciona tu resultado</div>
@@ -989,19 +1059,19 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
         <path id="p1" class="curve"></path><path id="p2" class="curve"></path><path id="p3" class="curve"></path><path id="p4" class="curve"></path><path id="p5" class="curve"></path>
         <g id="keypoints">
 <circle class="open-dot keypoint" cx="-3" cy="0.16666666666666666" r=".14"></circle>
-<circle class="point-hit" cx="-3" cy="0.16666666666666666" r=".36" data-x="-3" data-y="1/6" data-approx="-3;0.1667" data-kind="Círculo abierto" data-decimal-mode="approx"></circle>
+<circle class="point-hit" cx="-3" cy="0.16666666666666666" r=".40" data-x="-3" data-y="1/6" data-approx="-3;0.1667" data-kind="Círculo abierto" data-decimal-mode="approx"></circle>
 <circle class="closed-dot keypoint" cx="-3" cy="2" r=".14"></circle>
-<circle class="point-hit" cx="-3" cy="2" r=".36" data-x="-3" data-y="2" data-approx="" data-kind="Punto definido"></circle>
+<circle class="point-hit" cx="-3" cy="2" r=".40" data-x="-3" data-y="2" data-approx="" data-kind="Punto definido"></circle>
 <circle class="closed-dot keypoint" cx="0" cy="2" r=".14"></circle>
-<circle class="point-hit" cx="0" cy="2" r=".36" data-x="0" data-y="2" data-approx="" data-kind="Punto definido"></circle>
+<circle class="point-hit" cx="0" cy="2" r=".40" data-x="0" data-y="2" data-approx="" data-kind="Punto definido"></circle>
 <circle class="open-dot keypoint" cx="2" cy="2" r=".14"></circle>
-<circle class="point-hit" cx="2" cy="2" r=".36" data-x="2" data-y="2" data-approx="" data-kind="Círculo abierto"></circle>
-<circle class="open-dot keypoint" cx="2" cy="1.7320508075688772" r=".14"></circle>
-<circle class="point-hit" cx="2" cy="1.7320508075688772" r=".36" data-x="2" data-y="√3" data-approx="2;1.7321" data-kind="Círculo abierto" data-decimal-mode="approx"></circle>
+<circle class="point-hit" cx="2" cy="2" r=".40" data-x="2" data-y="2" data-approx="" data-kind="Círculo abierto"></circle>
+<circle class="open-dot keypoint" cx="2" cy="0.5" r=".14"></circle>
+<circle class="point-hit" cx="2" cy="0.5" r=".40" data-x="2" data-y="1/2" data-approx="2;0.5" data-kind="Círculo abierto" data-decimal-mode="exact"></circle>
 <circle class="closed-dot keypoint" cx="2" cy="-1" r=".14"></circle>
-<circle class="point-hit" cx="2" cy="-1" r=".36" data-x="2" data-y="−1" data-approx="" data-kind="Punto definido"></circle>
-<circle class="open-dot keypoint" cx="5" cy="2.482050807568877" r=".14"></circle>
-<circle class="point-hit" cx="5" cy="2.482050807568877" r=".36" data-x="5" data-y="√3+3/4" data-approx="5;2.4821" data-kind="Círculo abierto" data-decimal-mode="approx"></circle>
+<circle class="point-hit" cx="2" cy="-1" r=".40" data-x="2" data-y="−1" data-approx="" data-kind="Punto definido"></circle>
+<circle class="open-dot keypoint" cx="5" cy="2" r=".14"></circle>
+<circle class="point-hit" cx="5" cy="2" r=".40" data-x="5" data-y="2" data-approx="" data-kind="Círculo abierto"></circle>
 </g>
         <line id="aline" class="a-line" x1="-2" x2="-2" y1="-10000" y2="10000"></line>
         <line id="hline" class="h-line" x1="-10000" x2="10000" y1="-1" y2="-1"></line>
@@ -1160,13 +1230,13 @@ function smoothCamera(tx,ty,a=.18){setCamera(camX+(tx-camX)*a,camY+(ty-camY)*a)}
 function restoreScene(clearPath=true){const sx=camX,sy=camY,start=performance.now(),dur=430;function frame(t){const p=Math.min(1,(t-start)/dur),e=p*p*(3-2*p);setCamera(sx+(CAMERA_CONFIG.centerX-sx)*e,sy*(1-e));if(p<1)requestAnimationFrame(frame);else{setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY);if(clearPath){trace.setAttribute('d','');runner.setAttribute('opacity','0')}}}requestAnimationFrame(frame)}
 function sample(id,fn,x0,x1,steps=900,warp='none'){let d='',pen=false;for(let i=0;i<=steps;i++){const t=i/steps;let q=t;if(warp==='left')q=t*t*t;else if(warp==='right')q=1-Math.pow(1-t,3);else if(warp==='both')q=(1-Math.cos(Math.PI*t))/2;const x=x0+(x1-x0)*q,y=fn(x);if(!Number.isFinite(y)||Math.abs(y)>5000){pen=false;continue}d+=(pen?'L':'M')+x.toFixed(5)+' '+y.toFixed(5)+' ';pen=true}document.getElementById(id).setAttribute('d',d)}
 const SQ=Math.sqrt(2),SQ3=Math.sqrt(3);
-const fns={p1:x=>1/(3-x),p2:x=>x/2+2,p3:x=>2,p4:x=>SQ3+(x-2)/4,p5:x=>1+1/(x-5)};
+const fns={p1:x=>1/(3-x),p2:x=>x/2+2,p3:x=>2,p4:x=>0.5+(x-2)/2,p5:x=>1+1/(x-5)};
 sample('p1',fns.p1,-45,-3.001,1000,'right');sample('p2',fns.p2,-2.999,-.001,500,'both');sample('p3',fns.p3,.001,1.999,260,'both');sample('p4',fns.p4,2.001,4.999,500,'both');sample('p5',fns.p5,5.0006,45,2600,'left');
 const cases={
  '-3':{left:{kind:'finite',value:1/6,exact:'1/6',fn:fns.p1,start:-4.3},right:{kind:'finite',value:.5,exact:'1/2',fn:fns.p2,start:-1.8},bilateral:{kind:'none'},image:{kind:'finite',value:2,exact:'2'}},
  '0':{left:{kind:'finite',value:2,exact:'2',fn:fns.p2,start:-1.2},right:{kind:'finite',value:2,exact:'2',fn:fns.p3,start:1.0},bilateral:{kind:'finite',value:2,exact:'2'},image:{kind:'finite',value:2,exact:'2'}},
- '2':{left:{kind:'finite',value:2,exact:'2',fn:fns.p3,start:1.0},right:{kind:'finite',value:SQ3,exact:'√3',fn:fns.p4,start:3.0},bilateral:{kind:'none'},image:{kind:'finite',value:-1,exact:'−1'}},
- '5':{left:{kind:'finite',value:SQ3+.75,exact:'√3+3/4',fn:fns.p4,start:4.0},right:{kind:'posinf',fn:fns.p5,start:5.8},bilateral:{kind:'none'},image:{kind:'undefined'}}
+ '2':{left:{kind:'finite',value:2,exact:'2',fn:fns.p3,start:1.0},right:{kind:'finite',value:.5,exact:'1/2',fn:fns.p4,start:3.0},bilateral:{kind:'none'},image:{kind:'finite',value:-1,exact:'−1'}},
+ '5':{left:{kind:'finite',value:2,exact:'2',fn:fns.p4,start:4.0},right:{kind:'posinf',fn:fns.p5,start:5.8},bilateral:{kind:'none'},image:{kind:'undefined'}}
 };
 const globals={neginf:{kind:'finite',value:0,exact:'0',fn:fns.p1,start:-5,end:-38,label:'−∞',horizontal:0},posinf:{kind:'finite',value:1,exact:'1',fn:fns.p5,start:6.2,end:42,label:'+∞',horizontal:1}};
 const setDescriptions={
@@ -1241,10 +1311,13 @@ function openContinuity(a){
 function answerContinuity(choice){
   if(continuityTarget===null)return;
   const expected=isContinuousAt(continuityTarget),ok=(choice==='yes')===expected;
-  if(!ok){showToast('<strong>Aún no.</strong> Para continuidad, el límite debe existir como número real y coincidir con el valor de la función.',false);return}
+  if(!ok){
+    showToast('<strong>Aún no.</strong> Revisa el valor de la función y el límite.',false);
+    return
+  }
   const a=continuityTarget;
   completedContinuity.add(a);refreshAnalysisCards();closeContinuity();celebrate('¡Continuidad correcta!',true);
-  showToast(`<strong>Correcto.</strong> La función ${expected?'sí':'no'} es continua en x = ${a.replace('-','−')}.`);
+  showContinuityFeedback(a,expected);
   checkFinalAchievement()
 }
 continuityBtns.forEach(b=>b.onclick=e=>{e.stopPropagation();openContinuity(b.dataset.contTarget)});
@@ -1855,6 +1928,94 @@ window.addEventListener('resize',()=>{
   cameraResizeTimer=setTimeout(()=>setCamera(camX,camY),80)
 });
 requestAnimationFrame(()=>setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY));
+
+
+/* v16.5 point inspector */
+document.addEventListener('click',function(ev){
+ const hit=ev.target.closest?.('.point-hit');
+ if(!hit)return;
+ ev.stopPropagation();
+ if(typeof closeAnswerPanel==='function')closeAnswerPanel(false);
+ if(typeof coordPop==='undefined')return;
+ const x=hit.dataset.x??'', y=hit.dataset.y??'', kind=hit.dataset.kind??'Punto';
+ const approx=hit.dataset.approx??'', mode=hit.dataset.decimalMode??'';
+ const title=coordPop.querySelector('.coord-kind'); if(title)title.textContent=kind;
+ const exact=coordPop.querySelector('.coord-exact');
+ if(exact)exact.innerHTML=`(${x}, ${y})`;
+ const approxBox=coordPop.querySelector('.coord-approx');
+ const approxBtn=coordPop.querySelector('.coord-approx-btn');
+ if(approxBox)approxBox.textContent='';
+ if(approxBtn){
+   if(approx){
+     approxBtn.style.display='';
+     approxBtn.textContent=mode==='exact'?'Ver forma decimal':'Ver aproximación decimal';
+     approxBtn.onclick=(e)=>{
+       e.stopPropagation();
+       const parts=approx.split(';');
+       if(approxBox)approxBox.textContent=`(${parts[0]??x}, ${parts[1]??y})`;
+       approxBtn.style.display='none';
+     };
+   }else approxBtn.style.display='none';
+ }
+ const cx=parseFloat(hit.getAttribute('cx')), cy=parseFloat(hit.getAttribute('cy'));
+ if(Number.isFinite(cx)&&Number.isFinite(cy)){
+   coordPop.style.left='';
+   coordPop.style.top='';
+ }
+ coordPop.classList.add('show');
+});
+
+
+function showContinuityFeedback(a,isContinuous){
+ const box=document.getElementById('continuityFeedback');
+ if(!box)return;
+ const c=cases[String(a)];
+ const lim=c?.bilateral;
+ const img=c?.image;
+ let msg='';
+ if(isContinuous){
+   msg=`<strong>Correcto.</strong> La función es continua en <i>x</i> = ${String(a).replace('-','−')} porque el límite existe y coincide con <i>f</i>(${String(a).replace('-','−')}).`;
+   box.classList.remove('bad');
+ }else{
+   const reasons=[];
+   if(!img || img.kind==='undefined')reasons.push(`<i>f</i>(${String(a).replace('-','−')}) no está definida`);
+   if(!lim || lim.kind==='none' || lim.kind==='posinf' || lim.kind==='neginf')reasons.push('el límite no existe como número real');
+   if(img && img.kind==='finite' && lim && lim.kind==='finite' && Math.abs(img.value-lim.value)>1e-9)reasons.push('el límite no coincide con el valor de la función');
+   msg=`<strong>Correcto.</strong> La función no es continua en <i>x</i> = ${String(a).replace('-','−')} porque ${reasons.join(' y ')}.`;
+   box.classList.add('bad');
+ }
+ box.innerHTML=msg;
+ box.classList.add('show'); box.setAttribute('aria-hidden','false');
+}
+document.addEventListener('click',function(e){
+ const box=document.getElementById('continuityFeedback');
+ if(!box || !box.classList.contains('show'))return;
+ if(!box.contains(e.target)){
+   box.classList.remove('show'); box.setAttribute('aria-hidden','true');
+ }
+});
+
+
+/* v16.5 robust coordinate tap */
+document.querySelectorAll('.point-hit').forEach(pt=>{
+ pt.addEventListener('pointerup',e=>{
+   e.preventDefault();e.stopImmediatePropagation();
+   if(typeof openCoordPop==='function')openCoordPop(pt,e);
+ },true);
+});
+
+
+/* v16.5 final coordinate click arbitration */
+document.addEventListener('click',function(e){
+ const hit=e.target.closest?.('.point-hit');
+ if(!hit)return;
+ const cx=e.clientX,cy=e.clientY;
+ setTimeout(()=>{
+   if(typeof openCoordPop==='function'){
+     openCoordPop(hit,{clientX:cx,clientY:cy,preventDefault(){},stopPropagation(){}});
+   }
+ },0);
+},true);
 </script>
 </body>
 </html>

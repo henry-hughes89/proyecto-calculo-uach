@@ -939,6 +939,75 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
  .analysis-family .chip,.analysis-family .meta-chip{font-size:.49rem!important;padding:6px 5px!important}
 }
 
+
+/* v16.5 · visual continuity with dark homepage */
+body{
+  background:
+    radial-gradient(circle at 80% 3%,rgba(32,196,207,.10),transparent 26%),
+    linear-gradient(155deg,#06131b 0%,#09212a 54%,#07151e 100%)!important;
+}
+.page-shell,.app,.explorer-shell{
+  background:transparent!important;
+}
+.stage-wrap,.graph-wrap{
+  box-shadow:0 18px 42px rgba(0,0,0,.18)!important;
+}
+
+/* Coordinates must remain easy to tap on touch screens. */
+.point-hit{
+  pointer-events:all!important;
+  cursor:pointer!important;
+  fill:transparent!important;
+  stroke:transparent!important;
+}
+
+/* Feedback after answering continuity. */
+.continuity-feedback{
+  position:fixed;
+  z-index:2500;
+  left:50%;
+  top:18%;
+  transform:translateX(-50%) translateY(-8px);
+  width:min(88vw,520px);
+  padding:14px 16px;
+  border-radius:18px;
+  background:rgba(245,252,250,.96);
+  border:1px solid rgba(72,177,145,.42);
+  color:#173a3d;
+  box-shadow:0 18px 48px rgba(0,0,0,.24);
+  opacity:0;
+  pointer-events:none;
+  transition:.18s ease;
+  font-size:.86rem;
+  line-height:1.35;
+}
+.continuity-feedback.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+  pointer-events:auto;
+}
+.continuity-feedback strong{color:#117c68}
+.continuity-feedback.bad{
+  border-color:rgba(208,125,88,.42);
+  background:rgba(255,248,244,.97);
+}
+.continuity-feedback.bad strong{color:#a44f2d}
+
+
+/* Ensure the invisible hit circle owns taps, not the decorative point/curve. */
+.keypoint,#curve path,.curve-path,.graph-path{
+  pointer-events:none!important;
+}
+.point-hit{
+  pointer-events:all!important;
+}
+
+
+/* Guide/asymptote overlays must never block point inspection. */
+.a-line,.h-line,#aline,#hline,#rangeSweep,#domainSweep{
+  pointer-events:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -974,7 +1043,8 @@ svg{width:100%;height:100%;display:block;touch-action:none;background:#fcfefe}
        </div>
       </div>
     </div>
-    <div id="answerpanel" class="answerpanel">
+    <div id="continuityFeedback" class="continuity-feedback" aria-hidden="true"></div>
+<div id="answerpanel" class="answerpanel">
       <div class="answer-top">
         <div class="answer-main">
           <div id="answerTitle" class="answer-title">Selecciona tu resultado</div>
@@ -1303,10 +1373,13 @@ function openContinuity(a){
 function answerContinuity(choice){
   if(continuityTarget===null)return;
   const expected=isContinuousAt(continuityTarget),ok=(choice==='yes')===expected;
-  if(!ok){showToast('<strong>Aún no.</strong> Para continuidad, el límite debe existir como número real y coincidir con el valor de la función.',false);return}
+  if(!ok){
+    showToast('<strong>Aún no.</strong> Revisa el valor de la función y el límite.',false);
+    return
+  }
   const a=continuityTarget;
   completedContinuity.add(a);refreshAnalysisCards();closeContinuity();celebrate('¡Continuidad correcta!',true);
-  showToast(`<strong>Correcto.</strong> La función ${expected?'sí':'no'} es continua en x = ${a.replace('-','−')}.`);
+  showContinuityFeedback(a,expected);
   checkFinalAchievement()
 }
 continuityBtns.forEach(b=>b.onclick=e=>{e.stopPropagation();openContinuity(b.dataset.contTarget)});
@@ -1920,6 +1993,94 @@ window.addEventListener('resize',()=>{
   cameraResizeTimer=setTimeout(()=>setCamera(camX,camY),80)
 });
 requestAnimationFrame(()=>setCamera(CAMERA_CONFIG.centerX,CAMERA_CONFIG.centerY));
+
+
+/* v16.5 point inspector */
+document.addEventListener('click',function(ev){
+ const hit=ev.target.closest?.('.point-hit');
+ if(!hit)return;
+ ev.stopPropagation();
+ if(typeof closeAnswerPanel==='function')closeAnswerPanel(false);
+ if(typeof coordPop==='undefined')return;
+ const x=hit.dataset.x??'', y=hit.dataset.y??'', kind=hit.dataset.kind??'Punto';
+ const approx=hit.dataset.approx??'', mode=hit.dataset.decimalMode??'';
+ const title=coordPop.querySelector('.coord-kind'); if(title)title.textContent=kind;
+ const exact=coordPop.querySelector('.coord-exact');
+ if(exact)exact.innerHTML=`(${x}, ${y})`;
+ const approxBox=coordPop.querySelector('.coord-approx');
+ const approxBtn=coordPop.querySelector('.coord-approx-btn');
+ if(approxBox)approxBox.textContent='';
+ if(approxBtn){
+   if(approx){
+     approxBtn.style.display='';
+     approxBtn.textContent=mode==='exact'?'Ver forma decimal':'Ver aproximación decimal';
+     approxBtn.onclick=(e)=>{
+       e.stopPropagation();
+       const parts=approx.split(';');
+       if(approxBox)approxBox.textContent=`(${parts[0]??x}, ${parts[1]??y})`;
+       approxBtn.style.display='none';
+     };
+   }else approxBtn.style.display='none';
+ }
+ const cx=parseFloat(hit.getAttribute('cx')), cy=parseFloat(hit.getAttribute('cy'));
+ if(Number.isFinite(cx)&&Number.isFinite(cy)){
+   coordPop.style.left='';
+   coordPop.style.top='';
+ }
+ coordPop.classList.add('show');
+});
+
+
+function showContinuityFeedback(a,isContinuous){
+ const box=document.getElementById('continuityFeedback');
+ if(!box)return;
+ const c=cases[String(a)];
+ const lim=c?.bilateral;
+ const img=c?.image;
+ let msg='';
+ if(isContinuous){
+   msg=`<strong>Correcto.</strong> La función es continua en <i>x</i> = ${String(a).replace('-','−')} porque el límite existe y coincide con <i>f</i>(${String(a).replace('-','−')}).`;
+   box.classList.remove('bad');
+ }else{
+   const reasons=[];
+   if(!img || img.kind==='undefined')reasons.push(`<i>f</i>(${String(a).replace('-','−')}) no está definida`);
+   if(!lim || lim.kind==='none' || lim.kind==='posinf' || lim.kind==='neginf')reasons.push('el límite no existe como número real');
+   if(img && img.kind==='finite' && lim && lim.kind==='finite' && Math.abs(img.value-lim.value)>1e-9)reasons.push('el límite no coincide con el valor de la función');
+   msg=`<strong>Correcto.</strong> La función no es continua en <i>x</i> = ${String(a).replace('-','−')} porque ${reasons.join(' y ')}.`;
+   box.classList.add('bad');
+ }
+ box.innerHTML=msg;
+ box.classList.add('show'); box.setAttribute('aria-hidden','false');
+}
+document.addEventListener('click',function(e){
+ const box=document.getElementById('continuityFeedback');
+ if(!box || !box.classList.contains('show'))return;
+ if(!box.contains(e.target)){
+   box.classList.remove('show'); box.setAttribute('aria-hidden','true');
+ }
+});
+
+
+/* v16.5 robust coordinate tap */
+document.querySelectorAll('.point-hit').forEach(pt=>{
+ pt.addEventListener('pointerup',e=>{
+   e.preventDefault();e.stopImmediatePropagation();
+   if(typeof openCoordPop==='function')openCoordPop(pt,e);
+ },true);
+});
+
+
+/* v16.5 final coordinate click arbitration */
+document.addEventListener('click',function(e){
+ const hit=e.target.closest?.('.point-hit');
+ if(!hit)return;
+ const cx=e.clientX,cy=e.clientY;
+ setTimeout(()=>{
+   if(typeof openCoordPop==='function'){
+     openCoordPop(hit,{clientX:cx,clientY:cy,preventDefault(){},stopPropagation(){}});
+   }
+ },0);
+},true);
 </script>
 </body>
 </html>
