@@ -1108,6 +1108,31 @@ body{
   vector-effect:non-scaling-stroke;
 }
 
+
+/* v24 · sistema de feedback sensorial y progreso */
+button{transform:translateZ(0)}
+button:not(:disabled):active{filter:brightness(.97)}
+.analysis-section-title{display:flex;align-items:center;gap:8px}
+.ux-progress{margin-left:auto;display:flex;gap:5px;align-items:center}
+.ux-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid rgba(35,111,121,.42);background:rgba(255,255,255,.38);transition:background .24s ease,box-shadow .24s ease,transform .24s ease}
+.ux-dot.on{background:#2f9d72;border-color:#2f9d72;box-shadow:0 0 0 3px rgba(47,157,114,.12);transform:scale(1.08)}
+.sound-toggle{position:absolute;right:10px;top:8px;z-index:12;width:34px;height:34px;border-radius:50%;border:1px solid rgba(121,166,174,.45);background:rgba(244,250,250,.72);color:#42646d;font-size:15px;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 4px 14px rgba(18,45,58,.08)}
+.sound-toggle.on{color:#0d7f8d;border-color:rgba(13,127,141,.55);box-shadow:0 0 0 3px rgba(13,127,141,.08)}
+.analysis-row.ux-hit,.continuity-btn.ux-hit,.chip.ux-hit{animation:uxHit .42s ease-out}
+@keyframes uxHit{0%{box-shadow:0 0 0 0 rgba(42,160,112,.0)}35%{box-shadow:0 0 0 7px rgba(42,160,112,.18)}100%{box-shadow:0 0 0 13px rgba(42,160,112,0)}}
+.analysis-card.ux-complete{animation:uxCardComplete .72s ease-out}
+@keyframes uxCardComplete{0%{box-shadow:0 0 0 0 rgba(42,160,112,0)}30%{box-shadow:0 0 0 4px rgba(42,160,112,.22),0 8px 24px rgba(42,160,112,.10)}100%{box-shadow:0 0 0 9px rgba(42,160,112,0)}}
+.stage.ux-graph-pulse #curve .curve,.stage.ux-graph-pulse #curve path{animation:uxCurvePulse .52s ease-out}
+@keyframes uxCurvePulse{0%{filter:none}35%{filter:drop-shadow(0 0 5px rgba(21,157,171,.85));stroke:#168e9d}100%{filter:none}}
+.keypoint.ux-point-pulse{animation:uxPointPulse .55s ease-out;transform-box:fill-box;transform-origin:center}
+@keyframes uxPointPulse{0%{filter:none}35%{filter:drop-shadow(0 0 5px rgba(35,158,105,.95));transform:scale(1.28)}100%{filter:none;transform:scale(1)}}
+.stage.ux-final{animation:uxStageFinish 1.45s ease-out}
+@keyframes uxStageFinish{0%{box-shadow:inset 0 0 0 0 rgba(27,174,187,0)}25%{box-shadow:inset 0 0 0 4px rgba(27,174,187,.48),0 0 28px rgba(27,174,187,.15)}70%{box-shadow:inset 0 0 0 2px rgba(27,174,187,.20)}100%{box-shadow:inset 0 0 0 0 rgba(27,174,187,0)}}
+.final-mascot{width:74px;max-height:58px;object-fit:contain;display:block;margin:0 auto 4px;filter:drop-shadow(0 5px 8px rgba(13,98,107,.16));animation:uxMascot .9s ease-out}
+@keyframes uxMascot{0%{opacity:0;transform:translateY(6px) scale(.94)}45%{opacity:1;transform:translateY(-2px) scale(1.04)}100%{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.analysis-row.ux-hit,.continuity-btn.ux-hit,.chip.ux-hit,.analysis-card.ux-complete,.stage.ux-graph-pulse #curve .curve,.stage.ux-graph-pulse #curve path,.keypoint.ux-point-pulse,.stage.ux-final,.final-mascot{animation:none!important}.ux-dot{transition:none}}
+@media(max-width:650px){.sound-toggle{width:30px;height:30px;right:7px;top:6px;font-size:13px}.ux-dot{width:6px;height:6px}.analysis-section-title{gap:5px}}
+
 </style>
 </head>
 <body>
@@ -1423,6 +1448,7 @@ function refreshAnalysisCards(){
     vb?.classList.toggle('done',vd);lb?.classList.toggle('done',ld);cb?.classList.toggle('done',cd);
     if(cb){cb.disabled=!unlocked;cb.classList.toggle('locked',!unlocked);cb.classList.toggle('ready',unlocked&&!cd)}
   })
+  if(typeof uxUpdateProgress==='function')uxUpdateProgress();
 }
 function closeContinuity(){continuityTarget=null;continuityPanel.classList.remove('show');continuityPanel.setAttribute('aria-hidden','true');stage.classList.remove('continuity-mode')}
 function openContinuity(a){
@@ -1458,7 +1484,7 @@ function checkFinalAchievement(){
  const requiredValues=["-1", "0", "1", "2"];
  const requiredContinuity=["-1", "0", "1", "2"];
  if(requiredLimits.every(x=>completedTargets.has(x))&&requiredValues.every(x=>completedValues.has(x))&&requiredContinuity.every(x=>completedContinuity.has(x))){
-  finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false')
+  finalwin.classList.add('show');finalwin.setAttribute('aria-hidden','false');if(typeof uxFinal==='function')uxFinal()
  }
 }
 exploreAgain.onclick=()=>{finalwin.classList.remove('show');finalwin.setAttribute('aria-hidden','true')};
@@ -1841,9 +1867,8 @@ function promptLimit(){
 }
 function setCue(text,em=false){nextCue.innerHTML=em?`<strong>${text}</strong>`:text}
 function celebrate(text='¡Correcto!',big=false){
-  victory.classList.remove('show');
-  stage.classList.remove('winflash');
-  if(navigator.vibrate){try{navigator.vibrate(big?18:10)}catch(e){}}
+  victory.classList.remove('show');stage.classList.remove('winflash');
+  if(typeof uxReward==='function')uxReward(text,big);
 }
 function pretty(spec){if(spec.kind==='finite')return spec.exact||String(spec.value).replace('-', '−');if(spec.kind==='posinf')return '+∞';if(spec.kind==='neginf')return '−∞';if(spec.kind==='undefined')return 'No está definida';return 'No existe'}
 function renderAnswer(){answer.textContent=answerValue||'Tu resultado';answer.classList.toggle('empty',!answerValue);updateNoExistKey()}
@@ -2310,6 +2335,61 @@ document.addEventListener('pointerdown',e=>{
   if(e.target.closest?.('#domainBtnTop,#rangeBtnTop'))return;
   closeSetTool();
 },true);
+
+/* v24 · feedback sensorial */
+const UX={sound:false,audio:null,finished:false,completedCards:new Set()};
+function uxVibrate(pattern){if(navigator.vibrate){try{navigator.vibrate(pattern)}catch(e){}}}
+function uxTone(kind='ok'){
+  if(!UX.sound)return;
+  try{
+    UX.audio=UX.audio||new (window.AudioContext||window.webkitAudioContext)();
+    const ac=UX.audio,now=ac.currentTime;
+    const notes=kind==='final'?[523.25,659.25,783.99]:kind==='card'?[523.25,659.25]:[659.25];
+    notes.forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,now+i*.075);g.gain.exponentialRampToValueAtTime(.055,now+i*.075+.012);g.gain.exponentialRampToValueAtTime(.0001,now+i*.075+.13);o.connect(g);g.connect(ac.destination);o.start(now+i*.075);o.stop(now+i*.075+.15)});
+  }catch(e){}
+}
+function uxFlash(el,cls='ux-hit',ms=480){if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),ms)}
+function uxPulseGraph(){stage.classList.remove('ux-graph-pulse');void stage.offsetWidth;stage.classList.add('ux-graph-pulse');setTimeout(()=>stage.classList.remove('ux-graph-pulse'),580)}
+function uxPulsePoint(a){
+  if(a===null||a===undefined)return;
+  const c=cases[String(a)]; if(!c||!c.image||c.image.kind!=='finite')return;
+  const x=Number(a),y=c.image.value;
+  const pts=[...document.querySelectorAll('.keypoint')];
+  let p=pts.find(q=>Math.abs(Number(q.getAttribute('cx'))-x)<1e-7&&Math.abs(Number(q.getAttribute('cy'))-y)<1e-7);
+  if(p)uxFlash(p,'ux-point-pulse',620)
+}
+function uxUpdateProgress(){
+  if(!window.__uxReady)return;
+  const cards=[...document.querySelectorAll('.analysis-card')];
+  cards.forEach((card,i)=>{
+    const a=card.dataset.a,done=completedValues.has(a)&&completedTargets.has(a)&&completedContinuity.has(a);
+    const dot=document.querySelector(`.ux-dot[data-i="${i}"]`); if(dot)dot.classList.toggle('on',done);
+    if(done&&!UX.completedCards.has(a)){UX.completedCards.add(a);uxFlash(card,'ux-complete',780);uxVibrate([18,45,18]);uxTone('card')}
+  })
+}
+function uxReward(text,big){
+  let el=null;
+  if(text.includes('Valor')){el=document.querySelector(`.value-chip[data-value-target="${selected}"]`);uxPulsePoint(selected)}
+  else if(text.includes('Continuidad')){el=document.querySelector(`.continuity-btn[data-cont-target="${selected??continuityTarget}"]`);uxPulseGraph()}
+  else if(text.includes('Límite')){el=target?document.querySelector(`.chip[data-target="${target}"]`):null;uxPulseGraph()}
+  uxFlash(el);
+  uxVibrate(big?[22,42,16]:14);uxTone('ok')
+}
+function uxFinal(){
+  if(UX.finished)return;UX.finished=true;
+  stage.classList.remove('ux-final');void stage.offsetWidth;stage.classList.add('ux-final');
+  uxVibrate([25,45,25,55,35]);uxTone('final');setTimeout(()=>stage.classList.remove('ux-final'),1600)
+}
+(function uxInit(){
+  window.__uxReady=true;
+  const title=document.querySelector('.analysis-section-title');
+  if(title&&!title.querySelector('.ux-progress')){const p=document.createElement('span');p.className='ux-progress';p.setAttribute('aria-label','Progreso de puntos');p.innerHTML=[0,1,2,3].map(i=>`<i class="ux-dot" data-i="${i}"></i>`).join('');title.appendChild(p)}
+  const b=document.createElement('button');b.className='sound-toggle';b.type='button';b.title='Activar sonidos de logro';b.setAttribute('aria-label','Activar sonidos de logro');b.textContent='♩';document.querySelector('.shell')?.appendChild(b);
+  b.addEventListener('click',e=>{e.stopPropagation();UX.sound=!UX.sound;b.classList.toggle('on',UX.sound);b.textContent=UX.sound?'♪':'♩';b.title=UX.sound?'Desactivar sonidos':'Activar sonidos de logro';if(UX.sound){uxTone('ok')}});
+  const fc=document.querySelector('.finalcard');if(fc&&!fc.querySelector('.final-mascot')){const im=document.createElement('img');im.className='final-mascot';im.src='../../assets/mascota-lim01.png';im.alt='Mascota del Proyecto Cálculo';fc.insertBefore(im,fc.firstChild)}
+  uxUpdateProgress();
+})();
+
 </script>
 </body>
 </html>
