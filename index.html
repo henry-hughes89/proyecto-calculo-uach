@@ -1143,6 +1143,129 @@ body::before{
 @media(max-width:650px){.resource-complete-badge{right:39px;top:6px;font-size:.29rem;padding:2px 5px}}
 @media(prefers-reduced-motion:reduce){.case-card-v16::after{animation:none!important}}
 
+
+/* ==========================================================
+   v26 · orientación fuerte, sonido visible y estado completado
+   ========================================================== */
+.case-card-v16::after{animation:none!important}
+.case-card-v16.home-guide{
+  animation:v26HomeGuide 1.05s ease-out 1!important;
+  z-index:1;
+}
+.case-card-v16.home-guide::before{
+  content:"";
+  position:absolute;
+  inset:-25% -65%;
+  z-index:0;
+  pointer-events:none;
+  background:linear-gradient(105deg,transparent 36%,rgba(72,235,241,.05) 43%,rgba(95,244,248,.30) 50%,rgba(72,235,241,.05) 57%,transparent 64%);
+  transform:translateX(-36%);
+  animation:v26HomeSweep 1.05s ease-out 1;
+}
+.case-card-v16.home-guide > *{position:relative;z-index:1}
+@keyframes v26HomeGuide{
+  0%,100%{
+    border-color:rgba(33,215,226,.48);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.015),0 8px 22px rgba(0,0,0,.18);
+  }
+  38%,62%{
+    border-color:rgba(103,246,250,.98);
+    box-shadow:
+      0 0 0 3px rgba(50,224,232,.22),
+      0 0 30px rgba(42,225,233,.48),
+      inset 0 0 28px rgba(46,219,226,.16);
+  }
+}
+@keyframes v26HomeSweep{
+  0%{transform:translateX(-44%);opacity:0}
+  18%{opacity:1}
+  75%{opacity:1}
+  100%{transform:translateX(44%);opacity:0}
+}
+
+.case-card-v16.resource-complete{
+  border-color:rgba(73,225,143,.80)!important;
+  background:
+    radial-gradient(circle at 50% 92%,rgba(48,188,116,.16),transparent 34%),
+    linear-gradient(132deg,rgba(10,70,54,.98),rgba(7,31,37,.98) 73%)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(103,238,164,.12),
+    0 0 26px rgba(35,174,107,.13),
+    0 8px 25px rgba(0,0,0,.22)!important;
+}
+.case-card-v16.resource-complete .case-number-v16{
+  color:#91f0bc!important;
+  border-color:rgba(92,231,157,.48)!important;
+  background:rgba(35,143,94,.18)!important;
+}
+.resource-complete-badge{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:9px!important;
+  transform:translateX(-50%)!important;
+  min-width:118px;
+  justify-content:center;
+  padding:5px 11px!important;
+  border-radius:999px!important;
+  border:1px solid rgba(107,238,168,.65)!important;
+  background:rgba(15,100,67,.88)!important;
+  color:#b5f6d0!important;
+  font-size:.46rem!important;
+  font-weight:950!important;
+  letter-spacing:.07em!important;
+  box-shadow:0 5px 16px rgba(11,59,44,.34),inset 0 1px 0 rgba(255,255,255,.10);
+}
+@media(max-width:650px){
+  .resource-complete-badge{
+    bottom:6px!important;
+    min-width:92px;
+    padding:4px 8px!important;
+    font-size:.34rem!important;
+  }
+}
+
+.viewer-sound{
+  position:absolute;
+  right:132px;
+  top:10px;
+  z-index:50;
+  height:38px;
+  padding:0 13px;
+  display:none;
+  align-items:center;
+  gap:6px;
+  border:1px solid rgba(83,182,192,.55);
+  border-radius:999px;
+  background:rgba(239,249,249,.94);
+  color:#274f5d;
+  font:800 .68rem/1 Inter,system-ui,sans-serif;
+  box-shadow:0 7px 22px rgba(0,0,0,.15);
+  cursor:pointer;
+}
+.viewer.show .viewer-sound{display:flex}
+.viewer-sound.on{
+  color:#086f7e;
+  border-color:rgba(27,170,184,.76);
+  background:rgba(222,248,249,.98);
+  box-shadow:0 0 0 3px rgba(31,185,198,.10),0 7px 22px rgba(0,0,0,.15);
+}
+.viewer-sound .sound-icon{font-size:.82rem}
+@media(max-width:650px){
+  .viewer-sound{
+    right:105px;
+    top:8px;
+    height:31px;
+    padding:0 9px;
+    gap:4px;
+    font-size:.51rem;
+  }
+}
+@media(max-width:390px){
+  .viewer-sound .sound-label{display:none}
+  .viewer-sound{right:102px;width:31px;padding:0;justify-content:center}
+}
+
 </style>
 </head>
 <body>
@@ -1299,6 +1422,7 @@ body::before{
 
 <section id="viewer" class="viewer">
   <div class="viewer-frame-wrap">
+    <button id="viewerSound" class="viewer-sound" type="button" aria-label="Activar sonidos"><span class="sound-icon">🔇</span><span class="sound-label">Sonido</span></button>
     <button id="back" class="back">← Recursos</button>
     <iframe id="frame" title="Actividad LIM-01"></iframe>
   </div>
@@ -1347,6 +1471,41 @@ window.addEventListener('message',e=>{
 window.addEventListener('storage',refreshResourceCompletion);
 window.addEventListener('focus',refreshResourceCompletion);
 refreshResourceCompletion();
+
+
+const viewerSound=document.getElementById('viewerSound');
+let LIM01_SOUND=false;
+try{LIM01_SOUND=localStorage.getItem('lim01.sound')==='1'}catch(e){}
+function paintViewerSound(){
+  viewerSound.classList.toggle('on',LIM01_SOUND);
+  viewerSound.querySelector('.sound-icon').textContent=LIM01_SOUND?'🔊':'🔇';
+  viewerSound.title=LIM01_SOUND?'Desactivar sonidos':'Activar sonidos';
+  viewerSound.setAttribute('aria-label',viewerSound.title);
+}
+function pushSoundPreference(){
+  try{frame.contentWindow?.postMessage({type:'lim01-sound',enabled:LIM01_SOUND},'*')}catch(e){}
+}
+viewerSound.addEventListener('click',()=>{
+  LIM01_SOUND=!LIM01_SOUND;
+  try{localStorage.setItem('lim01.sound',LIM01_SOUND?'1':'0')}catch(e){}
+  paintViewerSound();pushSoundPreference();
+});
+frame.addEventListener('load',()=>setTimeout(pushSoundPreference,60));
+paintViewerSound();
+
+let homeGuideTimers=[];
+function runHomeGuide(){
+  homeGuideTimers.forEach(clearTimeout);homeGuideTimers=[];
+  document.querySelectorAll('.case-card-v16.home-guide').forEach(c=>c.classList.remove('home-guide'));
+  const cards=[...document.querySelectorAll('.case-card-v16[data-open]')];
+  cards.forEach((card,i)=>{
+    homeGuideTimers.push(setTimeout(()=>{
+      card.classList.remove('home-guide');void card.offsetWidth;card.classList.add('home-guide');
+      homeGuideTimers.push(setTimeout(()=>card.classList.remove('home-guide'),1080));
+    },180+i*1120));
+  });
+}
+setTimeout(runHomeGuide,320);
 
 </script>
 

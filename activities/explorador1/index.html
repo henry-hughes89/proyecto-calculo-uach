@@ -1204,6 +1204,62 @@ button:not(:disabled):active{filter:brightness(.97)}
   .ux-dot.on,.analysis-section.ux-guide-pulse,.analysis-family.ux-guide-pulse,.analysis-card.ux-idle-pulse{animation:none!important}
 }
 
+
+/* ==========================================================
+   v26 · guía visual fuerte y sonido visible desde el visor
+   ========================================================== */
+.sound-toggle{display:none!important}
+
+.analysis-section.ux-guide-pulse,
+.analysis-family.ux-guide-pulse{
+  position:relative;
+  animation:v26GuideStrong 1.02s ease-out 1!important;
+}
+.analysis-section.ux-guide-pulse::after,
+.analysis-family.ux-guide-pulse::after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(105deg,transparent 25%,rgba(31,190,204,.03) 38%,rgba(51,215,226,.19) 50%,rgba(31,190,204,.03) 62%,transparent 75%);
+  animation:v26GuideWash 1.02s ease-out 1;
+}
+@keyframes v26GuideStrong{
+  0%,100%{
+    box-shadow:0 0 0 0 rgba(30,184,197,0);
+    filter:none;
+  }
+  38%,64%{
+    box-shadow:
+      0 0 0 4px rgba(26,190,204,.24),
+      0 0 30px rgba(28,190,204,.36),
+      inset 0 0 24px rgba(40,191,204,.12)!important;
+    filter:saturate(1.08) brightness(1.02);
+  }
+}
+@keyframes v26GuideWash{
+  0%{opacity:0;transform:translateX(-18%)}
+  25%,72%{opacity:1}
+  100%{opacity:0;transform:translateX(18%)}
+}
+.analysis-card.ux-idle-pulse,
+.analysis-family.ux-idle-pulse{
+  animation:v26IdleGuide .9s ease-out 1!important;
+}
+@keyframes v26IdleGuide{
+  0%,100%{box-shadow:0 0 0 0 rgba(25,178,191,0)}
+  45%{box-shadow:0 0 0 3px rgba(25,178,191,.20),0 0 20px rgba(25,178,191,.25)}
+}
+@media(prefers-reduced-motion:reduce){
+  .analysis-section.ux-guide-pulse,
+  .analysis-family.ux-guide-pulse,
+  .analysis-card.ux-idle-pulse,
+  .analysis-family.ux-idle-pulse{animation:none!important}
+  .analysis-section.ux-guide-pulse::after,
+  .analysis-family.ux-guide-pulse::after{animation:none!important;display:none}
+}
+
 </style>
 </head>
 <body>
@@ -2423,6 +2479,15 @@ document.addEventListener('pointerdown',e=>{
 
 /* v24 · feedback sensorial */
 const UX={sound:false,audio:null,finished:false,completedCards:new Set()};
+try{UX.sound=localStorage.getItem('lim01.sound')==='1'}catch(e){}
+window.addEventListener('message',e=>{
+  const d=e.data||{};
+  if(d.type==='lim01-sound'){
+    UX.sound=!!d.enabled;
+    try{localStorage.setItem('lim01.sound',UX.sound?'1':'0')}catch(_){}
+    if(UX.sound){uxTone('ok')}
+  }
+});
 function uxVibrate(pattern){if(navigator.vibrate){try{navigator.vibrate(pattern)}catch(e){}}}
 function uxTone(kind='ok'){
   if(!UX.sound)return;
@@ -2469,7 +2534,7 @@ function uxFinal(){
   window.__uxReady=true;
   const title=document.querySelector('.analysis-section-title');
   if(title&&!title.querySelector('.ux-progress')){const p=document.createElement('span');p.className='ux-progress';p.setAttribute('aria-label','Progreso de puntos');p.innerHTML=[0,1,2,3].map(i=>`<i class="ux-dot" data-i="${i}"></i>`).join('');title.appendChild(p)}
-  const b=document.createElement('button');b.className='sound-toggle';b.type='button';b.title='Activar sonidos de logro';b.setAttribute('aria-label','Activar sonidos de logro');b.textContent='♩';document.querySelector('.shell')?.appendChild(b);
+  const b=document.createElement('button');b.className='sound-toggle';b.type='button';b.title=UX.sound?'Desactivar sonidos':'Activar sonidos de logro';b.setAttribute('aria-label',b.title);b.textContent=UX.sound?'♪':'♩';b.classList.toggle('on',UX.sound);document.querySelector('.shell')?.appendChild(b);
   b.addEventListener('click',e=>{e.stopPropagation();UX.sound=!UX.sound;b.classList.toggle('on',UX.sound);b.textContent=UX.sound?'♪':'♩';b.title=UX.sound?'Desactivar sonidos':'Activar sonidos de logro';if(UX.sound){uxTone('ok')}});
   const fc=document.querySelector('.finalcard');if(fc&&!fc.querySelector('.final-mascot')){const im=document.createElement('img');im.className='final-mascot';im.src='../../assets/mascota-lim01.png';im.alt='Mascota del Proyecto Cálculo';fc.insertBefore(im,fc.firstChild)}
   uxUpdateProgress();
@@ -2496,7 +2561,7 @@ function uxPulseOnce(el,cls='ux-guide-pulse',ms=760){
 function uxGuideSequence(){
   uxClearGuideTimers();
   const els=[document.querySelector('.analysis-section'),document.querySelector('.infinity-family'),document.querySelector('.extra-family')].filter(Boolean);
-  els.forEach((el,i)=>uxGuideTimers.push(setTimeout(()=>uxPulseOnce(el),i*720)));
+  els.forEach((el,i)=>uxGuideTimers.push(setTimeout(()=>uxPulseOnce(el,'ux-guide-pulse',1050),180+i*1120)));
   uxScheduleIdleHint();
 }
 function uxPendingHintTarget(){
