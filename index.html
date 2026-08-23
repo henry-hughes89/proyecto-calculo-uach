@@ -1084,6 +1084,40 @@ body::before{
   }
 }
 
+
+/* v16.3 · semantic color system */
+.case-card-v16,
+.case-cyan,
+.case-orange,
+.case-green,
+.case-purple{
+  --accent:#25d4de!important;
+}
+.creation-lime{
+  border-color:rgba(132,207,40,.36)!important;
+  background:linear-gradient(120deg,rgba(48,72,18,.57),rgba(12,30,35,.94))!important;
+}
+.creation-lime .creation-icon-v16,
+.creation-lime .creation-mini-v16{color:#8bd331!important}
+.creation-lime small{color:#9cdb53!important}
+
+.creation-gold{
+  border-color:rgba(235,177,63,.36)!important;
+  background:linear-gradient(120deg,rgba(73,53,17,.58),rgba(20,29,34,.94))!important;
+}
+.creation-gold .creation-icon-v16,
+.creation-gold .creation-mini-v16{color:#efb641!important}
+.creation-gold small{color:#efbd5b!important}
+
+.oscillation-v16{
+  border-color:rgba(179,105,228,.38)!important;
+  background:linear-gradient(110deg,rgba(58,30,76,.75),rgba(24,18,43,.95))!important;
+}
+.case-card-v16:nth-child(1)::after{animation-delay:0s!important}
+.case-card-v16:nth-child(2)::after{animation-delay:1.15s!important}
+.case-card-v16:nth-child(3)::after{animation-delay:2.30s!important}
+.case-card-v16:nth-child(4)::after{animation-delay:3.45s!important}
+
 </style>
 </head>
 <body>
@@ -1145,7 +1179,7 @@ body::before{
       </div>
     </button>
 
-    <button class="case-card-v16 case-orange" data-open="explorador2">
+    <button class="case-card-v16 case-cyan" data-open="explorador2">
       <div class="case-top-v16">
         <div class="case-number-v16">02</div>
         <div class="case-head-v16">
@@ -1176,7 +1210,7 @@ body::before{
       </div>
     </button>
 
-    <button class="case-card-v16 case-green" data-open="explorador3">
+    <button class="case-card-v16 case-cyan" data-open="explorador3">
       <div class="case-top-v16">
         <div class="case-number-v16">03</div>
         <div class="case-head-v16">
@@ -1210,7 +1244,7 @@ body::before{
       </div>
     </button>
 
-    <button class="case-card-v16 case-purple" data-open="explorador4">
+    <button class="case-card-v16 case-cyan" data-open="explorador4">
       <div class="case-top-v16">
         <div class="case-number-v16">04</div>
         <div class="case-head-v16">
@@ -1247,7 +1281,7 @@ body::before{
   </section>
 
   <section class="creation-grid-v16">
-    <article class="creation-card-v16 creation-cyan">
+    <article class="creation-card-v16 creation-lime">
       <div class="creation-icon-v16">✎</div>
       <div>
         <small>PRÓXIMAMENTE</small>
