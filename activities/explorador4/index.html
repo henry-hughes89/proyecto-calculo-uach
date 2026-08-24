@@ -1348,8 +1348,8 @@ button:not(:disabled):active{filter:brightness(.97)}
 <circle class="point-hit" cx="1.5" cy="3.5" r=".44" data-x="3/2" data-y="7/2" data-approx="1.5;3.5" data-kind="Punto definido" data-decimal-mode="exact"></circle>
 <circle class="open-dot keypoint" cx="2" cy="3" r=".14"></circle>
 <circle class="point-hit" cx="2" cy="3" r=".44" data-x="2" data-y="3" data-approx="" data-kind="Círculo abierto"></circle>
-<circle class="closed-dot keypoint" cx="2" cy="5" r=".14"></circle>
-<circle class="point-hit" cx="2" cy="5" r=".44" data-x="2" data-y="5" data-approx="" data-kind="Punto definido"></circle>
+<circle class="closed-dot keypoint" cx="2" cy="4.33333333" r=".14"></circle>
+<circle class="point-hit" cx="2" cy="4.33333333" r=".44" data-x="2" data-y="13/3" data-approx="2;4.33" data-kind="Punto definido" data-decimal-mode="approx"></circle>
 <circle class="open-dot keypoint" cx="4" cy="5" r=".14"></circle>
 <circle class="point-hit" cx="4" cy="5" r=".44" data-x="4" data-y="5" data-approx="" data-kind="Círculo abierto"></circle>
 <circle class="closed-dot keypoint" cx="5" cy="2" r=".14"></circle>
@@ -1536,7 +1536,7 @@ const cases={
  '0':{left:{kind:'finite',value:0,exact:'0',fn:fns.p1,start:-.8},right:{kind:'posinf',fn:fns.p2,start:.6},bilateral:{kind:'none'},image:{kind:'finite',value:3,exact:'3'}},
  '1':{left:{kind:'finite',value:2,exact:'2',fn:fns.p2,start:.4},right:{kind:'finite',value:4,exact:'4',fn:fns.p3,start:1.6},bilateral:{kind:'none'},image:{kind:'undefined'}},
  '1.5':{left:{kind:'finite',value:3.5,exact:'7/2',fn:fns.p3,start:1.15},right:{kind:'finite',value:3.5,exact:'7/2',fn:fns.p3,start:1.85},bilateral:{kind:'finite',value:3.5,exact:'7/2'},image:{kind:'finite',value:3.5,exact:'7/2'}},
- '2':{left:{kind:'finite',value:3,exact:'3',fn:fns.p3,start:1.3},right:{kind:'finite',value:3,exact:'3',fn:fns.p4,start:2.7},bilateral:{kind:'finite',value:3,exact:'3'},image:{kind:'finite',value:5,exact:'5'}}
+ '2':{left:{kind:'finite',value:3,exact:'3',fn:fns.p3,start:1.3},right:{kind:'finite',value:3,exact:'3',fn:fns.p4,start:2.7},bilateral:{kind:'finite',value:3,exact:'3'},image:{kind:'finite',value:13/3,exact:'13/3'}}
 };
 const globals={
  neginf:{kind:'neginf',fn:fns.p1,start:-3,end:-24,label:'−∞'},
@@ -1701,7 +1701,7 @@ function domainIntersections(x){
  else if(x>0+e&&x<1-e)ys.push(fns.p2(x));
  else if(Math.abs(x-1)<=e){}
  else if(x>1+e&&x<2-e)ys.push(fns.p3(x));
- else if(Math.abs(x-2)<=e)ys.push(5);
+ else if(Math.abs(x-2)<=e)ys.push(13/3);
  else if(x>2+e&&x<4-e)ys.push(fns.p4(x));
  else if(Math.abs(x-4)<=e){}
  else if(x>=5-e)ys.push(fns.p5(Math.max(5,x)));
@@ -2611,6 +2611,33 @@ function uxReturnHome(){
   location.href='../../index.html'
 }
 
+
+
+/* ==========================================================
+   v27 · inspector decimal independiente del estado del límite
+   ========================================================== */
+document.addEventListener('click',e=>{
+  const btn=e.target?.closest?.('#coordApproxBtn');
+  if(!btn)return;
+
+  /* Evita los dos handlers históricos del botón, que podían
+     cancelar mutuamente el cambio después de trabajar un límite. */
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+
+  const pop=document.getElementById('coordPop');
+  const approx=document.getElementById('coordApprox');
+  if(!pop?.classList.contains('show')||!approx)return;
+
+  approx.classList.toggle('show');
+  const showing=approx.classList.contains('show');
+  const decimalMode=btn.dataset.decimalMode||'approx';
+
+  btn.textContent=decimalMode==='exact'
+    ?(showing?'= Ocultar forma decimal':'= Ver forma decimal')
+    :(showing?'≈ Ocultar aproximación decimal':'≈ Ver aproximación decimal');
+},true);
 </script>
 </body>
 </html>

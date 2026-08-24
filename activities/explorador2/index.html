@@ -1338,8 +1338,8 @@ button:not(:disabled):active{filter:brightness(.97)}
         <g id="keypoints">
 <circle class="open-dot keypoint" cx="-1" cy="1.25" r=".14"></circle>
 <circle class="point-hit" cx="-1" cy="1.25" r=".44" data-x="-1" data-y="5/4" data-approx="-1;1.25" data-kind="Círculo abierto" data-decimal-mode="exact"></circle>
-<circle class="closed-dot keypoint" cx="-1" cy="3" r=".14"></circle>
-<circle class="point-hit" cx="-1" cy="3" r=".44" data-x="-1" data-y="3" data-approx="" data-kind="Punto definido"></circle>
+<circle class="closed-dot keypoint" cx="-1" cy="2.44948974" r=".14"></circle>
+<circle class="point-hit" cx="-1" cy="2.44948974" r=".44" data-x="-1" data-y="√6" data-approx="-1;2.45" data-kind="Punto definido" data-decimal-mode="approx"></circle>
 <circle class="closed-dot keypoint" cx="0" cy="2" r=".14"></circle>
 <circle class="point-hit" cx="0" cy="2" r=".44" data-x="0" data-y="2" data-approx="" data-kind="Punto definido"></circle>
 <circle class="open-dot keypoint" cx="0" cy="3" r=".14"></circle>
@@ -1522,7 +1522,7 @@ sample('p2',fns.p1,-.999,-.001,500,'both');
 sample('p3',fns.p2,.001,.9994,1200,'both');
 sample('p4',fns.p3,1.0006,28,1900,'left');
 const cases={
- '-1':{left:{kind:'finite',value:1.25,exact:'5/4',fn:fns.p1,start:-2.0},right:{kind:'finite',value:1.25,exact:'5/4',fn:fns.p1,start:-.3},bilateral:{kind:'finite',value:1.25,exact:'5/4'},image:{kind:'finite',value:3,exact:'3'}},
+ '-1':{left:{kind:'finite',value:1.25,exact:'5/4',fn:fns.p1,start:-2.0},right:{kind:'finite',value:1.25,exact:'5/4',fn:fns.p1,start:-.3},bilateral:{kind:'finite',value:1.25,exact:'5/4'},image:{kind:'finite',value:Math.sqrt(6),exact:'√6',irrational:true}},
  '0':{left:{kind:'finite',value:2,exact:'2',fn:fns.p1,start:-.8},right:{kind:'finite',value:3,exact:'3',fn:fns.p2,start:.65},bilateral:{kind:'none'},image:{kind:'finite',value:2,exact:'2'}},
  '1':{left:{kind:'posinf',fn:fns.p2,start:.3},right:{kind:'posinf',fn:fns.p3,start:1.7},bilateral:{kind:'posinf'},image:{kind:'undefined'}},
  '2':{left:{kind:'finite',value:2,exact:'2',fn:fns.p3,start:1.25},right:{kind:'finite',value:2,exact:'2',fn:fns.p3,start:2.75},bilateral:{kind:'finite',value:2,exact:'2'},image:{kind:'finite',value:2,exact:'2'}}
@@ -1533,7 +1533,7 @@ const globals={
 };
 const setDescriptions={
  domain:{intervals:[{from:-Infinity,to:1},{from:1,to:Infinity}],extendsLeft:true,extendsRight:true,result:'ℝ ∖ {1}',summary:'El único valor ausente del dominio es x = 1, donde aparece la asíntota vertical.'},
- range:{intervals:[{from:1,to:1.25},{from:1.25,to:Infinity}],points:[],extendsDown:false,extendsUp:true,result:'(1,+∞) ∖ {5/4}',summary:'La altura 5/4 se pierde al redefinir f(−1); las demás alturas mayores que 1 sí aparecen.',checkpoints:[{y:1,belongs:false,message:'La gráfica se aproxima a y = 1 cuando x→−∞, pero nunca alcanza esa altura.'},{y:1.25,belongs:false,message:'La altura 5/4 correspondería al valor original en x = −1, pero allí la función fue redefinida como f(−1)=3.'}]}
+ range:{intervals:[{from:1,to:1.25},{from:1.25,to:Infinity}],points:[],extendsDown:false,extendsUp:true,result:'(1,+∞) ∖ {5/4}',summary:'La altura 5/4 se pierde al redefinir f(−1); las demás alturas mayores que 1 sí aparecen.',checkpoints:[{y:1,belongs:false,message:'La gráfica se aproxima a y = 1 cuando x→−∞, pero nunca alcanza esa altura.'},{y:1.25,belongs:false,message:'La altura 5/4 correspondería al valor original en x = −1, pero allí la función fue redefinida como f(−1)=√6.'}]}
 };
 let target=null,selected=null,chosenSide=null,answered={left:false,right:false,bilateral:false,image:false},mode='idle',answerValue='',timer=null,animating=false,lastAnimation=null;
 const partialProgress={
@@ -1686,7 +1686,7 @@ function hideHits(){setHits.style.opacity=0}
 function domainIntersections(x){
  const e=.04,ys=[];
  if(x<0-e&&Math.abs(x+1)>e)ys.push(fns.p1(x));
- else if(Math.abs(x+1)<=e)ys.push(3);
+ else if(Math.abs(x+1)<=e)ys.push(Math.sqrt(6));
  else if(Math.abs(x)<=e)ys.push(2);
  else if(x>0+e&&x<1-e)ys.push(fns.p2(x));
  else if(Math.abs(x-1)<=e){}
@@ -2595,6 +2595,33 @@ function uxReturnHome(){
   location.href='../../index.html'
 }
 
+
+
+/* ==========================================================
+   v27 · inspector decimal independiente del estado del límite
+   ========================================================== */
+document.addEventListener('click',e=>{
+  const btn=e.target?.closest?.('#coordApproxBtn');
+  if(!btn)return;
+
+  /* Evita los dos handlers históricos del botón, que podían
+     cancelar mutuamente el cambio después de trabajar un límite. */
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+
+  const pop=document.getElementById('coordPop');
+  const approx=document.getElementById('coordApprox');
+  if(!pop?.classList.contains('show')||!approx)return;
+
+  approx.classList.toggle('show');
+  const showing=approx.classList.contains('show');
+  const decimalMode=btn.dataset.decimalMode||'approx';
+
+  btn.textContent=decimalMode==='exact'
+    ?(showing?'= Ocultar forma decimal':'= Ver forma decimal')
+    :(showing?'≈ Ocultar aproximación decimal':'≈ Ver aproximación decimal');
+},true);
 </script>
 </body>
 </html>

@@ -2583,6 +2583,33 @@ function uxReturnHome(){
   location.href='../../index.html'
 }
 
+
+
+/* ==========================================================
+   v27 · inspector decimal independiente del estado del límite
+   ========================================================== */
+document.addEventListener('click',e=>{
+  const btn=e.target?.closest?.('#coordApproxBtn');
+  if(!btn)return;
+
+  /* Evita los dos handlers históricos del botón, que podían
+     cancelar mutuamente el cambio después de trabajar un límite. */
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+
+  const pop=document.getElementById('coordPop');
+  const approx=document.getElementById('coordApprox');
+  if(!pop?.classList.contains('show')||!approx)return;
+
+  approx.classList.toggle('show');
+  const showing=approx.classList.contains('show');
+  const decimalMode=btn.dataset.decimalMode||'approx';
+
+  btn.textContent=decimalMode==='exact'
+    ?(showing?'= Ocultar forma decimal':'= Ver forma decimal')
+    :(showing?'≈ Ocultar aproximación decimal':'≈ Ver aproximación decimal');
+},true);
 </script>
 </body>
 </html>
