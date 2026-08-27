@@ -1260,6 +1260,16 @@ button:not(:disabled):active{filter:brightness(.97)}
   .analysis-family.ux-guide-pulse::after{animation:none!important;display:none}
 }
 
+
+/* v27.1 · ayuda de coordenadas durante la respuesta */
+.point-answer-helper{display:none;align-items:center;justify-content:flex-start;margin:7px 0 5px}
+.point-answer-helper.show{display:flex}
+.point-answer-helper button{border:1px solid rgba(35,147,159,.34);background:rgba(229,247,249,.90);color:#126f7b;border-radius:999px;padding:6px 10px;font-size:.58rem;font-weight:880;cursor:pointer}
+.point-answer-helper button.active{background:#148d9b;color:#fff;border-color:#148d9b}
+.answer-point-badge{position:absolute;z-index:19;transform:translate(-50%,-125%);pointer-events:none;background:rgba(250,253,253,.96);border:1px solid rgba(28,144,157,.46);color:#173f4b;border-radius:999px;padding:4px 7px;white-space:nowrap;font-family:"STIX Two Math","Cambria Math",serif;font-size:.68rem;font-weight:800;box-shadow:0 6px 16px rgba(20,75,84,.15)}
+.answer-point-halo{fill:none;stroke:#12a1b0;stroke-width:.10;vector-effect:non-scaling-stroke;pointer-events:none}
+.answer-point-guide{stroke:#12a1b0;stroke-width:.055;stroke-dasharray:.16 .12;vector-effect:non-scaling-stroke;opacity:.64;pointer-events:none}
+
 </style>
 </head>
 <body>
@@ -1311,6 +1321,11 @@ button:not(:disabled):active{filter:brightness(.97)}
           <button id="check" class="check">Comprobar</button>
           <button id="clearKey" class="clear-key">Limpiar</button>
         </div>
+      </div>
+
+
+      <div id="pointAnswerHelper" class="point-answer-helper">
+        <button id="pointAnswerHelperBtn" type="button">Ver puntos en x = a</button>
       </div>
 
       <div class="keypad-layout">
@@ -2136,8 +2151,48 @@ function focusPoint(){
  return{x:target==='neginf'?camX-VIEW_W/2:camX+VIEW_W/2,y:globals[target]&&globals[target].kind==='finite'?globals[target].value:0}
 }
 function placeAnswerPanel(){clearAnswerQuadrants()}
-function openAnswerPanel(){answerValue='';renderAnswer();placeAnswerPanel();answerpanel.classList.add('show');answerpanel.setAttribute('aria-hidden','false');answerToggle.classList.add('show');answerToggle.textContent='Ocultar panel'}
-function closeAnswerPanel(keep=false){answerpanel.classList.remove('show');answerpanel.setAttribute('aria-hidden','true');if(keep){answerToggle.classList.add('show');answerToggle.textContent='Responder'}else answerToggle.classList.remove('show')}
+
+
+/* v27.1 · ayuda "Ver puntos en x = a" */
+const pointAnswerHelper=document.getElementById('pointAnswerHelper');
+const pointAnswerHelperBtn=document.getElementById('pointAnswerHelperBtn');
+function clearAnswerPointHelp(){
+  document.querySelectorAll('.answer-point-badge').forEach(el=>el.remove());
+  document.querySelectorAll('.answer-point-halo,.answer-point-guide').forEach(el=>el.remove());
+  pointAnswerHelperBtn?.classList.remove('active');
+  if(pointAnswerHelperBtn)pointAnswerHelperBtn.textContent='Ver puntos en x = a';
+}
+function updatePointHelper(){
+  clearAnswerPointHelp();
+  const available=selected!==null && Number.isFinite(Number(selected));
+  pointAnswerHelper?.classList.toggle('show',available);
+  if(available&&pointAnswerHelperBtn)pointAnswerHelperBtn.textContent=`Ver puntos en x = ${String(selected).replace('-','−')}`;
+}
+function showAnswerPoints(){
+  clearAnswerPointHelp();
+  if(selected===null||!Number.isFinite(Number(selected)))return;
+  const hits=[...document.querySelectorAll('.point-hit')].filter(pt=>Math.abs(Number(pt.dataset.x)-Number(selected))<1e-9);
+  if(!hits.length)return;
+  const ns='http://www.w3.org/2000/svg';
+  const layer=document.createElementNS(ns,'g'); layer.setAttribute('class','answer-point-help-layer'); viewport.appendChild(layer);
+  const guide=document.createElementNS(ns,'line');
+  guide.setAttribute('x1',selected);guide.setAttribute('x2',selected);guide.setAttribute('y1',-10000);guide.setAttribute('y2',10000);guide.setAttribute('class','answer-point-guide');layer.appendChild(guide);
+  const stageRect=stage.getBoundingClientRect();
+  hits.forEach(pt=>{
+    const halo=document.createElementNS(ns,'circle');halo.setAttribute('cx',pt.getAttribute('cx'));halo.setAttribute('cy',pt.getAttribute('cy'));halo.setAttribute('r','.27');halo.setAttribute('class','answer-point-halo');layer.appendChild(halo);
+    const r=pt.getBoundingClientRect();
+    const badge=document.createElement('div');badge.className='answer-point-badge';badge.innerHTML=`(${pt.dataset.x}, ${pt.dataset.y})`;
+    badge.style.left=(r.left-stageRect.left+r.width/2)+'px';badge.style.top=(r.top-stageRect.top)+'px';stage.appendChild(badge);
+  });
+  pointAnswerHelperBtn.classList.add('active');pointAnswerHelperBtn.textContent='Ocultar puntos';
+}
+pointAnswerHelperBtn?.addEventListener('click',e=>{
+  e.preventDefault();e.stopPropagation();
+  if(document.querySelector('.answer-point-badge')){clearAnswerPointHelp();updatePointHelper()}else showAnswerPoints();
+});
+
+function openAnswerPanel(){answerValue='';renderAnswer();placeAnswerPanel();answerpanel.classList.add('show');answerpanel.setAttribute('aria-hidden','false');answerToggle.classList.add('show');answerToggle.textContent='Ocultar panel';updatePointHelper()}
+function closeAnswerPanel(keep=false){answerpanel.classList.remove('show');answerpanel.setAttribute('aria-hidden','true');clearAnswerPointHelp();pointAnswerHelper?.classList.remove('show');if(keep){answerToggle.classList.add('show');answerToggle.textContent='Responder'}else answerToggle.classList.remove('show')}
 answerpanel.setAttribute('aria-hidden','true');
 answerToggle.onclick=e=>{e.stopPropagation();answerpanel.classList.contains('show')?closeAnswerPanel(true):openAnswerPanel()};
 
