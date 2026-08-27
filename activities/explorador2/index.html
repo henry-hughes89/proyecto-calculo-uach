@@ -1261,14 +1261,16 @@ button:not(:disabled):active{filter:brightness(.97)}
 }
 
 
-/* v27.1 · ayuda de coordenadas durante la respuesta */
-.point-answer-helper{display:none;align-items:center;justify-content:flex-start;margin:7px 0 5px}
-.point-answer-helper.show{display:flex}
-.point-answer-helper button{border:1px solid rgba(35,147,159,.34);background:rgba(229,247,249,.90);color:#126f7b;border-radius:999px;padding:6px 10px;font-size:.58rem;font-weight:880;cursor:pointer}
-.point-answer-helper button.active{background:#148d9b;color:#fff;border-color:#148d9b}
-.answer-point-badge{position:absolute;z-index:19;transform:translate(-50%,-125%);pointer-events:none;background:rgba(250,253,253,.96);border:1px solid rgba(28,144,157,.46);color:#173f4b;border-radius:999px;padding:4px 7px;white-space:nowrap;font-family:"STIX Two Math","Cambria Math",serif;font-size:.68rem;font-weight:800;box-shadow:0 6px 16px rgba(20,75,84,.15)}
-.answer-point-halo{fill:none;stroke:#12a1b0;stroke-width:.10;vector-effect:non-scaling-stroke;pointer-events:none}
-.answer-point-guide{stroke:#12a1b0;stroke-width:.055;stroke-dasharray:.16 .12;vector-effect:non-scaling-stroke;opacity:.64;pointer-events:none}
+/* v28 · ayuda robusta «Ver puntos en x = número» */
+.point-helper-row{display:flex;justify-content:flex-start;align-items:center;margin-top:7px}
+.point-helper-btn{appearance:none;border:1px solid rgba(30,143,155,.28);background:linear-gradient(180deg,#edf9fa,#e2f4f6);color:#116f7c;border-radius:999px;padding:7px 11px;font-size:.68rem;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(18,111,124,.08)}
+.point-helper-btn:hover{filter:brightness(.99)}
+.point-helper-btn.active{background:#138f9e;color:#fff;border-color:#138f9e}
+.xa-help-guide{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed rgba(20,159,173,.62);pointer-events:none;z-index:13}
+.xa-help-badge{position:absolute;transform:translate(-50%,-118%);z-index:14;pointer-events:none;white-space:nowrap;border:1px solid rgba(24,143,156,.38);background:rgba(250,253,253,.97);color:#173f4b;border-radius:999px;padding:4px 8px;font-family:"STIX Two Math","Cambria Math",serif;font-size:.72rem;font-weight:850;box-shadow:0 6px 16px rgba(18,68,76,.14)}
+.xa-help-badge.closed::before{content:"● ";color:#138f9e}.xa-help-badge.open::before{content:"○ ";color:#138f9e;font-weight:950}
+.xa-help-ring{position:absolute;transform:translate(-50%,-50%);width:27px;height:27px;border:3px solid rgba(19,159,173,.85);border-radius:50%;z-index:13;pointer-events:none;box-shadow:0 0 0 6px rgba(19,159,173,.10)}
+@media(max-width:430px){.point-helper-btn{font-size:.63rem;padding:6px 9px}.xa-help-badge{font-size:.66rem;padding:3px 7px}}
 
 </style>
 </head>
@@ -1323,11 +1325,6 @@ button:not(:disabled):active{filter:brightness(.97)}
         </div>
       </div>
 
-
-      <div id="pointAnswerHelper" class="point-answer-helper">
-        <button id="pointAnswerHelperBtn" type="button">Ver puntos en x = a</button>
-      </div>
-
       <div class="keypad-layout">
         <div id="numPad" class="num-pad"></div>
         <div id="opPad" class="op-pad"></div>
@@ -1340,6 +1337,7 @@ button:not(:disabled):active{filter:brightness(.97)}
       <div id="undefinedRow" class="undefined-row" style="display:none">
         <button id="undefinedKey" type="button" class="key undefined-key">f(a) no está definida</button>
       </div>
+      <div class="point-helper-row" style="display:none"><button id="pointHelperBtn" type="button" class="point-helper-btn">Ver puntos</button></div>
     </div>
 
     
@@ -2151,48 +2149,8 @@ function focusPoint(){
  return{x:target==='neginf'?camX-VIEW_W/2:camX+VIEW_W/2,y:globals[target]&&globals[target].kind==='finite'?globals[target].value:0}
 }
 function placeAnswerPanel(){clearAnswerQuadrants()}
-
-
-/* v27.1 · ayuda "Ver puntos en x = a" */
-const pointAnswerHelper=document.getElementById('pointAnswerHelper');
-const pointAnswerHelperBtn=document.getElementById('pointAnswerHelperBtn');
-function clearAnswerPointHelp(){
-  document.querySelectorAll('.answer-point-badge').forEach(el=>el.remove());
-  document.querySelectorAll('.answer-point-halo,.answer-point-guide').forEach(el=>el.remove());
-  pointAnswerHelperBtn?.classList.remove('active');
-  if(pointAnswerHelperBtn)pointAnswerHelperBtn.textContent='Ver puntos en x = a';
-}
-function updatePointHelper(){
-  clearAnswerPointHelp();
-  const available=selected!==null && Number.isFinite(Number(selected));
-  pointAnswerHelper?.classList.toggle('show',available);
-  if(available&&pointAnswerHelperBtn)pointAnswerHelperBtn.textContent=`Ver puntos en x = ${String(selected).replace('-','−')}`;
-}
-function showAnswerPoints(){
-  clearAnswerPointHelp();
-  if(selected===null||!Number.isFinite(Number(selected)))return;
-  const hits=[...document.querySelectorAll('.point-hit')].filter(pt=>Math.abs(Number(pt.dataset.x)-Number(selected))<1e-9);
-  if(!hits.length)return;
-  const ns='http://www.w3.org/2000/svg';
-  const layer=document.createElementNS(ns,'g'); layer.setAttribute('class','answer-point-help-layer'); viewport.appendChild(layer);
-  const guide=document.createElementNS(ns,'line');
-  guide.setAttribute('x1',selected);guide.setAttribute('x2',selected);guide.setAttribute('y1',-10000);guide.setAttribute('y2',10000);guide.setAttribute('class','answer-point-guide');layer.appendChild(guide);
-  const stageRect=stage.getBoundingClientRect();
-  hits.forEach(pt=>{
-    const halo=document.createElementNS(ns,'circle');halo.setAttribute('cx',pt.getAttribute('cx'));halo.setAttribute('cy',pt.getAttribute('cy'));halo.setAttribute('r','.27');halo.setAttribute('class','answer-point-halo');layer.appendChild(halo);
-    const r=pt.getBoundingClientRect();
-    const badge=document.createElement('div');badge.className='answer-point-badge';badge.innerHTML=`(${pt.dataset.x}, ${pt.dataset.y})`;
-    badge.style.left=(r.left-stageRect.left+r.width/2)+'px';badge.style.top=(r.top-stageRect.top)+'px';stage.appendChild(badge);
-  });
-  pointAnswerHelperBtn.classList.add('active');pointAnswerHelperBtn.textContent='Ocultar puntos';
-}
-pointAnswerHelperBtn?.addEventListener('click',e=>{
-  e.preventDefault();e.stopPropagation();
-  if(document.querySelector('.answer-point-badge')){clearAnswerPointHelp();updatePointHelper()}else showAnswerPoints();
-});
-
-function openAnswerPanel(){answerValue='';renderAnswer();placeAnswerPanel();answerpanel.classList.add('show');answerpanel.setAttribute('aria-hidden','false');answerToggle.classList.add('show');answerToggle.textContent='Ocultar panel';updatePointHelper()}
-function closeAnswerPanel(keep=false){answerpanel.classList.remove('show');answerpanel.setAttribute('aria-hidden','true');clearAnswerPointHelp();pointAnswerHelper?.classList.remove('show');if(keep){answerToggle.classList.add('show');answerToggle.textContent='Responder'}else answerToggle.classList.remove('show')}
+function openAnswerPanel(){answerValue='';renderAnswer();placeAnswerPanel();answerpanel.classList.add('show');answerpanel.setAttribute('aria-hidden','false');answerToggle.classList.add('show');answerToggle.textContent='Ocultar panel';setTimeout(()=>window.refreshPointHelper?.(),0)}
+function closeAnswerPanel(keep=false){window.clearPointHelper?.();answerpanel.classList.remove('show');answerpanel.setAttribute('aria-hidden','true');if(keep){answerToggle.classList.add('show');answerToggle.textContent='Responder'}else answerToggle.classList.remove('show')}
 answerpanel.setAttribute('aria-hidden','true');
 answerToggle.onclick=e=>{e.stopPropagation();answerpanel.classList.contains('show')?closeAnswerPanel(true):openAnswerPanel()};
 
@@ -2677,6 +2635,88 @@ document.addEventListener('click',e=>{
     ?(showing?'= Ocultar forma decimal':'= Ver forma decimal')
     :(showing?'≈ Ocultar aproximación decimal':'≈ Ver aproximación decimal');
 },true);
+
+/* v28 · ayuda robusta de puntos en la vertical seleccionada */
+(function(){
+ const helper=document.getElementById('pointHelperBtn');
+ const stageEl=document.getElementById('stage');
+ const panelEl=document.getElementById('answerpanel');
+ if(!helper||!stageEl||!panelEl)return;
+
+ const nice=n=>String(n).replace('-', '−');
+ function helperAllowed(){
+   return selected!==null && target!=='neginf' && target!=='posinf' && ['answer','image','bilateral'].includes(mode);
+ }
+ function updateHelper(){
+   clearPointHelp(false);
+   if(!helperAllowed()){
+     helper.parentElement.style.display='none';
+     return;
+   }
+   helper.parentElement.style.display='flex';
+   helper.textContent=`Ver puntos en x = ${nice(selected)}`;
+   helper.dataset.x=String(selected);
+ }
+ function keypointType(hit){
+   const x=hit.getAttribute('cx'),y=hit.getAttribute('cy');
+   const visual=[...document.querySelectorAll('.keypoint')].find(k=>
+     k.getAttribute('cx')===x && k.getAttribute('cy')===y
+   );
+   return visual?.classList.contains('closed-dot')?'closed':'open';
+ }
+ function pointScreen(hit){
+   try{
+     const svg=hit.ownerSVGElement,pt=svg.createSVGPoint();
+     pt.x=parseFloat(hit.getAttribute('cx'));pt.y=parseFloat(hit.getAttribute('cy'));
+     const ctm=hit.getScreenCTM();if(!ctm)return null;
+     return pt.matrixTransform(ctm);
+   }catch(_){return null}
+ }
+ function clearPointHelp(resetButton=true){
+   stageEl.querySelectorAll('.xa-help-guide,.xa-help-badge,.xa-help-ring').forEach(e=>e.remove());
+   if(resetButton){helper.classList.remove('active');if(helperAllowed())helper.textContent=`Ver puntos en x = ${nice(selected)}`}
+ }
+ function showPointHelp(){
+   clearPointHelp(false);
+   const x=Number(helper.dataset.x);
+   if(!Number.isFinite(x))return;
+   const hits=[...document.querySelectorAll('.point-hit')].filter(pt=>Math.abs(Number(pt.dataset.x)-x)<1e-9);
+   if(!hits.length)return;
+   const sr=stageEl.getBoundingClientRect();
+   const firstPos=pointScreen(hits[0]);
+   if(firstPos){
+     const guide=document.createElement('div');guide.className='xa-help-guide';
+     guide.style.left=(firstPos.x-sr.left)+'px';stageEl.appendChild(guide);
+   }
+   hits.forEach(hit=>{
+     const p=pointScreen(hit);if(!p)return;
+     const left=p.x-sr.left,top=p.y-sr.top;
+     const ring=document.createElement('div');ring.className='xa-help-ring';ring.style.left=left+'px';ring.style.top=top+'px';stageEl.appendChild(ring);
+     const badge=document.createElement('div');badge.className='xa-help-badge '+keypointType(hit);
+     badge.textContent=`(${hit.dataset.x}, ${hit.dataset.y})`;
+     badge.style.left=left+'px';badge.style.top=top+'px';stageEl.appendChild(badge);
+   });
+   helper.classList.add('active');helper.textContent='Ocultar puntos';
+ }
+ helper.addEventListener('click',e=>{
+   e.preventDefault();e.stopPropagation();
+   if(helper.classList.contains('active'))clearPointHelp(true);else showPointHelp();
+ });
+ window.refreshPointHelper=updateHelper;
+ window.clearPointHelper=()=>clearPointHelp(false);
+
+ // The answer panel can be opened by several existing flows. Hook the actual
+ // class change instead of trying to infer the selected a from the DOM.
+
+ // Changing task or replaying removes stale labels; reopening restores them.
+ document.addEventListener('pointerdown',e=>{
+   if(e.target.closest('#pointHelperBtn'))return;
+   if(e.target.closest('.value-chip,.limit-chip,.chip.global,.continuity-btn,#play,.meta-chip'))clearPointHelp(false);
+ },true);
+ window.addEventListener('resize',()=>clearPointHelp(true),{passive:true});
+ window.addEventListener('orientationchange',()=>clearPointHelp(true),{passive:true});
+})();
+
 </script>
 </body>
 </html>
